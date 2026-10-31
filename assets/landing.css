@@ -217,7 +217,8 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
 }
 .msg.closing { color: var(--accent); }
 /* until the demo starts, the static transcript is held back; a fallback reveals it if the script never runs */
-.js .demo-log.is-pending > * { opacity: 0; animation: pending-fallback 1ms 5s forwards; }
+.js .demo-log.is-pending > * { opacity: 0; }
+.js:not(.demo-ready) .demo-log.is-pending > * { animation: pending-fallback 1ms 6s forwards; }
 .js .demo-figure:has(.demo-log.is-pending) .demo-decide { visibility: hidden; }
 @keyframes pending-fallback { to { opacity: 1; } }
 .msg.enter { animation: msg-in var(--duration-ui) var(--ease-out-expo) both; }
@@ -461,11 +462,6 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
 .sync-chip b { font-weight: 700; font-variant-numeric: tabular-nums; }
 .sync-chip.from { left: 2cqw; top: 62cqw; }
 .sync-chip.to { left: 50cqw; top: 14cqw; }
-.sync-dot {
-  position: absolute; z-index: 3; left: 0; top: 0; width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 50%;
-  background: var(--accent); box-shadow: 0 0 0 6px rgba(196, 149, 106, 0.25), 0 0 18px rgba(196, 149, 106, 0.8);
-  opacity: 0;
-}
 .sync-label {
   position: absolute; left: 24cqw; top: 31cqw; z-index: 2; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em;
   text-transform: uppercase; color: var(--accent-ink); background: var(--bg); padding: 0.15rem 0.5rem; border-radius: 999px;
@@ -473,8 +469,10 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
 
 .devices .sync-chip.from { animation: chip-from 7s var(--ease-out-expo) infinite; }
 .devices .sync-chip.to { animation: chip-to 7s var(--ease-out-expo) infinite; }
-.devices .sync-dot { animation: dot-travel 7s linear infinite; }
-.devices.is-paused .sync-chip, .devices.is-paused .sync-dot { animation-play-state: paused; }
+.devices.is-paused .sync-chip { animation-play-state: paused; }
+/* the dot is SVG (SMIL) so it follows the dashed arc exactly in every browser */
+.sync-mover .halo { fill: rgba(196, 149, 106, 0.28); }
+.sync-mover .core { fill: var(--accent); }
 
 @keyframes chip-from {
   0% { opacity: 0; transform: translateY(10px) scale(0.94); }
@@ -486,30 +484,9 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
   52%, 84% { opacity: 1; transform: none; }
   94%, 100% { opacity: 0; transform: translateY(-6px); }
 }
-@keyframes dot-travel {
-  0%, 16% { opacity: 0; transform: translate(14cqw, 68cqw) scale(0.4); }
-  20% { opacity: 1; transform: translate(14.0cqw, 68.0cqw) scale(1); }
-  21.5% { transform: translate(14.2cqw, 67.4cqw); }
-  23% { transform: translate(14.7cqw, 65.5cqw); }
-  24.5% { transform: translate(15.6cqw, 62.5cqw); }
-  26% { transform: translate(17.1cqw, 58.5cqw); }
-  27.5% { transform: translate(19.0cqw, 53.7cqw); }
-  29% { transform: translate(21.6cqw, 48.4cqw); }
-  30.5% { transform: translate(25.0cqw, 43.0cqw); }
-  32% { transform: translate(29.2cqw, 37.8cqw); }
-  33.5% { transform: translate(34.1cqw, 33.3cqw); }
-  35% { transform: translate(39.5cqw, 29.9cqw); }
-  36.5% { transform: translate(45.0cqw, 27.7cqw); }
-  38% { transform: translate(50.0cqw, 26.5cqw); }
-  39.5% { transform: translate(54.2cqw, 26.0cqw); }
-  41% { transform: translate(57.4cqw, 25.9cqw); }
-  42.5% { transform: translate(59.3cqw, 26.0cqw); }
-  44% { opacity: 1; transform: translate(60.0cqw, 26.0cqw) scale(1); }
-  48%, 100% { opacity: 0; transform: translate(60cqw, 26cqw) scale(1.8); }
-}
 @media (prefers-reduced-motion: reduce) {
   .devices .sync-chip.from, .devices .sync-chip.to { animation: none; opacity: 1; transform: none; }
-  .devices .sync-dot { animation: none; opacity: 0; }
+  .sync-mover { display: none; }
 }
 .plan-note { display: flex; align-items: center; gap: 0.5rem; margin: 0.9rem 0 0; font-weight: 600; color: var(--text); }
 .plan-note svg { flex: none; color: var(--accent-ink); }

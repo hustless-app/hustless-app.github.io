@@ -33,9 +33,9 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<link rel="stylesheet" href="/assets/landing.css">
-<script src="/assets/early.js"></script>
-<script src="/assets/demo.js" defer></script>
+<link rel="stylesheet" href="/assets/landing.css?v=20261031b">
+<script src="/assets/early.js?v=20261031b"></script>
+<script src="/assets/demo.js?v=20261031b" defer></script>
 
 <script type="application/ld+json">
 {
@@ -448,11 +448,18 @@
           <div class="phone">
             <img src="/assets/img/ja-03-now-400.webp" sizes="200px" width="400" height="869" loading="lazy" decoding="async" alt="">
           </div>
-          <svg class="sync-arc" viewBox="0 0 100 120" aria-hidden="true"><path d="M14 68 Q26 24 60 26"/></svg>
+          <svg class="sync-arc" viewBox="0 0 100 120" aria-hidden="true">
+            <path id="sync-path" d="M14 68 Q26 24 60 26"/>
+            <g class="sync-mover" opacity="0">
+              <circle class="halo" r="2.6" fill="#c4956a" fill-opacity="0.28"/>
+              <circle class="core" r="1.15" fill="#c4956a"/>
+              <animateMotion dur="7s" repeatCount="indefinite" calcMode="spline" keyPoints="0;0;1;1" keyTimes="0;0.2;0.44;1" keySplines="0 0 1 1;0.45 0 0.55 1;0 0 1 1"><mpath href="#sync-path"/></animateMotion>
+              <animate attributeName="opacity" dur="7s" repeatCount="indefinite" values="0;0;1;1;0;0" keyTimes="0;0.16;0.2;0.44;0.48;1"/>
+            </g>
+          </svg>
           <span class="sync-label" aria-hidden="true">iCloud</span>
           <span class="sync-chip from" aria-hidden="true"><small>iPhone で追加</small><b>ラテ · ¥480</b></span>
           <span class="sync-chip to" aria-hidden="true"><small>すぐに iPad にも</small><b>ラテ · ¥480</b></span>
-          <span class="sync-dot" aria-hidden="true"></span>
         </div>
       </div>
     </div>

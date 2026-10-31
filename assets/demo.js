@@ -48,6 +48,7 @@
     const data = readScenarios();
     const root = document.querySelector("[data-demo]");
     if (!data || !root) return;
+    document.documentElement.classList.add("demo-ready"); // the CSS fallback reveal is only for when this never runs
 
     const log = root.querySelector(".demo-log");
     const decide = root.querySelector(".demo-decide");
@@ -133,13 +134,21 @@
     observer.observe(root);
   }
 
-  // Pause the sync animation while it is off screen.
+  // Pause the sync scene while it is off screen: CSS chips via a class, the SVG dot via its own clock.
   function initDevices() {
     const scene = document.querySelector(".devices");
-    if (!scene || !("IntersectionObserver" in window)) return;
-    scene.classList.add("is-paused");
+    if (!scene) return;
+    const svg = scene.querySelector(".sync-arc");
+    const setPlaying = (isPlaying) => {
+      scene.classList.toggle("is-paused", !isPlaying);
+      if (!svg || typeof svg.pauseAnimations !== "function") return;
+      if (isPlaying) svg.unpauseAnimations(); else svg.pauseAnimations();
+    };
+    if (prefersReducedMotion.matches) { setPlaying(false); return; }
+    if (!("IntersectionObserver" in window)) return;
+    setPlaying(false);
     const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => scene.classList.toggle("is-paused", !entry.isIntersecting));
+      entries.forEach((entry) => setPlaying(entry.isIntersecting));
     });
     observer.observe(scene);
   }
