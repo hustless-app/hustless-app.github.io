@@ -1,0 +1,589 @@
+<!doctype html>
+<html lang="ja" data-store="soon">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'none'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+
+<title>hustless — 衝動買い防止とAI家計簿 · 買う前にひと呼吸</title>
+<meta name="description" content="hustless は買う前にひとつずつ問いかけてくれる、iPhone・iPad 向けの AI 家計簿アプリ。声で支出を記録し、サブスクや固定費の支払いもリマインド。アカウント不要・広告なし。">
+<link rel="canonical" href="https://hustless-app.github.io/ja/">
+<link rel="alternate" hreflang="en" href="https://hustless-app.github.io/">
+<link rel="alternate" hreflang="ja" href="https://hustless-app.github.io/ja/">
+<link rel="alternate" hreflang="x-default" href="https://hustless-app.github.io/">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="theme-color" content="#f5f0e8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#15120f" media="(prefers-color-scheme: dark)">
+<meta name="apple-itunes-app" content="app-id=6826845830">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="hustless">
+<meta property="og:title" content="hustless — 買う前に、ひと呼吸。">
+<meta property="og:description" content="買う前にひとつずつ問いかける AI コーチ。声で記録できる家計簿、サブスク・固定費のリマインダー。プライバシー重視。">
+<meta property="og:url" content="https://hustless-app.github.io/ja/">
+<meta property="og:image" content="https://hustless-app.github.io/og-ja.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="hustless — 買う前に、ひと呼吸。iPhone 向け AI 家計簿。">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:locale:alternate" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/assets/landing.css">
+<script src="/assets/early.js"></script>
+<script src="/assets/demo.js" defer></script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://hustless-app.github.io/ja/#page",
+      "url": "https://hustless-app.github.io/ja/",
+      "name": "hustless — 衝動買い防止とAI家計簿 · 買う前にひと呼吸",
+      "inLanguage": "ja",
+      "isPartOf": {
+        "@id": "https://hustless-app.github.io/#site"
+      },
+      "about": {
+        "@id": "https://hustless-app.github.io/ja/#app"
+      },
+      "publisher": {
+        "@id": "https://hustless-app.github.io/#org"
+      },
+      "datePublished": "2026-10-31",
+      "dateModified": "2026-10-31",
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://hustless-app.github.io/og-ja.png",
+        "width": 1200,
+        "height": 630
+      }
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://hustless-app.github.io/#org",
+      "name": "hustless",
+      "url": "https://hustless-app.github.io/",
+      "logo": "https://hustless-app.github.io/apple-touch-icon.png",
+      "email": "hustless.support@gmail.com",
+      "description": "hustless is made by an independent developer in Greece.",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "GR"
+      }
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://hustless-app.github.io/#site",
+      "url": "https://hustless-app.github.io/",
+      "name": "hustless",
+      "inLanguage": [
+        "en",
+        "ja"
+      ],
+      "publisher": {
+        "@id": "https://hustless-app.github.io/#org"
+      }
+    },
+    {
+      "@type": "MobileApplication",
+      "@id": "https://hustless-app.github.io/ja/#app",
+      "name": "hustless: 衝動買い防止とAI家計簿",
+      "alternateName": "hustless",
+      "description": "買う前に、穏やかにひとつずつ問いかける iPhone・iPad 向けの AI コーチ。本当に欲しいのか、その場の気分なのかを見分けられます。声で支出を記録し、サブスクや固定費の支払い前にリマインドし、お金の行き先を見える化します。",
+      "operatingSystem": "iOS 18.0 以降、iPadOS 18.0 以降",
+      "applicationCategory": "FinanceApplication",
+      "inLanguage": [
+        "ja",
+        "en",
+        "el"
+      ],
+      "contentRating": "18+",
+      "url": "https://hustless-app.github.io/ja/",
+      "installUrl": "https://apps.apple.com/jp/app/id6826845830",
+      "publisher": {
+        "@id": "https://hustless-app.github.io/#org"
+      },
+      "featureList": [
+        "買う前にひとつずつ問いかける AI コーチ",
+        "商品をすすめることはありません",
+        "声とテキストで支出を記録",
+        "サブスク・固定費の支払い前リマインダー",
+        "分析とカレンダー",
+        "ホーム画面・ロック画面ウィジェット",
+        "アカウント不要・広告なし・トラッキングなし",
+        "ひとつのサブスクで iPhone と iPad",
+        "自分の iCloud で同期（任意）"
+      ],
+      "screenshot": [
+        "https://hustless-app.github.io/assets/img/ja-03-now-800.webp",
+        "https://hustless-app.github.io/assets/img/ja-04-insights-800.webp",
+        "https://hustless-app.github.io/assets/img/ipad-ja-insights-1120.webp"
+      ],
+      "image": "https://hustless-app.github.io/og-ja.png",
+      "dateModified": "2026-10-31"
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://hustless-app.github.io/ja/#faq",
+      "inLanguage": "ja",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "hustless とは？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "衝動買いを防ぐための、iPhone・iPad 向け AI コーチ兼家計簿アプリです。買おうとしているものを伝えると、短い問いかけをひとつずつ返し、本当に欲しいかどうかを自分で決められるようにします。声やテキストで支出を記録し、サブスクや固定費の支払い前にお知らせし、お金の行き先を見える化します。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "AI が買うものを決めるの？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "いいえ。商品やお店、ブランドをすすめることはなく、指示もしません。問いかけるだけで、決めるのはいつもあなたです。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "データは安全？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "アカウント不要、広告なし、トラッキングなし。支出データはあなたの端末に保存され、オンにすれば自分の iCloud で同期されます。AI 機能は回答に必要な情報だけを送信し、会話がサーバーに保存されることはありません。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "iPhone と iPad で別々に支払う必要はある？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "いいえ。hustless は iPhone と iPad の両方に対応したひとつのアプリで、サブスクは Apple アカウントに紐づきます。一度登録すれば両方で使え、データは自分の iCloud で同期されます。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "料金は？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "App Store の 7 日間無料トライアルから始められます。その後は月額または年額プラン。お住まいの国・地域の価格は App Store に表示されます。"
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="wordmark" href="/ja/" aria-label="hustless ホーム"><b>hust</b><span>less</span></a>
+    <nav class="site-nav" aria-label="メインナビゲーション">
+      <a class="optional" href="#how">使い方</a>
+      <a class="optional" href="#privacy">プライバシー</a>
+      <a class="optional" href="#faq">よくある質問</a>
+      <a class="lang" href="/" hreflang="en" lang="en">English</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero" aria-labelledby="hero-heading">
+    <div class="wrap">
+      <div>
+        <h1 id="hero-heading">買う前に、<br><span class="voice">ひと呼吸。</span></h1>
+        <p class="lead">hustless は、iPhone のための AI 家計簿コーチ。買う前にそっと問いかけてくれる友だちです。<strong>短く穏やかに、ひとつずつ</strong>。本当に欲しいのか、その場の気分なのかを見分けるために。批判なし、我慢なし。選ぶのはいつもあなたです。</p>
+
+        <div class="get">
+          <span class="store-btn when-soon" role="note" aria-disabled="true">
+            <span><small>まもなく登場</small><b>App Store</b></span>
+          </span>
+          <a class="when-live" href="https://apps.apple.com/jp/app/id6826845830?ct=landing-ja-hero">
+            <picture>
+              <source srcset="/assets/img/badge-ja-jp-white.svg" media="(prefers-color-scheme: dark)">
+              <img src="/assets/img/badge-ja-jp-black.svg" alt="App Store からダウンロード" width="150" height="50">
+            </picture>
+          </a>
+          <div class="qr">
+            <img class="qr-code" src="/assets/img/qr.svg" alt="App Store の hustless を開く QR コード" width="76" height="76">
+            <span>iPhone のカメラで読み取ってください。</span>
+          </div>
+        </div>
+        <p class="fine-print">7 日間無料 · ひとつのサブスクで iPhone・iPad · iOS 18 以降</p>
+      </div>
+
+      <figure class="demo-figure">
+        <div class="demo" data-demo>
+          <div class="demo-bar" aria-hidden="true">
+            <svg class="x" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+            <span class="wordmark"><b>hust</b><span>less</span></span>
+            <span></span>
+          </div>
+          <ol class="demo-log is-pending" aria-live="polite" aria-label="会話の例">
+            <li class="msg me">新しいヘッドホン、3万円</li>
+            <li class="msg ai">3万円はけっこうな金額だね。今使っているヘッドホンの、何が不満？</li>
+            <li class="msg me">まだ使えるけど、もう3年目</li>
+            <li class="msg ai">ちゃんと使えているなら、一度立ち止まるいい理由になるね。あと数か月今のを使うとしたら、何が困る？</li>
+          </ol>
+          <div class="demo-decide">
+            <p>どう決めた？</p>
+            <div class="decide-row">
+              <button type="button" data-choice="buy">買う</button>
+              <button type="button" data-choice="wait">保留</button>
+              <button type="button" data-choice="avoid">やめる</button>
+            </div>
+          </div>
+          <div class="demo-picker">
+            <p>試してみて — 何を買おうと思ってる？</p>
+            <div class="picks">
+              <button type="button" aria-pressed="true">ヘッドホン、3万円</button>
+              <button type="button" aria-pressed="false">ジャケット、40%オフ</button>
+              <button type="button" aria-pressed="false">ライブのチケット、1万5千円</button>
+            </div>
+          </div>
+        </div>
+        <figcaption>会話の例です。アプリでは、AI があなたの状況に合わせて問いかけます。何を買うべきかを指示することはありません。</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <script type="application/json" id="demo-data">
+  {
+    "decisionLabels": { "buy": "買う", "wait": "保留", "avoid": "やめる" },
+    "closings": {
+      "buy": "わかった。君の選択だ。👌",
+      "wait": "48時間。まだ覚えていたら、本当に欲しいものだ。",
+      "avoid": "あなたのものとして残った。🌿"
+    },
+    "scenarios": [
+      { "label": "ヘッドホン、3万円", "turns": [
+        { "role": "me", "text": "新しいヘッドホン、3万円" },
+        { "role": "ai", "text": "3万円はけっこうな金額だね。今使っているヘッドホンの、何が不満？" },
+        { "role": "me", "text": "まだ使えるけど、もう3年目" },
+        { "role": "ai", "text": "ちゃんと使えているなら、一度立ち止まるいい理由になるね。あと数か月今のを使うとしたら、何が困る？" }
+      ]},
+      { "label": "ジャケット、40%オフ", "turns": [
+        { "role": "me", "text": "ジャケット、40%オフ" },
+        { "role": "ai", "text": "40%オフはお得に感じるよね。もし定価だったら、それでも欲しい？" },
+        { "role": "me", "text": "正直、たぶん買わない" },
+        { "role": "ai", "text": "じゃあ、欲しい気持ちの一部はセールが作っているのかも。手持ちの服で足りないところを、このジャケットが埋めてくれる？" }
+      ]},
+      { "label": "ライブのチケット、1万5千円", "turns": [
+        { "role": "me", "text": "ライブのチケット、1万5千円" },
+        { "role": "ai", "text": "楽しみな予定だね。ずっと見たかったアーティスト？" },
+        { "role": "me", "text": "16歳のときから。8年ぶりのツアー" },
+        { "role": "ai", "text": "何年も続いている気持ちなら、その場の気分じゃないね。1万5千円、今月ほかを削らずに出せる？" }
+      ]}
+    ]
+  }
+  </script>
+
+  <div class="facts">
+    <ul class="wrap" aria-label="ひと目でわかる">
+      <li>アカウント不要</li>
+      <li>広告なし</li>
+      <li>トラッキングなし</li>
+      <li>ひとつのサブスクで iPhone・iPad</li>
+      <li>日本語 · English · Ελληνικά</li>
+    </ul>
+  </div>
+
+  <section class="chapter" id="how" aria-labelledby="ch1">
+    <div class="wrap">
+      <div class="chapter-head">
+        <div><h2 id="ch1">話すだけで、<span class="voice">記録。</span></h2></div>
+        <p>「コーヒー500」と話すか入力するだけ。金額を読み取り、カテゴリを選んで保存します。一度カテゴリを直せば、次からはそれを覚えています。</p>
+      </div>
+      <div class="split">
+        <ul class="points">
+          <li>
+            <span class="dot" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></span>
+            <h3>声でもテキストでも、数秒で</h3>
+            <p>「万」や漢数字、全角の数字もそのまま読み取ります。</p>
+          </li>
+          <li>
+            <span class="dot" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h10M4 18h6"/></svg></span>
+            <h3>25 のカテゴリと、自分のカテゴリ</h3>
+            <p>好きな絵文字とキーワードで、自分だけのカテゴリを作れます。</p>
+          </li>
+          <li>
+            <span class="dot" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="8" rx="2"/><rect x="3" y="13" width="18" height="8" rx="2"/></svg></span>
+            <h3>ウィジェットとロック画面</h3>
+            <p>今日の合計がひと目でわかり、タップひとつで声で記録できます。</p>
+          </li>
+        </ul>
+        <div class="phones">
+          <div class="phone">
+            <img src="/assets/img/ja-03-now-400.webp" srcset="/assets/img/ja-03-now-400.webp 400w, /assets/img/ja-03-now-800.webp 800w" sizes="300px" width="400" height="869" loading="lazy" decoding="async" alt="hustless の「いま」画面。今日の合計 ¥5,830、マイクボタン、スーパー・ランチ・ラテなど最近の支出。">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="chapter" aria-labelledby="ch2">
+    <div class="wrap">
+      <div class="chapter-head">
+        <div><h2 id="ch2">うっかり請求を、<span class="voice">なくす。</span></h2></div>
+        <p>サブスクや家賃・公共料金・ローンなどの固定費を、それぞれの請求サイクルで登録。支払いの前にお知らせし、ちゃんと使ったかも聞いてくれます。</p>
+      </div>
+      <div class="split flip">
+        <ul class="points">
+          <li>
+            <span class="dot" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></span>
+            <h3>好きなタイミングでリマインド</h3>
+            <p>1・3・5・7・14・30 日前から選べて、時刻も指定でき、スヌーズも可能。</p>
+          </li>
+          <li>
+            <span class="dot" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01"/></svg></span>
+            <h3>「今月ちゃんと使った？」</h3>
+            <p>使っていないサブスクは、次の請求の前に解約を思い出させてくれます。</p>
+          </li>
+          <li>
+            <span class="dot" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+            <h3>「支払いましたか？」</h3>
+            <p>支払日が過ぎたら、タップひとつで履歴に記録します。</p>
+          </li>
+        </ul>
+        <div class="stack" aria-label="リマインダーの例">
+          <div class="notif">
+            <img class="icon" src="/apple-touch-icon.png" alt="" width="42" height="42" loading="lazy">
+            <b>サブスク <span class="when">今</span></b>
+            <p class="muted">動画配信</p>
+            <p>今月使った？サブスクはあと 3 日で更新されます。</p>
+          </div>
+          <div class="notif">
+            <img class="icon" src="/apple-touch-icon.png" alt="" width="42" height="42" loading="lazy">
+            <b>支払い <span class="when">9:00</span></b>
+            <p class="muted">家賃</p>
+            <p>5 日後に支払い · ¥85,000</p>
+          </div>
+          <div class="bills">
+            <h3>固定費</h3>
+            <ul>
+              <li><span>クラウドストレージ</span><span>¥400</span></li>
+              <li><span>ジム</span><span>¥7,700</span></li>
+              <li><span>電気</span><span>¥9,800</span></li>
+              <li class="total"><span>毎月の合計</span><span>¥128,600</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="chapter" aria-labelledby="ch3">
+    <div class="wrap">
+      <div class="chapter-head">
+        <div><h2 id="ch3">お金の行き先が、<span class="voice">見える。</span></h2></div>
+        <p>時間の推移、カテゴリ、一日のリズム、曜日や天気によるパターン。そして、あなた自身の支出だけをもとにした短い AI インサイト。</p>
+      </div>
+      <div class="bento">
+        <article class="tile big">
+          <div>
+            <h3>6 つの面をもつ分析</h3>
+            <p>キューブをスワイプしてグラフを切り替え。棒をタップすると中身が見られます。</p>
+          </div>
+          <div class="phone">
+            <img src="/assets/img/ja-04-insights-400.webp" srcset="/assets/img/ja-04-insights-400.webp 400w, /assets/img/ja-04-insights-800.webp 800w" sizes="260px" width="400" height="869" loading="lazy" decoding="async" alt="分析画面。月の合計、1 日あたりの金額、週ごとの棒グラフ。">
+          </div>
+        </article>
+        <article class="tile wide dark">
+          <div>
+            <p class="insight-label">AI インサイト · 気づいたこと</p>
+            <p class="insight-quote">「月曜がいちばん使う日で、夜の支出が月の大半を占めています。月曜の夜、何がピークにつながっているのでしょう？」</p>
+          </div>
+          <p class="insight-foot"><span>わかった</span><span>あなたの支出だけをもとに</span></p>
+        </article>
+        <article class="tile wide">
+          <h3>ひと月が見えるカレンダー</h3>
+          <p>使った金額に応じて毎日が色分けされます。基準は自分で設定できます。</p>
+          <div class="heat" aria-hidden="true">
+            <i class="l5"></i><i class="l1"></i><i class="l2"></i><i class="l5"></i><i class="l1"></i><i class="l1"></i><i class="l3"></i>
+            <i class="l5"></i><i class="l4"></i><i class="l2"></i><i class="l1"></i><i></i><i class="l5"></i><i class="l2"></i>
+            <i class="l2"></i><i class="l1"></i><i class="l5"></i><i class="l2"></i><i class="l3"></i><i class="l1"></i><i></i>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="chapter" id="devices" aria-labelledby="ch-devices">
+    <div class="wrap">
+      <div class="chapter-head">
+        <div>
+          <h2 id="ch-devices">ひとつのサブスクで、<span class="voice">iPhone も iPad も。</span></h2>
+        </div>
+        <p>一度ダウンロードすれば、どちらでも使えます。支出・リマインダー・カテゴリは自分の iCloud で同期。追加料金はかかりません。</p>
+      </div>
+      <div class="split">
+        <ul class="points">
+          <li>
+            <span class="dot" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12a9 9 0 0 1-15.5 6.2M3 12a9 9 0 0 1 15.5-6.2M18.5 2v4h-4M5.5 22v-4h4"/></svg></span>
+            <h3>iPhone で記録、iPad で確認</h3>
+            <p>どちらかで支出を追加すると、数秒でもう一方にも表示されます。</p>
+          </li>
+          <li>
+            <span class="dot" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></span>
+            <h3>サブスクはひとつで、両方に</h3>
+            <p>Apple アカウントで一度登録すれば、iPhone と iPad の両方で使えます。</p>
+          </li>
+          <li>
+            <span class="dot" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17.5 19a4.5 4.5 0 1 0-1.4-8.8 6 6 0 0 0-11.6 2.3A3.5 3.5 0 0 0 6 19z"/></svg></span>
+            <h3>自分の iCloud で、自分で選ぶ</h3>
+            <p>同期はあなた専用の iCloud で行われます。1 台だけで使いたいときは、アプリでオフにできます。</p>
+          </li>
+        </ul>
+        <div class="devices" role="img" aria-label="hustless の分析を表示した iPad と、その手前の iPhone。iPhone で追加したラテ ¥480 が、すぐに iPad にも表示されます。">
+          <div class="tablet">
+            <img src="/assets/img/ipad-ja-insights-560.webp" srcset="/assets/img/ipad-ja-insights-560.webp 560w, /assets/img/ipad-ja-insights-1120.webp 1120w" sizes="(max-width: 860px) 80vw, 500px" width="560" height="746" loading="lazy" decoding="async" alt="">
+          </div>
+          <div class="phone">
+            <img src="/assets/img/ja-03-now-400.webp" sizes="200px" width="400" height="869" loading="lazy" decoding="async" alt="">
+          </div>
+          <svg class="sync-arc" viewBox="0 0 100 120" aria-hidden="true"><path d="M14 68 Q26 24 60 26"/></svg>
+          <span class="sync-label" aria-hidden="true">iCloud</span>
+          <span class="sync-chip from" aria-hidden="true"><small>iPhone で追加</small><b>ラテ · ¥480</b></span>
+          <span class="sync-chip to" aria-hidden="true"><small>すぐに iPad にも</small><b>ラテ · ¥480</b></span>
+          <span class="sync-dot" aria-hidden="true"></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="chapter" aria-labelledby="ch4">
+    <div class="wrap">
+      <div class="chapter-head">
+        <div><h2 id="ch4">買う<span class="voice">前</span>の、その瞬間のために。</h2></div>
+      </div>
+      <ul class="who">
+        <li><span>—</span>ついその場で買って、一週間後に後悔してしまう。</li>
+        <li><span>—</span>ノーバイ・ノースペンドに挑戦中で、迷った瞬間に支えがほしい。</li>
+        <li><span>—</span>サブスクの数がわからなくなり、使っていないものにも払っている。</li>
+        <li><span>—</span>厳しい予算や罪悪感なしで、もっと賢くお金を使いたい。</li>
+        <li><span>—</span>表計算ソフトより、話しながら考えたい。</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="manifesto" id="privacy" aria-labelledby="privacy-heading">
+    <div class="wrap">
+      <h2 class="big" id="privacy-heading">あなたの支出は、<span class="voice">あなたのもの。</span>私たちのものでも、広告主のものでもありません。</h2>
+      <div class="cols">
+        <p><b>アカウント不要、広告なし、トラッキングなし。</b>開いたらすぐに使えます。登録は何もいりません。</p>
+        <p><b>データは端末の中に。</b>支出は iPhone と iPad に保存され、希望すれば自分の iCloud だけで同期されます。</p>
+        <p><b>AI には必要な分だけ。</b>会話がサーバーに保存されることはありません。<a href="/privacy.html#ja">プライバシーポリシー</a>をご覧ください。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="chapter" id="pricing" aria-labelledby="pricing-heading">
+    <div class="wrap">
+      <div class="price-card">
+        <div>
+          <h3 id="pricing-heading">まずは 7 日間無料。</h3>
+          <ul>
+            <li>トライアルには AI との会話 5 回と、1 日 5 回までの AI 分析が含まれます。</li>
+            <li>その後は月額または年額。Apple アカウントの設定からいつでもキャンセルできます。</li>
+            <li>価格は国・地域ごとに App Store に表示されます。</li>
+          </ul>
+          <p class="plan-note"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>ひとつのサブスクで、iPhone と iPad の両方が使えます。</p>
+        </div>
+        <div class="plans">
+          <div class="plan"><small>プラン</small><b>月額</b></div>
+          <div class="plan best"><small>プラン</small><b>年額</b><em>2 か月分お得</em></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="chapter" id="faq" aria-labelledby="faq-heading">
+    <div class="wrap">
+      <div class="chapter-head">
+        <div><h2 id="faq-heading">よくある質問</h2></div>
+      </div>
+      <div class="faq">
+        <article class="qa">
+          <h3>hustless とは？</h3>
+          <p>衝動買いを防ぐための、iPhone・iPad 向け AI コーチ兼家計簿アプリです。買おうとしているものを伝えると、短い問いかけをひとつずつ返し、本当に欲しいかどうかを自分で決められるようにします。声やテキストで支出を記録し、サブスクや固定費の支払い前にお知らせし、お金の行き先を見える化します。</p>
+        </article>
+        <article class="qa">
+          <h3>普通の家計簿アプリと何が違う？</h3>
+          <p>守るべき予算も、罪悪感もありません。支出や固定費の記録もできますが、いちばん大切にしているのは「買う前の瞬間」。あなたにとって価値あるものを選べるようにすることです。</p>
+        </article>
+        <article class="qa">
+          <h3>AI が買うものを決めるの？</h3>
+          <p>いいえ。商品やお店、ブランドをすすめることはなく、指示もしません。問いかけるだけで、決めるのはいつもあなたです。</p>
+        </article>
+        <article class="qa">
+          <h3>衝動買いはどう防げる？</h3>
+          <p>衝動買いは一瞬で起こります。hustless はそこに短い「間」をつくります。なぜ欲しいのか、もう持っていないか、今月の予定に合うか。保留を選んだら、48 時間待ってみることをすすめます。まだ覚えていたら、本当に欲しいものです。</p>
+        </article>
+        <article class="qa">
+          <h3>データは安全？</h3>
+          <p>アカウント不要、広告なし、トラッキングなし。支出データはあなたの端末に保存され、オンにすれば自分の iCloud で同期されます。AI 機能は回答に必要な情報だけを送信し、会話がサーバーに保存されることはありません。</p>
+        </article>
+        <article class="qa">
+          <h3>料金は？</h3>
+          <p>App Store の 7 日間無料トライアルから始められます。その後は月額または年額プラン。お住まいの国・地域の価格は App Store に表示されます。現在の期間が終わる 24 時間前までにキャンセルしない限り、自動的に更新されます。</p>
+        </article>
+        <article class="qa">
+          <h3>iPhone と iPad で別々に支払う必要はある？</h3>
+          <p>いいえ。hustless は iPhone と iPad の両方に対応したひとつのアプリで、サブスクは Apple アカウントに紐づきます。一度登録すれば両方で使え、データは自分の iCloud で同期されます。</p>
+        </article>
+        <article class="qa">
+          <h3>対応端末と言語は？</h3>
+          <p>iOS・iPadOS 18 以降の iPhone と iPad。iCloud で同期できます。日本語・英語・ギリシャ語に対応し、ライト／ダークモード、文字サイズの調整にも対応しています。</p>
+        </article>
+        <article class="qa">
+          <h3>解約するには？</h3>
+          <p>アプリの「あなた」→「アカウント」→「サブスクリプションを管理」、または iPhone の「設定」→ 自分の名前 →「サブスクリプション」から。詳しくは<a href="/support.html#ja">サポートページ</a>へ。</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="final" aria-labelledby="final-heading">
+    <div class="wrap">
+      <h2 id="final-heading">価値あるものを、<span class="voice">買おう。</span></h2>
+      <div class="get">
+        <span class="store-btn when-soon" role="note" aria-disabled="true">
+          <span><small>まもなく登場</small><b>App Store</b></span>
+        </span>
+        <a class="when-live" href="https://apps.apple.com/jp/app/id6826845830?ct=landing-ja-footer">
+          <picture>
+            <source srcset="/assets/img/badge-ja-jp-white.svg" media="(prefers-color-scheme: dark)">
+            <img src="/assets/img/badge-ja-jp-black.svg" alt="App Store からダウンロード" width="150" height="50">
+          </picture>
+        </a>
+        <div class="qr">
+          <img class="qr-code" src="/assets/img/qr.svg" alt="App Store の hustless を開く QR コード" width="76" height="76" loading="lazy">
+          <span>iPhone のカメラで読み取ってください。</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <a class="wordmark" href="/ja/" aria-label="hustless ホーム"><b>hust</b><span>less</span></a>
+    <nav aria-label="フッター">
+      <a href="/privacy.html#ja">プライバシーポリシー</a>
+      <a href="/support.html#ja">サポート</a>
+      <a href="/" hreflang="en" lang="en">English</a>
+    </nav>
+    <p class="maker">hustless は、ギリシャの個人開発者がつくっています。ご質問やご意見は <a href="mailto:hustless.support@gmail.com">hustless.support@gmail.com</a> まで。<time datetime="2026-10-31">2026年10月</time>更新。</p>
+    <span>© 2026 hustless. Apple、iPhone、iPad は Apple Inc. の商標です。</span>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,29 @@
+# hustless
+
+> hustless is an AI spending coach for iPhone and iPad that helps people stop impulse buying. Before a purchase, the user tells the app what they want to buy and the AI asks one short, calm question at a time, so they can tell a real want from a passing one. It never recommends products and never tells the user what to do. The app also logs spending by voice or text, reminds the user before subscriptions and bills, and shows where their money goes.
+
+## Key facts
+
+- Platforms: iPhone and iPad, iOS / iPadOS 18 or later. One app and one subscription cover both devices (the subscription belongs to the user's Apple ID; no extra cost for iPad). Data syncs through the user's own private iCloud (optional, can be turned off).
+- Languages: English, Japanese, Greek.
+- App Store name: "hustless: Stop Impulse Buying" (Japanese: 「hustless: 衝動買い防止とAI家計簿」). App Store ID 6826845830. Category: Finance. Age rating 18+.
+- Price: 7-day free trial through the App Store, then $3.49/month or $34.99/year in the United States; local prices in the App Store. The trial includes 5 AI conversations and up to 5 AI insights a day.
+- Availability: 145 countries and regions; not yet in the European Union. Launching on the App Store soon.
+- Privacy: no account, no ads, no tracking. Expenses stay on the user's devices. Only the AI features send what they need to answer; conversations are not stored on the server.
+- Features: AI "I'm here" coach before purchases; voice and text expense logging with 25 categories plus custom ones; reminders 1–30 days before each subscription or bill, with an "Did you use it this month?" question for subscriptions; insights (trends, categories, time of day, weekday and weather patterns, AI insights); calendar heat map; Home Screen and Lock Screen widgets.
+- Who it is for: people who buy on impulse and regret it, people doing a no-spend or no-buy challenge, people who lost track of their subscriptions, and anyone who wants to spend mindfully without a strict budget.
+
+## Pages
+
+- [Home (English)](https://hustless-app.github.io/): overview, example conversation, pricing, FAQ
+- [ホーム (日本語)](https://hustless-app.github.io/ja/): 日本語の概要とよくある質問
+- [Support](https://hustless-app.github.io/support.html): cancelling, restoring purchases, fair-use limits, contact
+- [Privacy Policy](https://hustless-app.github.io/privacy.html): what data is processed and why
+
+## About
+
+hustless is made by an independent developer in Greece. Last updated: 2026-10-31.
+
+## Contact
+
+hustless.support@gmail.com

@@ -1,20 +1,636 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-store="soon">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>hustless</title>
-<meta name="description" content="hustless — the friend who asks before you buy.">
-<link rel="stylesheet" href="style.css">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'none'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+
+<title>hustless — Stop Impulse Buying · AI Spending Coach for iPhone</title>
+<meta name="description" content="hustless is an AI spending coach for iPhone and iPad. Before you buy, it asks one calm question at a time. Log spending by voice and track every subscription and bill.">
+<link rel="canonical" href="https://hustless-app.github.io/">
+<link rel="alternate" hreflang="en" href="https://hustless-app.github.io/">
+<link rel="alternate" hreflang="ja" href="https://hustless-app.github.io/ja/">
+<link rel="alternate" hreflang="x-default" href="https://hustless-app.github.io/">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="theme-color" content="#f5f0e8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#15120f" media="(prefers-color-scheme: dark)">
+<meta name="apple-itunes-app" content="app-id=6826845830">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="hustless">
+<meta property="og:title" content="hustless — Pause before you buy">
+<meta property="og:description" content="An AI coach that asks one question at a time before you buy. Voice expense logging, subscription and bill reminders, private by design.">
+<meta property="og:url" content="https://hustless-app.github.io/">
+<meta property="og:image" content="https://hustless-app.github.io/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="hustless — Pause before you buy. An AI spending coach for iPhone.">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preload" href="/assets/fonts/jakarta-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/landing.css">
+<script src="/assets/early.js"></script>
+<script src="/assets/demo.js" defer></script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://hustless-app.github.io/#page",
+      "url": "https://hustless-app.github.io/",
+      "name": "hustless — Stop Impulse Buying · AI Spending Coach for iPhone",
+      "inLanguage": "en",
+      "isPartOf": {
+        "@id": "https://hustless-app.github.io/#site"
+      },
+      "about": {
+        "@id": "https://hustless-app.github.io/#app"
+      },
+      "publisher": {
+        "@id": "https://hustless-app.github.io/#org"
+      },
+      "datePublished": "2026-10-31",
+      "dateModified": "2026-10-31",
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://hustless-app.github.io/og.png",
+        "width": 1200,
+        "height": 630
+      }
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://hustless-app.github.io/#org",
+      "name": "hustless",
+      "url": "https://hustless-app.github.io/",
+      "logo": "https://hustless-app.github.io/apple-touch-icon.png",
+      "email": "hustless.support@gmail.com",
+      "description": "hustless is made by an independent developer in Greece.",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "GR"
+      }
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://hustless-app.github.io/#site",
+      "url": "https://hustless-app.github.io/",
+      "name": "hustless",
+      "inLanguage": [
+        "en",
+        "ja"
+      ],
+      "publisher": {
+        "@id": "https://hustless-app.github.io/#org"
+      }
+    },
+    {
+      "@type": "MobileApplication",
+      "@id": "https://hustless-app.github.io/#app",
+      "name": "hustless: Stop Impulse Buying",
+      "alternateName": "hustless",
+      "description": "An AI spending coach for iPhone and iPad. Before a purchase it asks one calm question at a time, so you can tell a real want from a passing one. It also logs spending by voice, reminds you before every subscription and bill, and shows where your money goes.",
+      "operatingSystem": "iOS 18.0 or later, iPadOS 18.0 or later",
+      "applicationCategory": "FinanceApplication",
+      "applicationSubCategory": "Mindful spending",
+      "inLanguage": [
+        "en",
+        "el",
+        "ja"
+      ],
+      "contentRating": "18+",
+      "url": "https://hustless-app.github.io/",
+      "installUrl": "https://apps.apple.com/app/id6826845830",
+      "publisher": {
+        "@id": "https://hustless-app.github.io/#org"
+      },
+      "featureList": [
+        "AI coach that asks one question at a time before you buy",
+        "Never recommends products",
+        "Voice and text expense logging",
+        "Reminders before subscriptions and bills",
+        "Spending insights and calendar heat map",
+        "Home Screen and Lock Screen widgets",
+        "No account, no ads, no tracking",
+        "One subscription for iPhone and iPad",
+        "Optional sync through the user's own iCloud"
+      ],
+      "offers": [
+        {
+          "@type": "Offer",
+          "name": "Monthly",
+          "price": "3.49",
+          "priceCurrency": "USD",
+          "category": "subscription"
+        },
+        {
+          "@type": "Offer",
+          "name": "Yearly",
+          "price": "34.99",
+          "priceCurrency": "USD",
+          "category": "subscription"
+        }
+      ],
+      "screenshot": [
+        "https://hustless-app.github.io/assets/img/03-now-800.webp",
+        "https://hustless-app.github.io/assets/img/04-insights-800.webp",
+        "https://hustless-app.github.io/assets/img/06-calendar-800.webp",
+        "https://hustless-app.github.io/assets/img/ipad-en-insights-1120.webp"
+      ],
+      "image": "https://hustless-app.github.io/og.png",
+      "dateModified": "2026-10-31"
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://hustless-app.github.io/#faq",
+      "inLanguage": "en",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is hustless?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "hustless is an AI spending coach for iPhone and iPad that helps you stop impulse buying. When you are about to buy something, you tell it what it is, and it asks one short question at a time so you can decide whether you really want it. It also logs spending by voice or text, reminds you before subscriptions and bills, and shows where your money goes."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does the AI tell me what to buy?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. It never recommends products, shops or brands, and it never tells you what to do. It asks questions, and when you decide, it respects your choice."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does hustless help with impulse buying?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It adds a short pause before a purchase: a few calm questions about why you want the item, what you already have and whether it fits. If you choose to wait, it suggests giving it 48 hours."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my data private?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. There is no account, no ads and no tracking. Expenses stay on your devices and can sync through your own private iCloud. Only the AI features send what they need to answer, and conversations are not stored on the server."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much does hustless cost?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A 7-day free trial through the App Store, then $3.49 a month or $34.99 a year in the United States. Prices in other countries are shown in the App Store."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do I pay separately for iPhone and iPad?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. hustless is one app for iPhone and iPad, and the subscription belongs to your Apple ID. Subscribe once and it works on both, with your data in sync through your own iCloud."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which devices and languages are supported?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "iPhone and iPad with iOS or iPadOS 18 or later, in English, Greek and Japanese."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 </head>
 <body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="wordmark" href="/" aria-label="hustless home"><b>hust</b><span>less</span></a>
+    <nav class="site-nav" aria-label="Main navigation">
+      <a class="optional" href="#how">How it works</a>
+      <a class="optional" href="#privacy">Privacy</a>
+      <a class="optional" href="#faq">FAQ</a>
+      <a class="lang" href="/ja/" hreflang="ja" lang="ja">日本語</a>
+    </nav>
+  </div>
+</header>
+
 <main>
-  <p class="wordmark"><b>hust</b><span>less</span></p>
-  <p class="subtitle">The friend who asks before you buy.</p>
-  <nav class="langs" aria-label="Pages">
-    <a href="privacy.html">Privacy Policy</a>
-    <a href="support.html">Support</a>
-  </nav>
+  <section class="hero" aria-labelledby="hero-heading">
+    <div class="wrap">
+      <div>
+        <h1 id="hero-heading">Pause <span class="voice">before</span> you buy.</h1>
+        <p class="lead">hustless is an AI spending coach for iPhone — the friend who asks before you buy. <strong>One calm question at a time</strong>, so you can tell a real want from a passing one. No judgment, no deprivation — the choice is always yours.</p>
+
+        <div class="get">
+          <span class="store-btn when-soon" role="note" aria-disabled="true">
+            <span><small>Coming soon to the</small><b>App Store</b></span>
+          </span>
+          <a class="when-live" href="https://apps.apple.com/app/id6826845830?ct=landing-hero">
+            <picture>
+              <source srcset="/assets/img/badge-en-us-white.svg" media="(prefers-color-scheme: dark)">
+              <img src="/assets/img/badge-en-us-black.svg" alt="Download on the App Store" width="150" height="50">
+            </picture>
+          </a>
+          <div class="qr">
+            <img class="qr-code" src="/assets/img/qr.svg" alt="QR code that opens hustless on the App Store" width="76" height="76">
+            <span>Scan with your iPhone camera to get the app.</span>
+          </div>
+        </div>
+        <p class="fine-print">7-day free trial · One subscription for iPhone &amp; iPad · iOS 18 or later</p>
+      </div>
+
+      <figure class="demo-figure">
+        <div class="demo" data-demo>
+          <div class="demo-bar" aria-hidden="true">
+            <svg class="x" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+            <span class="wordmark"><b>hust</b><span>less</span></span>
+            <span></span>
+          </div>
+          <ol class="demo-log is-pending" aria-live="polite" aria-label="Example conversation">
+            <li class="msg me">New headphones, $249</li>
+            <li class="msg ai">$249 is a real chunk of money, so let’s make sure this one is worth it. What’s wrong with the headphones you’re using right now?</li>
+            <li class="msg me">Mine still work, they’re just 3 years old</li>
+            <li class="msg ai">Three years is not old, and working headphones are a good reason to pause. What would you actually miss if you kept your current pair for another few months?</li>
+          </ol>
+          <div class="demo-decide">
+            <p>What did you decide?</p>
+            <div class="decide-row">
+              <button type="button" data-choice="buy">buy it</button>
+              <button type="button" data-choice="wait">wait</button>
+              <button type="button" data-choice="avoid">avoid</button>
+            </div>
+          </div>
+          <div class="demo-picker">
+            <p>Try it — what are you thinking of buying?</p>
+            <div class="picks">
+              <button type="button" aria-pressed="true">New headphones, $249</button>
+              <button type="button" aria-pressed="false">Jacket, 40% off</button>
+              <button type="button" aria-pressed="false">Concert tickets, $120</button>
+            </div>
+          </div>
+        </div>
+        <figcaption>An example conversation. In the app, the AI writes each question for your situation — and never tells you what to buy.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <script type="application/json" id="demo-data">
+  {
+    "decisionLabels": { "buy": "buy it", "wait": "wait", "avoid": "avoid" },
+    "closings": {
+      "buy": "Okay. Your call. 👌",
+      "wait": "48 hours. If you still remember it, you probably want it.",
+      "avoid": "It stays yours. 🌿"
+    },
+    "scenarios": [
+      { "label": "New headphones, $249", "turns": [
+        { "role": "me", "text": "New headphones, $249" },
+        { "role": "ai", "text": "$249 is a real chunk of money, so let’s make sure this one is worth it. What’s wrong with the headphones you’re using right now?" },
+        { "role": "me", "text": "Mine still work, they’re just 3 years old" },
+        { "role": "ai", "text": "Three years is not old, and working headphones are a good reason to pause. What would you actually miss if you kept your current pair for another few months?" }
+      ]},
+      { "label": "Jacket, 40% off", "turns": [
+        { "role": "me", "text": "A jacket, 40% off" },
+        { "role": "ai", "text": "40% off feels like a win. If it were full price, would you still want it?" },
+        { "role": "me", "text": "Probably not, honestly" },
+        { "role": "ai", "text": "Then the sale might be doing some of the wanting. Is there a gap in your wardrobe this jacket fills?" }
+      ]},
+      { "label": "Concert tickets, $120", "turns": [
+        { "role": "me", "text": "Concert tickets, $120" },
+        { "role": "ai", "text": "That sounds like something to look forward to. Is this a band you’ve wanted to see for a while?" },
+        { "role": "me", "text": "Since I was 16. First tour in 8 years" },
+        { "role": "ai", "text": "So this want has lasted years, not minutes. Does $120 fit this month without stretching anything else?" }
+      ]}
+    ]
+  }
+  </script>
+
+  <div class="facts">
+    <ul class="wrap" aria-label="At a glance">
+      <li>No account</li>
+      <li>No ads</li>
+      <li>No tracking</li>
+      <li>One subscription · iPhone &amp; iPad</li>
+      <li>English · Ελληνικά · 日本語</li>
+    </ul>
+  </div>
+
+  <section class="chapter" id="how" aria-labelledby="ch1">
+    <div class="wrap">
+      <div class="chapter-head">
+        <div>
+          <h2 id="ch1">Say it. <span class="voice">Logged.</span></h2>
+        </div>
+        <p>Say “5 coffee” or type it. hustless reads the amount, picks the category and saves it. Fix a category once and it remembers next time.</p>
+      </div>
+      <div class="split">
+        <ul class="points">
+          <li>
+            <span class="dot" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></span>
+            <h3>Voice or text, in seconds</h3>
+            <p>Numbers in words, decimals and thousands are understood the way you say them.</p>
+          </li>
+          <li>
+            <span class="dot" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h10M4 18h6"/></svg></span>
+            <h3>25 categories, plus your own</h3>
+            <p>Make categories with any emoji and your own keywords.</p>
+          </li>
+          <li>
+            <span class="dot" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="8" rx="2"/><rect x="3" y="13" width="18" height="8" rx="2"/></svg></span>
+            <h3>Widget and Lock Screen</h3>
+            <p>Today’s total at a glance, and one tap to log by voice.</p>
+          </li>
+        </ul>
+        <div class="phones">
+          <div class="phone">
+            <img src="/assets/img/03-now-400.webp" srcset="/assets/img/03-now-400.webp 400w, /assets/img/03-now-800.webp 800w" sizes="300px" width="400" height="869" loading="lazy" decoding="async" alt="The hustless Now screen: today’s total of $61.84, a microphone button and recent expenses for groceries, lunch and a latte.">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="chapter" aria-labelledby="ch2">
+    <div class="wrap">
+      <div class="chapter-head">
+        <div>
+          <h2 id="ch2">No surprise <span class="voice">bills.</span></h2>
+        </div>
+        <p>Add every subscription and fixed cost with its own billing cycle. hustless reminds you before each payment — and asks if you actually used it.</p>
+      </div>
+      <div class="split flip">
+        <ul class="points">
+          <li>
+            <span class="dot" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></span>
+            <h3>Reminders when you choose</h3>
+            <p>1, 3, 5, 7, 14 or 30 days before, at the time you pick, with snooze.</p>
+          </li>
+          <li>
+            <span class="dot" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01"/></svg></span>
+            <h3>One honest question</h3>
+            <p>Didn’t use a subscription this month? You’ll hear about it before the next charge.</p>
+          </li>
+          <li>
+            <span class="dot" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+            <h3>“Did you pay this?”</h3>
+            <p>When a due date passes, one tap logs the payment in your history.</p>
+          </li>
+        </ul>
+        <div class="stack" aria-label="Example reminders">
+          <div class="notif">
+            <img class="icon" src="/apple-touch-icon.png" alt="" width="42" height="42" loading="lazy">
+            <b>Subscription <span class="when">now</span></b>
+            <p class="muted">Streaming</p>
+            <p>Did you use it this month? Your subscription expires in 3 days.</p>
+          </div>
+          <div class="notif">
+            <img class="icon" src="/apple-touch-icon.png" alt="" width="42" height="42" loading="lazy">
+            <b>Payment <span class="when">9:00</span></b>
+            <p class="muted">Rent</p>
+            <p>Payment in 5 days · $1,450.00</p>
+          </div>
+          <div class="bills">
+            <h3>Fixed expenses</h3>
+            <ul>
+              <li><span>Cloud storage</span><span>$2.99</span></li>
+              <li><span>Gym</span><span>$39.00</span></li>
+              <li><span>Electricity</span><span>$85.00</span></li>
+              <li class="total"><span>Every month</span><span>$1,952.48</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="chapter" aria-labelledby="ch3">
+    <div class="wrap">
+      <div class="chapter-head">
+        <div>
+          <h2 id="ch3">See where it <span class="voice">really</span> goes.</h2>
+        </div>
+        <p>Trends, categories, the rhythm of your days, patterns by weekday and weather — and short AI insights based only on your own spending.</p>
+      </div>
+      <div class="bento">
+        <article class="tile big">
+          <div>
+            <h3>Insights in six views</h3>
+            <p>Swipe through a cube of charts. Tap any bar to see what’s inside it.</p>
+          </div>
+          <div class="phone">
+            <img src="/assets/img/04-insights-400.webp" srcset="/assets/img/04-insights-400.webp 400w, /assets/img/04-insights-800.webp 800w" sizes="260px" width="400" height="869" loading="lazy" decoding="async" alt="The Insights screen: a monthly total of $1,950.86, $67.27 a day and a weekly bar chart.">
+          </div>
+        </article>
+        <article class="tile wide dark">
+          <div>
+            <p class="insight-label">AI insight · I noticed something</p>
+            <p class="insight-quote">“Monday is your heaviest day, and evenings carry most of the month. What happens on Monday evenings that makes it the peak?”</p>
+          </div>
+          <p class="insight-foot"><span>Got it</span><span>Based only on your own spending</span></p>
+        </article>
+        <article class="tile wide">
+          <h3>A calendar that shows the month</h3>
+          <p>Every day coloured by what you spent, with limits you set yourself.</p>
+          <div class="heat" aria-hidden="true">
+            <i class="l5"></i><i class="l1"></i><i class="l2"></i><i class="l5"></i><i class="l1"></i><i class="l1"></i><i class="l3"></i>
+            <i class="l5"></i><i class="l4"></i><i class="l2"></i><i class="l1"></i><i></i><i class="l5"></i><i class="l2"></i>
+            <i class="l2"></i><i class="l1"></i><i class="l5"></i><i class="l2"></i><i class="l3"></i><i class="l1"></i><i></i>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="chapter" id="devices" aria-labelledby="ch-devices">
+    <div class="wrap">
+      <div class="chapter-head">
+        <div>
+          <h2 id="ch-devices">One subscription. iPhone <span class="voice">and</span> iPad.</h2>
+        </div>
+        <p>Download once and use it on both. Your expenses, reminders and categories stay in sync through your own iCloud — at no extra cost.</p>
+      </div>
+      <div class="split">
+        <ul class="points">
+          <li>
+            <span class="dot" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12a9 9 0 0 1-15.5 6.2M3 12a9 9 0 0 1 15.5-6.2M18.5 2v4h-4M5.5 22v-4h4"/></svg></span>
+            <h3>Log on iPhone, see it on iPad</h3>
+            <p>Add an expense on one device and it shows up on the other within seconds.</p>
+          </li>
+          <li>
+            <span class="dot" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></span>
+            <h3>One subscription, both devices</h3>
+            <p>Subscribe once with your Apple ID. Your iPhone and your iPad are both included.</p>
+          </li>
+          <li>
+            <span class="dot" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17.5 19a4.5 4.5 0 1 0-1.4-8.8 6 6 0 0 0-11.6 2.3A3.5 3.5 0 0 0 6 19z"/></svg></span>
+            <h3>Your iCloud, your choice</h3>
+            <p>Sync runs through your own private iCloud. Prefer one device? Turn it off in the app.</p>
+          </li>
+        </ul>
+        <div class="devices" role="img" aria-label="An iPad showing hustless Insights, with an iPhone in front. A latte for $4.80 added on the iPhone appears on the iPad a moment later.">
+          <div class="tablet">
+            <img src="/assets/img/ipad-en-insights-560.webp" srcset="/assets/img/ipad-en-insights-560.webp 560w, /assets/img/ipad-en-insights-1120.webp 1120w" sizes="(max-width: 860px) 80vw, 500px" width="560" height="746" loading="lazy" decoding="async" alt="">
+          </div>
+          <div class="phone">
+            <img src="/assets/img/03-now-400.webp" sizes="200px" width="400" height="869" loading="lazy" decoding="async" alt="">
+          </div>
+          <svg class="sync-arc" viewBox="0 0 100 120" aria-hidden="true"><path d="M14 68 Q26 24 60 26"/></svg>
+          <span class="sync-label" aria-hidden="true">iCloud</span>
+          <span class="sync-chip from" aria-hidden="true"><small>Added on iPhone</small><b>Latte · $4.80</b></span>
+          <span class="sync-chip to" aria-hidden="true"><small>On iPad, a moment later</small><b>Latte · $4.80</b></span>
+          <span class="sync-dot" aria-hidden="true"></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="chapter" aria-labelledby="ch4">
+    <div class="wrap">
+      <div class="chapter-head">
+        <div>
+          <h2 id="ch4">Made for the moment <span class="voice">before.</span></h2>
+        </div>
+      </div>
+      <ul class="who">
+        <li><span>you</span>buy things on impulse and regret them a week later.</li>
+        <li><span>you</span>are doing a no-spend or no-buy challenge and want support in the moment.</li>
+        <li><span>you</span>lost count of your subscriptions and pay for ones you don’t use.</li>
+        <li><span>you</span>want to spend mindfully, without a strict budget or a guilt trip.</li>
+        <li><span>you</span>would rather talk a purchase through than open a spreadsheet.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="manifesto" id="privacy" aria-labelledby="privacy-heading">
+    <div class="wrap">
+      <h2 class="big" id="privacy-heading">Your spending is <span class="voice">yours.</span> Not ours, not an advertiser’s.</h2>
+      <div class="cols">
+        <p><b>No account, no ads, no tracking.</b>Open the app and start. Nothing to sign up for.</p>
+        <p><b>Stays on your devices.</b>Your expenses live on your iPhone and iPad, and sync only through your own iCloud — if you want.</p>
+        <p><b>AI sees only what it needs.</b>Conversations are not stored on our server. Read the <a href="/privacy.html">privacy policy</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="chapter" id="pricing" aria-labelledby="pricing-heading">
+    <div class="wrap">
+      <div class="price-card">
+        <div>
+          <h3 id="pricing-heading">Start with 7 days free.</h3>
+          <ul>
+            <li>The trial includes 5 AI conversations and up to 5 AI insights a day.</li>
+            <li>Then monthly or yearly. Cancel anytime in your Apple Account settings.</li>
+            <li>Prices shown in US dollars; your local price is shown in the App Store.</li>
+          </ul>
+          <p class="plan-note"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>One subscription covers your iPhone and your iPad.</p>
+        </div>
+        <div class="plans">
+          <div class="plan"><small>Monthly</small><b>$3.49</b></div>
+          <div class="plan best"><small>Yearly</small><b>$34.99</b><em>2 months free</em></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="chapter" id="faq" aria-labelledby="faq-heading">
+    <div class="wrap">
+      <div class="chapter-head">
+        <div><h2 id="faq-heading">Questions</h2></div>
+      </div>
+      <div class="faq">
+        <article class="qa">
+          <h3>What is hustless?</h3>
+          <p>hustless is an AI spending coach for iPhone and iPad that helps you stop impulse buying. When you are about to buy something, you tell it what it is, and it asks one short question at a time so you can decide whether you really want it. It also logs your spending by voice or text, reminds you before subscriptions and bills, and shows where your money goes.</p>
+        </article>
+        <article class="qa">
+          <h3>Is hustless a budgeting app?</h3>
+          <p>Not in the strict sense. There is no budget to stick to and no guilt. hustless tracks your spending and fixed costs, but its focus is the moment before a purchase: helping you buy what is worth it to you.</p>
+        </article>
+        <article class="qa">
+          <h3>Does the AI tell me what to buy?</h3>
+          <p>No. It never recommends products, shops or brands, and it never tells you what to do. It asks questions, and when you decide, it respects your choice.</p>
+        </article>
+        <article class="qa">
+          <h3>How does hustless help with impulse buying?</h3>
+          <p>Impulse purchases happen fast. hustless adds a short pause: a few calm questions about why you want the item, what you already have and whether it fits. If you choose to wait, it suggests giving it 48 hours — if you still remember it, you probably want it.</p>
+        </article>
+        <article class="qa">
+          <h3>Is my data private?</h3>
+          <p>Yes. There is no account, no ads and no tracking. Your expenses stay on your devices and, if you turn it on, sync through your own private iCloud. Only the AI features send what they need to answer, and conversations are not stored on our server.</p>
+        </article>
+        <article class="qa">
+          <h3>How much does hustless cost?</h3>
+          <p>It starts with a 7-day free trial through the App Store. After that it is $3.49 a month or $34.99 a year in the United States; prices in other countries are shown in the App Store. The subscription renews automatically unless you cancel at least 24 hours before the end of the current period.</p>
+        </article>
+        <article class="qa">
+          <h3>Do I pay separately for iPhone and iPad?</h3>
+          <p>No. hustless is one app for iPhone and iPad, and the subscription belongs to your Apple ID. Subscribe once and it works on both, with your data in sync through your own iCloud.</p>
+        </article>
+        <article class="qa">
+          <h3>Which devices and languages are supported?</h3>
+          <p>iPhone and iPad with iOS or iPadOS 18 or later, in sync through iCloud. The app is available in English, Greek and Japanese, with light and dark mode and adjustable text size.</p>
+        </article>
+        <article class="qa">
+          <h3>Where is hustless available?</h3>
+          <p>hustless is coming to the App Store in 145 countries and regions. It is not yet available in the European Union.</p>
+        </article>
+        <article class="qa">
+          <h3>How do I cancel?</h3>
+          <p>In the app, go to You → Account → Manage subscription, or on your iPhone open Settings → your name → Subscriptions. More help is on the <a href="/support.html">support page</a>.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="final" aria-labelledby="final-heading">
+    <div class="wrap">
+      <h2 id="final-heading">Buy what’s <span class="voice">worth it.</span></h2>
+      <div class="get">
+        <span class="store-btn when-soon" role="note" aria-disabled="true">
+          <span><small>Coming soon to the</small><b>App Store</b></span>
+        </span>
+        <a class="when-live" href="https://apps.apple.com/app/id6826845830?ct=landing-footer">
+          <picture>
+            <source srcset="/assets/img/badge-en-us-white.svg" media="(prefers-color-scheme: dark)">
+            <img src="/assets/img/badge-en-us-black.svg" alt="Download on the App Store" width="150" height="50">
+          </picture>
+        </a>
+        <div class="qr">
+          <img class="qr-code" src="/assets/img/qr.svg" alt="QR code that opens hustless on the App Store" width="76" height="76" loading="lazy">
+          <span>Scan with your iPhone camera.</span>
+        </div>
+      </div>
+    </div>
+  </section>
 </main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <a class="wordmark" href="/" aria-label="hustless home"><b>hust</b><span>less</span></a>
+    <nav aria-label="Footer">
+      <a href="/privacy.html">Privacy Policy</a>
+      <a href="/support.html">Support</a>
+      <a href="/ja/" hreflang="ja" lang="ja">日本語</a>
+    </nav>
+    <p class="maker">hustless is made by an independent developer in Greece. Questions or ideas? Write to <a href="mailto:hustless.support@gmail.com">hustless.support@gmail.com</a>. Updated <time datetime="2026-10-31">October 2026</time>.</p>
+    <span>© 2026 hustless. Apple, iPhone and iPad are trademarks of Apple Inc.</span>
+  </div>
+</footer>
+
 </body>
 </html>
