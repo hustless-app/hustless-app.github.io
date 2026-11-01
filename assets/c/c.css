@@ -249,3 +249,15 @@
 .cube-view:active { cursor: grabbing; }
 .cube-dots i { cursor: pointer; }
 @media (max-width: 860px) { .cube-scene { min-height: 0; padding-block: 0.5rem 0; } }
+
+/* ---------- short screens (phones in landscape): every device fits the viewport height ---------- */
+.demo-3d { width: min(540px, 100%, calc((100svh - 2.5rem) * 0.7667)); }
+.phones .phone.live { width: min(300px, 78vw, calc((100svh - 3rem) * 0.489)); }
+.rail { --rc-w: min(290px, 72vw, calc((100svh - 7rem) * 0.489)); }
+.devices[data-dvc] { max-width: min(620px, 100%, calc((100svh - 3rem) * 0.95)); }
+@media (orientation: landscape) and (max-height: 520px) {
+  .hero h1 { font-size: clamp(2.2rem, 1rem + 10vh, 4.2rem); }
+  .hero .lead { font-size: 1rem; }
+  .devices[data-dvc] { padding-top: 48px; }
+  .cube-phone { width: min(220px, calc((100svh - 2rem) * 0.46)); }
+}
