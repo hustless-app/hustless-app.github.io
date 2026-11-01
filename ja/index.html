@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ja" data-store="soon">
+<html lang="ja" data-variant="c" data-store="soon">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -33,9 +33,17 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<link rel="stylesheet" href="/assets/landing.css?v=20261031b">
-<script src="/assets/early.js?v=20261031b"></script>
-<script src="/assets/demo.js?v=20261031b" defer></script>
+<link rel="stylesheet" href="/assets/landing.css?v=20261101m">
+<link rel="stylesheet" href="/assets/scenes.css?v=20261101m">
+<link rel="stylesheet" href="/assets/c/c.css?v=20261101m">
+<script src="/assets/early.js?v=20261101m"></script>
+<script src="/assets/demo.js?v=20261101m" defer></script>
+<script src="/assets/live.js?v=20261101m" defer></script>
+<script src="/assets/vendor/gsap.min.js?v=3.13.0" defer></script>
+<script src="/assets/vendor/ScrollTrigger.min.js?v=3.13.0" defer></script>
+<script src="/assets/scenes.js?v=20261101m" defer></script>
+<script src="/assets/vendor/lenis.min.js?v=1.1.13" defer></script>
+<script src="/assets/c/c.js?v=20261101m" defer></script>
 
 <script type="application/ld+json">
 {
@@ -220,6 +228,7 @@
       </div>
 
       <figure class="demo-figure">
+        <div class="demo-3d">
         <div class="demo" data-demo>
           <div class="demo-bar" aria-hidden="true">
             <svg class="x" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
@@ -244,10 +253,14 @@
             <p>試してみて — 何を買おうと思ってる？</p>
             <div class="picks">
               <button type="button" aria-pressed="true">ヘッドホン、3万円</button>
+              <button type="button" aria-pressed="false">コーヒーメーカー、2万円</button>
               <button type="button" aria-pressed="false">ジャケット、40%オフ</button>
+              <button type="button" aria-pressed="false">どのヘッドホンがいい？</button>
+              <button type="button" aria-pressed="false">夜のデリバリー、3,200円</button>
               <button type="button" aria-pressed="false">ライブのチケット、1万5千円</button>
             </div>
           </div>
+        </div>
         </div>
         <figcaption>会話の例です。アプリでは、AI があなたの状況に合わせて問いかけます。何を買うべきかを指示することはありません。</figcaption>
       </figure>
@@ -256,31 +269,197 @@
 
   <script type="application/json" id="demo-data">
   {
-    "decisionLabels": { "buy": "買う", "wait": "保留", "avoid": "やめる" },
+    "decisionLabels": {
+      "buy": "買う",
+      "wait": "保留",
+      "avoid": "やめる"
+    },
     "closings": {
       "buy": "わかった。君の選択だ。👌",
       "wait": "48時間。まだ覚えていたら、本当に欲しいものだ。",
       "avoid": "あなたのものとして残った。🌿"
     },
     "scenarios": [
-      { "label": "ヘッドホン、3万円", "turns": [
-        { "role": "me", "text": "新しいヘッドホン、3万円" },
-        { "role": "ai", "text": "3万円はけっこうな金額だね。今使っているヘッドホンの、何が不満？" },
-        { "role": "me", "text": "まだ使えるけど、もう3年目" },
-        { "role": "ai", "text": "ちゃんと使えているなら、一度立ち止まるいい理由になるね。あと数か月今のを使うとしたら、何が困る？" }
-      ]},
-      { "label": "ジャケット、40%オフ", "turns": [
-        { "role": "me", "text": "ジャケット、40%オフ" },
-        { "role": "ai", "text": "40%オフはお得に感じるよね。もし定価だったら、それでも欲しい？" },
-        { "role": "me", "text": "正直、たぶん買わない" },
-        { "role": "ai", "text": "じゃあ、欲しい気持ちの一部はセールが作っているのかも。手持ちの服で足りないところを、このジャケットが埋めてくれる？" }
-      ]},
-      { "label": "ライブのチケット、1万5千円", "turns": [
-        { "role": "me", "text": "ライブのチケット、1万5千円" },
-        { "role": "ai", "text": "楽しみな予定だね。ずっと見たかったアーティスト？" },
-        { "role": "me", "text": "16歳のときから。8年ぶりのツアー" },
-        { "role": "ai", "text": "何年も続いている気持ちなら、その場の気分じゃないね。1万5千円、今月ほかを削らずに出せる？" }
-      ]}
+      {
+        "label": "ヘッドホン、3万円",
+        "auto": "wait",
+        "turns": [
+          {
+            "role": "me",
+            "text": "新しいヘッドホン、3万円"
+          },
+          {
+            "role": "ai",
+            "text": "3万円はけっこうな金額だね。今使っているヘッドホンの、何が不満？"
+          },
+          {
+            "role": "me",
+            "text": "まだ使えるけど、もう3年目"
+          },
+          {
+            "role": "ai",
+            "text": "ちゃんと使えているなら、一度立ち止まるいい理由になるね。あと数か月今のを使うとしたら、何が困る？"
+          },
+          {
+            "role": "me",
+            "text": "たぶん何も。広告を見ただけ"
+          },
+          {
+            "role": "ai",
+            "text": "広告は、ちゃんと使えるものを古く見せるのが上手なんだ。48時間置いて、それでも気になるか見てみる？"
+          }
+        ]
+      },
+      {
+        "label": "コーヒーメーカー、2万円",
+        "auto": "wait",
+        "turns": [
+          {
+            "role": "me",
+            "text": "コーヒーメーカー、2万円"
+          },
+          {
+            "role": "ai",
+            "text": "2万円のコーヒーメーカーですね。今は毎日どうやってコーヒーを飲んでいますか？"
+          },
+          {
+            "role": "me",
+            "text": "毎朝コンビニで買ってる"
+          },
+          {
+            "role": "ai",
+            "text": "毎朝のコンビニコーヒー、1か月だとどれくらいになりそう？それと比べて、2万円はどう見える？"
+          },
+          {
+            "role": "me",
+            "text": "月に6千円くらいかな"
+          },
+          {
+            "role": "ai",
+            "text": "それなら4か月弱で元が取れる計算だね。毎朝ちゃんと淹れる自分が想像できる？"
+          }
+        ]
+      },
+      {
+        "label": "ジャケット、40%オフ",
+        "auto": "avoid",
+        "turns": [
+          {
+            "role": "me",
+            "text": "ジャケット、40%オフ"
+          },
+          {
+            "role": "ai",
+            "text": "40%オフはお得に感じるよね。もし定価だったら、それでも欲しい？"
+          },
+          {
+            "role": "me",
+            "text": "正直、たぶん買わない"
+          },
+          {
+            "role": "ai",
+            "text": "じゃあ、欲しい気持ちの一部はセールが作っているのかも。手持ちの服で足りないところを、このジャケットが埋めてくれる？"
+          },
+          {
+            "role": "me",
+            "text": "ううん、似たのが2着ある"
+          },
+          {
+            "role": "ai",
+            "text": "じゃあ、これは3着目になりそうだね。セールは終わっても、ジャケットは残る。見送ったらどんな気分？"
+          }
+        ]
+      },
+      {
+        "label": "どのヘッドホンがいい？",
+        "auto": "wait",
+        "turns": [
+          {
+            "role": "me",
+            "text": "ノイキャンのヘッドホン、どれがいい？"
+          },
+          {
+            "role": "ai",
+            "text": "ブランド選びは私の役目じゃないんだ。でも、そもそも今ヘッドホンが必要かどうかは一緒に考えられるよ。今使っているものに、何か困ってる？"
+          },
+          {
+            "role": "me",
+            "text": "電車で左側が聞こえなくなる"
+          },
+          {
+            "role": "ai",
+            "text": "毎日の通勤でそれは地味にストレスだね。電車に乗っている時間は、1週間でどのくらい？"
+          },
+          {
+            "role": "me",
+            "text": "週に6時間くらい"
+          },
+          {
+            "role": "ai",
+            "text": "6時間はけっこう聴くね。本当に欲しいものを決めるまで、修理や手頃なもので乗り切れそう？"
+          }
+        ]
+      },
+      {
+        "label": "夜のデリバリー、3,200円",
+        "auto": "buy",
+        "turns": [
+          {
+            "role": "me",
+            "text": "デリバリー、3,200円"
+          },
+          {
+            "role": "ai",
+            "text": "遅い時間だし、疲れてるよね。これは晩ごはん？それとも晩ごはんのあとの何か？"
+          },
+          {
+            "role": "me",
+            "text": "晩ごはん。何も用意してなくて"
+          },
+          {
+            "role": "ai",
+            "text": "そういう日もあるよ。家にあるもので10分で作れそうなものはある？それとも今夜はデリバリーの日？"
+          },
+          {
+            "role": "me",
+            "text": "冷蔵庫が空っぽなんだ"
+          },
+          {
+            "role": "ai",
+            "text": "それなら、これはご褒美じゃなくて晩ごはんだね。楽しんで。配達料のかからない店を選ぶのもありかも。"
+          }
+        ]
+      },
+      {
+        "label": "ライブのチケット、1万5千円",
+        "auto": "buy",
+        "turns": [
+          {
+            "role": "me",
+            "text": "ライブのチケット、1万5千円"
+          },
+          {
+            "role": "ai",
+            "text": "楽しみな予定だね。ずっと見たかったアーティスト？"
+          },
+          {
+            "role": "me",
+            "text": "16歳のときから。8年ぶりのツアー"
+          },
+          {
+            "role": "ai",
+            "text": "何年も続いている気持ちなら、その場の気分じゃないね。1万5千円、今月ほかを削らずに出せる？"
+          },
+          {
+            "role": "me",
+            "text": "うん、3月から取っておいた"
+          },
+          {
+            "role": "ai",
+            "text": "ちゃんと計画してたんだね。それが「価値ある買い物」ってこと。🎶"
+          }
+        ]
+      }
     ]
   }
   </script>
@@ -320,22 +499,198 @@
           </li>
         </ul>
         <div class="phones">
-          <div class="phone">
-            <img src="/assets/img/ja-03-now-400.webp" srcset="/assets/img/ja-03-now-400.webp 400w, /assets/img/ja-03-now-800.webp 800w" sizes="300px" width="400" height="869" loading="lazy" decoding="async" alt="hustless の「いま」画面。今日の合計 ¥5,830、マイクボタン、スーパー・ランチ・ラテなど最近の支出。">
+          <div class="phone live">
+            <div class="ls" role="img" aria-label="hustless の「いま」画面のライブ例：「晩ごはん 1800」と話すと、金額とカテゴリ「食事」が認識され、最近の一覧のいちばん上に追加され、今日の合計が増えます。" data-live-phone>
+              <div class="ls-status"><span>9:41</span><svg viewBox="0 0 82 20" fill="currentColor" aria-hidden="true"><rect x="0" y="12" width="4" height="7" rx="1"/><rect x="6" y="9" width="4" height="10" rx="1"/><rect x="12" y="5" width="4" height="14" rx="1"/><rect x="18" y="1" width="4" height="18" rx="1"/><path d="M38 6.5c3.6 0 6.8 1.4 9.2 3.6l-2 2c-1.9-1.7-4.4-2.8-7.2-2.8s-5.3 1.1-7.2 2.8l-2-2c2.4-2.2 5.6-3.6 9.2-3.6zm0 5.6c2 0 3.8.8 5.1 2l-5.1 5.1-5.1-5.1c1.3-1.2 3.1-2 5.1-2z"/><rect x="54" y="3" width="24" height="14" rx="4" fill="none" stroke="currentColor" stroke-opacity=".45" stroke-width="1.6"/><rect x="56.5" y="5.5" width="19" height="9" rx="2.2" fill="#4cd964"/><rect x="79.5" y="7.5" width="2" height="5" rx="1" fill-opacity=".45"/></svg></div>
+              <div class="ls-top"><span class="ls-brand">hust<span>less</span></span><span class="ls-greet">ゆうきさん、おはようございます</span><span class="ls-avatar"></span></div>
+              <div class="ls-card ls-here"><span class="ls-heart">🤍</span><span><i>ここにいる</i><small>何かを買う前に</small></span><svg viewBox="0 0 10 18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 2l6 7-6 7"/></svg></div>
+              <div class="ls-card ls-today"><small>今日</small><b class="ls-total ls-swap">¥5,830</b><span class="ls-count ls-swap">今日4件</span></div>
+              <div class="ls-mic"><span class="ls-ring"></span><span class="ls-ring"></span><span class="ls-mic-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><rect x="8.5" y="2.5" width="7" height="12" rx="3.5"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3.5M8.5 21.5h7"/></svg></span></div>
+              <p class="ls-hint"><span class="idle">話すか下に入力して</span><span class="listen"><span class="ls-wave"><i></i><i></i><i></i><i></i></span>聞いています…</span></p>
+              <div class="ls-field"><span class="ls-ph">例：「コーヒー 500」</span><span class="ls-input"></span><span class="ls-cat"></span></div>
+              <span class="ls-plus">+</span>
+              <p class="ls-recent">最近</p>
+              <div class="ls-list ls-swap"><ul>
+            <li class="ls-row" data-vars="--tone:#24382a"><span class="ico">🛒</span><span class="nm">スーパー<small>食料品</small></span><span class="am">¥3,500<small>20分前</small></span></li>
+            <li class="ls-row" data-vars="--tone:#3a2220"><span class="ico">🍽️</span><span class="nm">ランチ<small>食事</small></span><span class="am">¥1,200<small>1時間前</small></span></li>
+            <li class="ls-row" data-vars="--tone:#33291f"><span class="ico">☕</span><span class="nm">ラテ<small>コーヒー</small></span><span class="am">¥480<small>3時間前</small></span></li>
+            <li class="ls-row" data-vars="--tone:#3a2220"><span class="ico">🍽️</span><span class="nm">朝ごはん<small>食事</small></span><span class="am">¥650<small>5時間前</small></span></li>
+              </ul></div>
+              <div class="ls-tabs"><span class="on"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 1.5c.5 5.6 4.9 10 10.5 10.5-5.6.5-10 4.9-10.5 10.5C11.5 16.9 7.1 12.5 1.5 12 7.1 11.5 11.5 7.1 12 1.5z"/></svg>いま</span><span><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="2" y="11" width="5.5" height="10" rx="1.6"/><rect x="9.25" y="6" width="5.5" height="15" rx="1.6"/><rect x="16.5" y="2.5" width="5.5" height="18.5" rx="1.6"/></svg>分析</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="2.5" y="3.5" width="19" height="17" rx="3.5"/><path d="M2.5 8.5h19" /><g fill="currentColor" stroke="none"><circle cx="7.5" cy="12.5" r="1"/><circle cx="12" cy="12.5" r="1"/><circle cx="16.5" cy="12.5" r="1"/><circle cx="7.5" cy="16.5" r="1"/><circle cx="12" cy="16.5" r="1"/><circle cx="16.5" cy="16.5" r="1"/></g></svg>カレンダー</span><span><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 1.5a10.5 10.5 0 1 0 0 21 10.5 10.5 0 0 0 0-21zm0 4a3.6 3.6 0 1 1 0 7.2 3.6 3.6 0 0 1 0-7.2zm0 15c-2.7 0-5.1-1.2-6.7-3.2 1.4-1.9 4-2.8 6.7-2.8s5.3.9 6.7 2.8c-1.6 2-4 3.2-6.7 3.2z"/></svg>あなた</span></div>
+            </div>
           </div>
+          <script type="application/json" id="live-data">{"locale": "en-US", "currency": "JPY", "countLabel": "今日{n}件", "now": "たった今", "secondsAgo": "{n}秒前", "start": {"total": 5830, "count": 4}, "rows": [["スーパー", "食料品", "🛒", "#24382a", 3500, "20分前"], ["ランチ", "食事", "🍽️", "#3a2220", 1200, "1時間前"], ["ラテ", "コーヒー", "☕", "#33291f", 480, "3時間前"], ["朝ごはん", "食事", "🍽️", "#3a2220", 650, "5時間前"]], "entries": [{"tokens": ["晩", "ご", "は", "ん", " ", {"t": "1800", "amt": true}], "name": "晩ごはん", "cat": "食事", "emoji": "🍽️", "tone": "#3a2220", "amount": 1800}, {"tokens": ["タ", "ク", "シ", "ー", " ", {"t": "1200", "amt": true}], "name": "タクシー", "cat": "交通", "emoji": "🚕", "tone": "#3a3320", "amount": 1200}, {"tokens": ["コ", "ー", "ヒ", "ー", " ", {"t": "500", "amt": true}], "name": "コーヒー", "cat": "コーヒー", "emoji": "☕", "tone": "#33291f", "amount": 500}]}</script>
         </div>
       </div>
     </div>
   </section>
 
+
+  <section class="chapter" aria-labelledby="ch3">
+    <div class="wrap">
+      <div class="chapter-head">
+        <div><h2 id="ch3">お金の行き先が、<span class="voice">見える。</span></h2></div>
+        <p>月曜の夜。雨の日。気づかなくなったいつものコーヒー。支出の裏にあるパターンが見えます — あなた自身のデータだけから。</p>
+      </div>
+      <!-- scene:cube -->
+      <div class="cube-scene" data-cube-scene>
+        <ol class="cube-steps">
+<li class="is-on" data-step="0"><b>今月、お金はどこへ</b><span>合計、1日あたり、前期比、週ごとの推移。</span></li>
+<li data-step="1"><b>カテゴリーをひと目で</b><span>円グラフをタップすると中身が見える。</span></li>
+<li data-step="2"><b>一日のリズム</b><span>朝から夜まで、月曜から日曜まで。</span></li>
+<li data-step="3"><b>増えているもの</b><span>カテゴリーごとの半年の推移。</span></li>
+<li data-step="4"><b>天気まで</b><span>雨の夕方と晴れた朝のちがい。</span></li>
+<li data-step="5"><b>気づいてくれるコーチ</b><span>あなた自身の支出だけをもとにしたAI分析。</span></li>
+        </ol>
+        <div class="cube-stage">
+          <div class="phone cube-phone">
+            <div class="ls cube-screen" role="img" aria-label="hustless の分析画面が立方体のように回り、6つのビューを表示：月の合計と週ごとの棒グラフ、カテゴリー、時間帯と曜日、カテゴリの推移、天気のパターン、AI分析。">
+              <div class="ls-status"><span>9:41</span><svg viewBox="0 0 82 20" fill="currentColor" aria-hidden="true"><rect x="0" y="12" width="4" height="7" rx="1"/><rect x="6" y="9" width="4" height="10" rx="1"/><rect x="12" y="5" width="4" height="14" rx="1"/><rect x="18" y="1" width="4" height="18" rx="1"/><path d="M38 6.5c3.6 0 6.8 1.4 9.2 3.6l-2 2c-1.9-1.7-4.4-2.8-7.2-2.8s-5.3 1.1-7.2 2.8l-2-2c2.4-2.2 5.6-3.6 9.2-3.6zm0 5.6c2 0 3.8.8 5.1 2l-5.1 5.1-5.1-5.1c1.3-1.2 3.1-2 5.1-2z"/><rect x="54" y="3" width="24" height="14" rx="4" fill="none" stroke="currentColor" stroke-opacity=".45" stroke-width="1.6"/><rect x="56.5" y="5.5" width="19" height="9" rx="2.2" fill="#4cd964"/><rect x="79.5" y="7.5" width="2" height="5" rx="1" fill-opacity=".45"/></svg></div>
+              <div class="cp-period"><span>週</span><span class="on">月</span><span>年</span><span>カスタム</span></div>
+              <div class="cube-view"><div class="cube">
+<div class="cube-side" data-side="0"><section class="cube-page is-shown" data-page="0">
+      <div class="cp-stats">
+        <div><i>Σ</i><b>¥230,532</b><small>合計</small></div>
+        <div><i>≡</i><b>¥7,437</b><small>1日あたり</small></div>
+        <div><i>⇆</i><b class="up">↑16%</b><small>前期比</small></div>
+      </div>
+      <p class="cp-label">週次</p>
+      <div class="cp-card"><svg class="cp-svg" viewBox="0 0 100 62" aria-hidden="true"><defs><linearGradient id="cg-hi" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d9a878"/><stop offset="1" stop-color="#b98757"/></linearGradient><linearGradient id="cg-lo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6b5240"/><stop offset="1" stop-color="#4a3a2e"/></linearGradient></defs><rect class="bar" data-vars="--d:0ms" x="6" y="44.34" width="14" height="7.66" rx="2.2" fill="url(#cg-lo)"/><rect class="bar" data-vars="--d:70ms" x="25" y="8.00" width="14" height="44.00" rx="2.2" fill="url(#cg-hi)"/><rect class="bar" data-vars="--d:140ms" x="44" y="26.30" width="14" height="25.70" rx="2.2" fill="url(#cg-lo)"/><rect class="bar" data-vars="--d:210ms" x="63" y="27.71" width="14" height="24.29" rx="2.2" fill="url(#cg-lo)"/><rect class="bar" data-vars="--d:280ms" x="82" y="29.28" width="14" height="22.72" rx="2.2" fill="url(#cg-lo)"/><line class="avg" x1="3" x2="97" y1="27.13" y2="27.13" pathLength="1"/><text class="avg-t" x="5" y="25.13">平均 ¥46,106</text><text x="13" y="59" text-anchor="middle">10/1</text><text x="32" y="59" text-anchor="middle">10/5</text><text x="51" y="59" text-anchor="middle">10/12</text><text x="70" y="59" text-anchor="middle">10/19</text><text x="89" y="59" text-anchor="middle">10/26</text></svg></div>
+      <p class="cp-chip">↗ 1日あたり¥7,437のペースで、期間合計は約¥246,440</p>
+      <p class="cp-chip">🔥 月曜は最も出費が多い曜日です</p>
+    </section><section class="cube-page" data-page="4">
+      <p class="cp-label">パターン</p>
+      <ul class="cp-weather"><li><span class="wx">☀️</span><span class="nm">晴れ<small>38回</small></span><i><em data-vars="--w:44.0%;--d:0ms"></em></i><b>平均 ¥730</b></li><li><span class="wx">☁️</span><span class="nm">曇り<small>21回</small></span><i><em data-vars="--w:66.9%;--d:90ms"></em></i><b>平均 ¥1,110</b></li><li><span class="wx">🌧️</span><span class="nm">雨<small>14回</small></span><i><em data-vars="--w:100.0%;--d:180ms" class="hi"></em></i><b>平均 ¥1,660</b></li><li><span class="wx">❄️</span><span class="nm">雪<small>3回</small></span><i><em data-vars="--w:80.1%;--d:270ms"></em></i><b>平均 ¥1,330</b></li></ul>
+      <p class="cp-note">🌧️ 雨の夕方は、晴れた朝の約2.3倍の出費。</p>
+      <p class="cp-label">季節性</p>
+      <div class="cp-card slim"><svg class="cp-svg" viewBox="0 0 100 24" aria-hidden="true"><rect class="bar" data-vars="--d:0ms" x="2.00" y="9.60" width="5.6" height="12.40" rx="1.2" fill="#4f3e31"/><rect class="bar" data-vars="--d:40ms" x="10.10" y="11.00" width="5.6" height="11.00" rx="1.2" fill="#4f3e31"/><rect class="bar" data-vars="--d:80ms" x="18.20" y="8.00" width="5.6" height="14.00" rx="1.2" fill="#4f3e31"/><rect class="bar" data-vars="--d:120ms" x="26.30" y="8.80" width="5.6" height="13.20" rx="1.2" fill="#4f3e31"/><rect class="bar" data-vars="--d:160ms" x="34.40" y="7.20" width="5.6" height="14.80" rx="1.2" fill="#4f3e31"/><rect class="bar" data-vars="--d:200ms" x="42.50" y="6.00" width="5.6" height="16.00" rx="1.2" fill="#4f3e31"/><rect class="bar" data-vars="--d:240ms" x="50.60" y="3.60" width="5.6" height="18.40" rx="1.2" fill="#4f3e31"/><rect class="bar" data-vars="--d:280ms" x="58.70" y="5.00" width="5.6" height="17.00" rx="1.2" fill="#4f3e31"/><rect class="bar" data-vars="--d:320ms" x="66.80" y="7.80" width="5.6" height="14.20" rx="1.2" fill="#4f3e31"/><rect class="bar" data-vars="--d:360ms" x="74.90" y="6.40" width="5.6" height="15.60" rx="1.2" fill="#4f3e31"/><rect class="bar" data-vars="--d:400ms" x="83.00" y="4.40" width="5.6" height="17.60" rx="1.2" fill="#4f3e31"/><rect class="bar" data-vars="--d:440ms" x="91.10" y="2.00" width="5.6" height="20.00" rx="1.2" fill="#d6a676"/></svg></div>
+    </section></div>
+<div class="cube-side" data-side="1"><section class="cube-page is-shown" data-page="1">
+      <p class="cp-label">カテゴリー</p>
+      <div class="cp-donut"><svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="38" class="track" pathLength="100"/><circle class="seg" data-vars="--d:0ms;--p:25.06" cx="50" cy="50" r="38" pathLength="100" stroke="#d6a676" stroke-dasharray="25.06 100" stroke-dashoffset="-0.00"/><circle class="seg" data-vars="--d:90ms;--p:21.80" cx="50" cy="50" r="38" pathLength="100" stroke="#c46a4a" stroke-dasharray="21.80 100" stroke-dashoffset="-26.26"/><circle class="seg" data-vars="--d:180ms;--p:14.24" cx="50" cy="50" r="38" pathLength="100" stroke="#8fa268" stroke-dasharray="14.24 100" stroke-dashoffset="-49.26"/><circle class="seg" data-vars="--d:270ms;--p:12.25" cx="50" cy="50" r="38" pathLength="100" stroke="#e9cfa6" stroke-dasharray="12.25 100" stroke-dashoffset="-64.70"/><circle class="seg" data-vars="--d:360ms;--p:9.80" cx="50" cy="50" r="38" pathLength="100" stroke="#9a7aa0" stroke-dasharray="9.80 100" stroke-dashoffset="-78.15"/><circle class="seg" data-vars="--d:450ms;--p:9.64" cx="50" cy="50" r="38" pathLength="100" stroke="#5f9690" stroke-dasharray="9.64 100" stroke-dashoffset="-89.16"/></svg>
+        <div class="cp-donut-c"><b>¥230,532</b><small>合計</small></div></div>
+      <ul class="cp-legend"><li data-vars="--c:#d6a676"><span>🛒 食料品</span><b>¥60,540</b><small>26%</small></li><li data-vars="--c:#c46a4a"><span>🍽️ 食事</span><b>¥53,020</b><small>23%</small></li><li data-vars="--c:#8fa268"><span>🛍️ ショッピング</span><b>¥35,600</b><small>15%</small></li><li data-vars="--c:#e9cfa6"><span>🎬 娯楽</span><b>¥31,010</b><small>13%</small></li><li data-vars="--c:#9a7aa0"><span>🚕 交通</span><b>¥25,370</b><small>11%</small></li><li data-vars="--c:#5f9690"><span>☕ コーヒー</span><b>¥24,992</b><small>11%</small></li></ul>
+    </section><section class="cube-page" data-page="5">
+      <p class="cp-label ai"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2c.6 5.3 4.7 9.4 10 10-5.3.6-9.4 4.7-10 10-.6-5.3-4.7-9.4-10-10 5.3-.6 9.4-4.7 10-10z"/></svg><span>AI分析</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.7M20 4v4h-4"/></svg></p>
+      <div class="cp-ai"><p class="greet">ゆうき、気づいたことがあります。</p><p class="body" data-type-text="月曜の支出は¥72,717で、木曜の¥18,069の約4倍です。夕方の支出¥101,434は今期全体の約44%を占めています。月曜と夕方は、どのように重なっていますか？">月曜の支出は¥72,717で、木曜の¥18,069の約4倍です。夕方の支出¥101,434は今期全体の約44%を占めています。月曜と夕方は、どのように重なっていますか？</p></div>
+      <p class="cp-ok">わかった</p>
+      <p class="cp-dots"><i class="on"></i><i></i><i></i><i></i></p>
+    </section></div>
+<div class="cube-side" data-side="2"><section class="cube-page is-shown" data-page="2">
+      <p class="cp-label">時間帯</p>
+      <ul class="cp-hbars"><li><span>朝</span><i><em data-vars="--w:24.3%;--d:0ms"></em></i><b>¥24,610</b></li><li><span>昼</span><i><em data-vars="--w:51.6%;--d:80ms"></em></i><b>¥52,388</b></li><li><span>夕方</span><i><em data-vars="--w:100.0%;--d:160ms" class="hi"></em></i><b>¥101,434</b></li><li><span>夜</span><i><em data-vars="--w:51.4%;--d:240ms"></em></i><b>¥52,100</b></li></ul>
+      <p class="cp-label">曜日</p>
+      <div class="cp-card"><svg class="cp-svg" viewBox="0 0 100 50" aria-hidden="true"><defs><linearGradient id="cg-hi2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d9a878"/><stop offset="1" stop-color="#b98757"/></linearGradient></defs><rect class="bar" data-vars="--d:0ms" x="4.0" y="6.00" width="9" height="34.00" rx="2" fill="url(#cg-hi2)"/><text x="8.5" y="48" text-anchor="middle">月</text><rect class="bar" data-vars="--d:60ms" x="17.5" y="26.72" width="9" height="13.28" rx="2" fill="#4f3e31"/><text x="22.0" y="48" text-anchor="middle">火</text><rect class="bar" data-vars="--d:120ms" x="31.0" y="25.41" width="9" height="14.59" rx="2" fill="#4f3e31"/><text x="35.5" y="48" text-anchor="middle">水</text><rect class="bar" data-vars="--d:180ms" x="44.5" y="31.55" width="9" height="8.45" rx="2" fill="#4f3e31"/><text x="49.0" y="48" text-anchor="middle">木</text><rect class="bar" data-vars="--d:240ms" x="58.0" y="22.31" width="9" height="17.69" rx="2" fill="#4f3e31"/><text x="62.5" y="48" text-anchor="middle">金</text><rect class="bar" data-vars="--d:300ms" x="71.5" y="28.69" width="9" height="11.31" rx="2" fill="#4f3e31"/><text x="76.0" y="48" text-anchor="middle">土</text><rect class="bar" data-vars="--d:360ms" x="85.0" y="31.54" width="9" height="8.46" rx="2" fill="#4f3e31"/><text x="89.5" y="48" text-anchor="middle">日</text></svg></div>
+      <p class="cp-chip">🌙 最も支出が多い時間: 夕方</p>
+    </section></div>
+<div class="cube-side" data-side="3"><section class="cube-page is-shown" data-page="3">
+      <p class="cp-label">カテゴリの推移</p>
+      <div class="cp-card"><svg class="cp-svg" viewBox="0 0 100 62" aria-hidden="true"><g class="grid"><line x1="3" x2="97" y1="10" y2="10"/><line x1="3" x2="97" y1="30" y2="30"/><line x1="3" x2="97" y1="50" y2="50"/></g><polyline class="ln" data-vars="--d:0ms" points="6.00,48.26 23.60,43.64 41.20,45.36 58.80,41.30 76.40,42.26 94.00,35.18" stroke="#c46a4a" pathLength="1"/><circle class="end" data-vars="--d:700ms" cx="94.00" cy="35.18" r="1.6" fill="#c46a4a"/><polyline class="ln" data-vars="--d:160ms" points="6.00,46.52 23.60,45.71 41.20,44.78 58.80,45.02 76.40,43.74 94.00,41.10" stroke="#d6a676" pathLength="1"/><circle class="end" data-vars="--d:860ms" cx="94.00" cy="41.10" r="1.6" fill="#d6a676"/><polyline class="ln" data-vars="--d:320ms" points="6.00,11.16 23.60,12.90 41.20,8.84 58.80,12.08 76.40,10.92 94.00,13.56" stroke="#8fa268" pathLength="1"/><circle class="end" data-vars="--d:1020ms" cx="94.00" cy="13.56" r="1.6" fill="#8fa268"/><text x="6.00" y="59" text-anchor="middle">5月</text><text x="23.60" y="59" text-anchor="middle">6月</text><text x="41.20" y="59" text-anchor="middle">7月</text><text x="58.80" y="59" text-anchor="middle">8月</text><text x="76.40" y="59" text-anchor="middle">9月</text><text x="94.00" y="59" text-anchor="middle">10月</text></svg></div>
+      <ul class="cp-trend-legend"><li data-vars="--c:#c46a4a"><span>娯楽</span><b class="up">↑30%</b></li><li data-vars="--c:#d6a676"><span>コーヒー</span><b class="up">↑12%</b></li><li data-vars="--c:#8fa268"><span>食事</span><b class="down">↓5%</b></li></ul>
+      <p class="cp-more">すべて見る →</p>
+    </section></div>
+              </div></div>
+              <p class="cube-dots"><i class="on"></i><i></i><i></i><i></i><i></i><i></i></p>
+              <div class="ls-tabs"><span><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 1.5c.5 5.6 4.9 10 10.5 10.5-5.6.5-10 4.9-10.5 10.5C11.5 16.9 7.1 12.5 1.5 12 7.1 11.5 11.5 7.1 12 1.5z"/></svg>いま</span><span class="on"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="2" y="11" width="5.5" height="10" rx="1.6"/><rect x="9.25" y="6" width="5.5" height="15" rx="1.6"/><rect x="16.5" y="2.5" width="5.5" height="18.5" rx="1.6"/></svg>分析</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="2.5" y="3.5" width="19" height="17" rx="3.5"/><path d="M2.5 8.5h19"/><g fill="currentColor" stroke="none"><circle cx="7.5" cy="12.5" r="1"/><circle cx="12" cy="12.5" r="1"/><circle cx="16.5" cy="12.5" r="1"/><circle cx="7.5" cy="16.5" r="1"/><circle cx="12" cy="16.5" r="1"/><circle cx="16.5" cy="16.5" r="1"/></g></svg>カレンダー</span><span><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 1.5a10.5 10.5 0 1 0 0 21 10.5 10.5 0 0 0 0-21zm0 4a3.6 3.6 0 1 1 0 7.2 3.6 3.6 0 0 1 0-7.2zm0 15c-2.7 0-5.1-1.2-6.7-3.2 1.4-1.9 4-2.8 6.7-2.8s5.3.9 6.7 2.8c-1.6 2-4 3.2-6.7 3.2z"/></svg>あなた</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <article class="tile wide calendar-tile cal" data-cal data-tip-over="上限 ¥10,000 を超過" data-tip-near="上限に近い" data-tip-under="上限の範囲内" data-tip-none="支出なし">
+        <div class="cal-copy">
+          <h3>月がひと目でわかるカレンダー</h3>
+          <p>10月の毎日を、使った金額で色分け。上限は自分で決められます。日付をタップしてみて。</p>
+          <ul class="cal-legend"><li data-lvl="0"><i></i>支出なし</li><li data-lvl="1"><i></i>¥4,000 未満</li><li data-lvl="2"><i></i>¥4,000–6,000</li><li data-lvl="3"><i></i>¥6,000–8,000</li><li data-lvl="4"><i></i>¥8,000–10,000</li><li data-lvl="5"><i></i>¥10,000 以上</li></ul>
+          <p class="cal-note">上限はあなたのもの。アプリでいつでも変更できます。</p>
+        </div>
+        <div class="cal-month">
+          <p class="cal-title">2026年10月</p>
+          <p class="cal-week"><span>月</span><span>火</span><span>水</span><span>木</span><span>金</span><span>土</span><span>日</span></p>
+          <ol class="cal-grid"><li class="pad"></li><li class="pad"></li><li class="pad"></li><li data-lvl="1" data-day="1" data-label="10月1日(木)" data-amt-label="¥2,480" tabindex="0"><span>1</span></li><li data-lvl="2" data-day="2" data-label="10月2日(金)" data-amt-label="¥5,360" tabindex="0"><span>2</span></li><li data-lvl="0" data-day="3" data-label="10月3日(土)" data-amt-label="—" tabindex="0"><span>3</span></li><li data-lvl="1" data-day="4" data-label="10月4日(日)" data-amt-label="¥1,700" tabindex="0"><span>4</span></li><li data-lvl="5" data-day="5" data-label="10月5日(月)" data-amt-label="¥14,480" tabindex="0"><span>5</span></li><li data-lvl="1" data-day="6" data-label="10月6日(火)" data-amt-label="¥3,640" tabindex="0"><span>6</span></li><li data-lvl="3" data-day="7" data-label="10月7日(水)" data-amt-label="¥6,720" tabindex="0"><span>7</span></li><li data-lvl="2" data-day="8" data-label="10月8日(木)" data-amt-label="¥4,200" tabindex="0"><span>8</span></li><li data-lvl="4" data-day="9" data-label="10月9日(金)" data-amt-label="¥8,980" tabindex="0"><span>9</span></li><li data-lvl="0" data-day="10" data-label="10月10日(土)" data-amt-label="—" tabindex="0"><span>10</span></li><li data-lvl="1" data-day="11" data-label="10月11日(日)" data-amt-label="¥3,060" tabindex="0"><span>11</span></li><li data-lvl="5" data-day="12" data-label="10月12日(月)" data-amt-label="¥12,960" tabindex="0"><span>12</span></li><li data-lvl="1" data-day="13" data-label="10月13日(火)" data-amt-label="¥1,980" tabindex="0"><span>13</span></li><li data-lvl="2" data-day="14" data-label="10月14日(水)" data-amt-label="¥5,500" tabindex="0"><span>14</span></li><li data-lvl="3" data-day="15" data-label="10月15日(木)" data-amt-label="¥7,640" tabindex="0"><span>15</span></li><li data-lvl="5" data-day="16" data-label="10月16日(金)" data-amt-label="¥10,520" tabindex="0"><span>16</span></li><li data-lvl="1" data-day="17" data-label="10月17日(土)" data-amt-label="¥2,360" tabindex="0"><span>17</span></li><li data-lvl="0" data-day="18" data-label="10月18日(日)" data-amt-label="—" tabindex="0"><span>18</span></li><li data-lvl="5" data-day="19" data-label="10月19日(月)" data-amt-label="¥11,660" tabindex="0"><span>19</span></li><li data-lvl="2" data-day="20" data-label="10月20日(火)" data-amt-label="¥4,680" tabindex="0"><span>20</span></li><li data-lvl="1" data-day="21" data-label="10月21日(水)" data-amt-label="¥3,520" tabindex="0"><span>21</span></li><li data-lvl="3" data-day="22" data-label="10月22日(木)" data-amt-label="¥6,380" tabindex="0"><span>22</span></li><li data-lvl="4" data-day="23" data-label="10月23日(金)" data-amt-label="¥9,240" tabindex="0"><span>23</span></li><li data-lvl="1" data-day="24" data-label="10月24日(土)" data-amt-label="¥1,500" tabindex="0"><span>24</span></li><li data-lvl="1" data-day="25" data-label="10月25日(日)" data-amt-label="¥2,600" tabindex="0"><span>25</span></li><li data-lvl="5" data-day="26" data-label="10月26日(月)" data-amt-label="¥16,320" tabindex="0"><span>26</span></li><li data-lvl="1" data-day="27" data-label="10月27日(火)" data-amt-label="¥3,960" tabindex="0"><span>27</span></li><li data-lvl="2" data-day="28" data-label="10月28日(水)" data-amt-label="¥5,880" tabindex="0"><span>28</span></li><li data-lvl="3" data-day="29" data-label="10月29日(木)" data-amt-label="¥7,340" tabindex="0"><span>29</span></li><li data-lvl="2" data-day="30" data-label="10月30日(金)" data-amt-label="¥4,820" tabindex="0"><span>30</span></li><li data-lvl="3" data-day="31" data-label="10月31日(土)" data-amt-label="¥6,310" tabindex="0"><span>31</span></li></ol>
+          <p class="cal-tip" role="status" aria-live="polite"></p>
+        </div>
+      </article>
+      <!-- /scene:cube -->
+    </div>
+  </section>
   <section class="chapter" aria-labelledby="ch2">
     <div class="wrap">
       <div class="chapter-head">
         <div><h2 id="ch2">うっかり請求を、<span class="voice">なくす。</span></h2></div>
-        <p>サブスクや家賃・公共料金・ローンなどの固定費を、それぞれの請求サイクルで登録。支払いの前にお知らせし、ちゃんと使ったかも聞いてくれます。</p>
+        <p>3月から行っていないジムが、金曜日に更新されます。hustless は3日前に知らせて、今月ちゃんと使ったかを聞いてくれます。</p>
       </div>
-      <div class="split flip">
-        <ul class="points">
+      <!-- scene:rail -->
+      <div class="rail" data-rail>
+        <ol class="rail-track" aria-label="リマインダーの例：サブスクの追加から支払いの記録まで" tabindex="0">
+      <li class="rc" data-card="0" aria-label="サブスクも固定費も、ひとつの場所に。"><div class="rc-inner">
+        <div class="rc-app">
+          <div class="ls-status"><span>9:41</span><svg viewBox="0 0 82 20" fill="currentColor" aria-hidden="true"><rect x="0" y="12" width="4" height="7" rx="1"/><rect x="6" y="9" width="4" height="10" rx="1"/><rect x="12" y="5" width="4" height="14" rx="1"/><rect x="18" y="1" width="4" height="18" rx="1"/><path d="M38 6.5c3.6 0 6.8 1.4 9.2 3.6l-2 2c-1.9-1.7-4.4-2.8-7.2-2.8s-5.3 1.1-7.2 2.8l-2-2c2.4-2.2 5.6-3.6 9.2-3.6zm0 5.6c2 0 3.8.8 5.1 2l-5.1 5.1-5.1-5.1c1.3-1.2 3.1-2 5.1-2z"/><rect x="54" y="3" width="24" height="14" rx="4" fill="none" stroke="currentColor" stroke-opacity=".45" stroke-width="1.6"/><rect x="56.5" y="5.5" width="19" height="9" rx="2.2" fill="#4cd964"/><rect x="79.5" y="7.5" width="2" height="5" rx="1" fill-opacity=".45"/></svg></div>
+          <p class="rc-head"><span>固定費</span><b>¥136,490<small>/月</small></b></p>
+          <div class="rc-group"><p>サブスク<i>+</i></p><ul><li><span class="ico">☁️</span><span class="nm">クラウドストレージ<small>2026年11月29日</small></span><b>¥400</b><i class="minus"></i></li><li><span class="ico">🏋️</span><span class="nm">ジム<small>2026年11月29日</small></span><b>¥7,800</b><i class="minus"></i></li><li><span class="ico">📺</span><span class="nm">動画配信<small>2026年11月29日</small></span><b>¥1,490</b><i class="minus"></i></li></ul></div>
+          <div class="rc-group"><p>必須<i>+</i></p><ul><li><span class="ico">🏦</span><span class="nm">自動車ローン<small>2026年11月29日</small></span><b>¥32,000</b><i class="minus"></i></li><li><span class="ico">💡</span><span class="nm">電気<small>2026年11月29日</small></span><b>¥9,800</b><i class="minus"></i></li><li><span class="ico">🏠</span><span class="nm">家賃<small>2026年11月29日</small></span><b>¥85,000</b><i class="minus"></i></li></ul></div>
+        </div>
+      </div><p class="rc-cap"><span>01</span>サブスクも固定費も、ひとつの場所に。</p></li>
+      <li class="rc" data-card="1" aria-label="通知のタイミングは自分で決める。"><div class="rc-inner">
+        <div class="rc-app rc-sheet">
+          <div class="ls-status"><span>9:41</span><svg viewBox="0 0 82 20" fill="currentColor" aria-hidden="true"><rect x="0" y="12" width="4" height="7" rx="1"/><rect x="6" y="9" width="4" height="10" rx="1"/><rect x="12" y="5" width="4" height="14" rx="1"/><rect x="18" y="1" width="4" height="18" rx="1"/><path d="M38 6.5c3.6 0 6.8 1.4 9.2 3.6l-2 2c-1.9-1.7-4.4-2.8-7.2-2.8s-5.3 1.1-7.2 2.8l-2-2c2.4-2.2 5.6-3.6 9.2-3.6zm0 5.6c2 0 3.8.8 5.1 2l-5.1 5.1-5.1-5.1c1.3-1.2 3.1-2 5.1-2z"/><rect x="54" y="3" width="24" height="14" rx="4" fill="none" stroke="currentColor" stroke-opacity=".45" stroke-width="1.6"/><rect x="56.5" y="5.5" width="19" height="9" rx="2.2" fill="#4cd964"/><rect x="79.5" y="7.5" width="2" height="5" rx="1" fill-opacity=".45"/></svg></div>
+          <p class="rc-bar"><span>キャンセル</span><b>新しいサブスク</b><span class="save">保存</span></p>
+          <ul class="rc-form">
+            <li><span>名前</span><b>動画配信</b></li>
+            <li><span>金額</span><b>¥1,490</b></li>
+            <li><span>更新日</span><b class="pill">2026年11月29日</b></li>
+            <li><span>頻度</span><b>1ヶ月ごと</b></li>
+          </ul>
+          <p class="rc-sub">事前通知 <small>(日)</small></p>
+          <div class="rc-chips"><span class="chip sel" data-vars="--d:520ms">1</span><span class="chip sel" data-vars="--d:260ms">3</span><span class="chip sel" data-vars="--d:0ms">5</span><span class="chip" data-vars="--d:0ms">7</span><span class="chip" data-vars="--d:0ms">14</span><span class="chip" data-vars="--d:0ms">30</span></div>
+          <p class="rc-hint">選択ごとに1回通知されます — 例:5日前・3日前・1日前</p>
+          <ul class="rc-form"><li><span>スヌーズ</span><i class="toggle"></i></li><li class="dim"><span>15分</span></li></ul>
+        </div>
+      </div><p class="rc-cap"><span>02</span>通知のタイミングは自分で決める。</p></li>
+      <li class="rc" data-card="2" aria-label="3日前に、正直なひと言。"><div class="rc-inner">
+        <div class="rc-lock sub">
+          <div class="ls-status"><span>9:41</span><svg viewBox="0 0 82 20" fill="currentColor" aria-hidden="true"><rect x="0" y="12" width="4" height="7" rx="1"/><rect x="6" y="9" width="4" height="10" rx="1"/><rect x="12" y="5" width="4" height="14" rx="1"/><rect x="18" y="1" width="4" height="18" rx="1"/><path d="M38 6.5c3.6 0 6.8 1.4 9.2 3.6l-2 2c-1.9-1.7-4.4-2.8-7.2-2.8s-5.3 1.1-7.2 2.8l-2-2c2.4-2.2 5.6-3.6 9.2-3.6zm0 5.6c2 0 3.8.8 5.1 2l-5.1 5.1-5.1-5.1c1.3-1.2 3.1-2 5.1-2z"/><rect x="54" y="3" width="24" height="14" rx="4" fill="none" stroke="currentColor" stroke-opacity=".45" stroke-width="1.6"/><rect x="56.5" y="5.5" width="19" height="9" rx="2.2" fill="#4cd964"/><rect x="79.5" y="7.5" width="2" height="5" rx="1" fill-opacity=".45"/></svg></div>
+          <p class="rc-clock">9:41</p><p class="rc-date">11月26日 水曜日</p>
+          <div class="rc-notif"><img src="/apple-touch-icon.png" alt="" width="40" height="40" loading="lazy"><div><p class="t"><b>サブスク</b><span>今</span></p><p class="s">動画配信</p><p class="b">今月使いましたか？3日後に更新されます</p></div></div>
+          <div class="rc-actions"><span>スヌーズ</span><span>はい、維持する</span><span class="press">いいえ</span></div>
+        </div>
+      </div><p class="rc-cap"><span>03</span>3日前に、正直なひと言。</p></li>
+      <li class="rc" data-card="3" aria-label="使っていないなら、請求の前に。"><div class="rc-inner">
+        <div class="rc-lock follow">
+          <div class="ls-status"><span>9:41</span><svg viewBox="0 0 82 20" fill="currentColor" aria-hidden="true"><rect x="0" y="12" width="4" height="7" rx="1"/><rect x="6" y="9" width="4" height="10" rx="1"/><rect x="12" y="5" width="4" height="14" rx="1"/><rect x="18" y="1" width="4" height="18" rx="1"/><path d="M38 6.5c3.6 0 6.8 1.4 9.2 3.6l-2 2c-1.9-1.7-4.4-2.8-7.2-2.8s-5.3 1.1-7.2 2.8l-2-2c2.4-2.2 5.6-3.6 9.2-3.6zm0 5.6c2 0 3.8.8 5.1 2l-5.1 5.1-5.1-5.1c1.3-1.2 3.1-2 5.1-2z"/><rect x="54" y="3" width="24" height="14" rx="4" fill="none" stroke="currentColor" stroke-opacity=".45" stroke-width="1.6"/><rect x="56.5" y="5.5" width="19" height="9" rx="2.2" fill="#4cd964"/><rect x="79.5" y="7.5" width="2" height="5" rx="1" fill-opacity=".45"/></svg></div>
+          <p class="rc-clock">9:41</p><p class="rc-date">11月26日 水曜日</p>
+          <div class="rc-notif"><img src="/apple-touch-icon.png" alt="" width="40" height="40" loading="lazy"><div><p class="t"><b>サブスク</b><span>今</span></p><p class="s">動画配信</p><p class="b">請求前にキャンセルしますか？</p></div></div>
+          <div class="rc-actions"><span class="press">キャンセル</span><span>維持する</span></div>
+        </div>
+      </div><p class="rc-cap"><span>04</span>使っていないなら、請求の前に。</p></li>
+      <li class="rc" data-card="4" aria-label="削れない支払いも、もう驚かない。"><div class="rc-inner">
+        <div class="rc-lock pay">
+          <div class="ls-status"><span>9:41</span><svg viewBox="0 0 82 20" fill="currentColor" aria-hidden="true"><rect x="0" y="12" width="4" height="7" rx="1"/><rect x="6" y="9" width="4" height="10" rx="1"/><rect x="12" y="5" width="4" height="14" rx="1"/><rect x="18" y="1" width="4" height="18" rx="1"/><path d="M38 6.5c3.6 0 6.8 1.4 9.2 3.6l-2 2c-1.9-1.7-4.4-2.8-7.2-2.8s-5.3 1.1-7.2 2.8l-2-2c2.4-2.2 5.6-3.6 9.2-3.6zm0 5.6c2 0 3.8.8 5.1 2l-5.1 5.1-5.1-5.1c1.3-1.2 3.1-2 5.1-2z"/><rect x="54" y="3" width="24" height="14" rx="4" fill="none" stroke="currentColor" stroke-opacity=".45" stroke-width="1.6"/><rect x="56.5" y="5.5" width="19" height="9" rx="2.2" fill="#4cd964"/><rect x="79.5" y="7.5" width="2" height="5" rx="1" fill-opacity=".45"/></svg></div>
+          <p class="rc-clock">9:41</p><p class="rc-date">11月26日 水曜日</p>
+          <div class="rc-notif"><img src="/apple-touch-icon.png" alt="" width="40" height="40" loading="lazy"><div><p class="t"><b>支払い</b><span>今</span></p><p class="s">家賃</p><p class="b">3日後に支払い · ¥85,000</p></div></div>
+          <div class="rc-actions"><span class="press">了解</span><span>明日また通知して</span></div>
+        </div>
+      </div><p class="rc-cap"><span>05</span>削れない支払いも、もう驚かない。</p></li>
+      <li class="rc" data-card="5" aria-label="ワンタップで、履歴に記録。"><div class="rc-inner">
+        <div class="rc-app rc-confirm">
+          <div class="ls-status"><span>9:41</span><svg viewBox="0 0 82 20" fill="currentColor" aria-hidden="true"><rect x="0" y="12" width="4" height="7" rx="1"/><rect x="6" y="9" width="4" height="10" rx="1"/><rect x="12" y="5" width="4" height="14" rx="1"/><rect x="18" y="1" width="4" height="18" rx="1"/><path d="M38 6.5c3.6 0 6.8 1.4 9.2 3.6l-2 2c-1.9-1.7-4.4-2.8-7.2-2.8s-5.3 1.1-7.2 2.8l-2-2c2.4-2.2 5.6-3.6 9.2-3.6zm0 5.6c2 0 3.8.8 5.1 2l-5.1 5.1-5.1-5.1c1.3-1.2 3.1-2 5.1-2z"/><rect x="54" y="3" width="24" height="14" rx="4" fill="none" stroke="currentColor" stroke-opacity=".45" stroke-width="1.6"/><rect x="56.5" y="5.5" width="19" height="9" rx="2.2" fill="#4cd964"/><rect x="79.5" y="7.5" width="2" height="5" rx="1" fill-opacity=".45"/></svg></div>
+          <p class="rc-counter">2件中1件目</p>
+          <p class="rc-q">お支払いは完了しましたか？</p>
+          <div class="rc-bill"><span class="ico">🏠</span><b>家賃</b><strong>¥85,000</strong><small>期限：2026年11月29日</small></div>
+          <p class="rc-yes"><span>はい、支払いました</span></p>
+          <p class="rc-no">まだです</p>
+          <p class="rc-toast"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="ck" d="M5 12.5l4.5 4.5L19 7.5" pathLength="1"/></svg></i>記録しました · 家賃 · ¥85,000</p>
+        </div>
+      </div><p class="rc-cap"><span>06</span>ワンタップで、履歴に記録。</p></li>
+        </ol>
+        <div class="rail-nav">
+          <button type="button" class="rail-btn prev" aria-label="前へ"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+          <div class="rail-dots"><button type="button" aria-label="1" aria-current="true"></button><button type="button" aria-label="2"></button><button type="button" aria-label="3"></button><button type="button" aria-label="4"></button><button type="button" aria-label="5"></button><button type="button" aria-label="6"></button></div>
+          <button type="button" class="rail-btn next" aria-label="次へ"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+        </div>
+      </div>
+      <!-- /scene:rail -->
+      <div class="rail-points">
+        <ul class="points cols3">
           <li>
             <span class="dot" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></span>
             <h3>好きなタイミングでリマインド</h3>
@@ -352,65 +707,6 @@
             <p>支払日が過ぎたら、タップひとつで履歴に記録します。</p>
           </li>
         </ul>
-        <div class="stack" aria-label="リマインダーの例">
-          <div class="notif">
-            <img class="icon" src="/apple-touch-icon.png" alt="" width="42" height="42" loading="lazy">
-            <b>サブスク <span class="when">今</span></b>
-            <p class="muted">動画配信</p>
-            <p>今月使った？サブスクはあと 3 日で更新されます。</p>
-          </div>
-          <div class="notif">
-            <img class="icon" src="/apple-touch-icon.png" alt="" width="42" height="42" loading="lazy">
-            <b>支払い <span class="when">9:00</span></b>
-            <p class="muted">家賃</p>
-            <p>5 日後に支払い · ¥85,000</p>
-          </div>
-          <div class="bills">
-            <h3>固定費</h3>
-            <ul>
-              <li><span>クラウドストレージ</span><span>¥400</span></li>
-              <li><span>ジム</span><span>¥7,700</span></li>
-              <li><span>電気</span><span>¥9,800</span></li>
-              <li class="total"><span>毎月の合計</span><span>¥128,600</span></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="chapter" aria-labelledby="ch3">
-    <div class="wrap">
-      <div class="chapter-head">
-        <div><h2 id="ch3">お金の行き先が、<span class="voice">見える。</span></h2></div>
-        <p>時間の推移、カテゴリ、一日のリズム、曜日や天気によるパターン。そして、あなた自身の支出だけをもとにした短い AI インサイト。</p>
-      </div>
-      <div class="bento">
-        <article class="tile big">
-          <div>
-            <h3>6 つの面をもつ分析</h3>
-            <p>キューブをスワイプしてグラフを切り替え。棒をタップすると中身が見られます。</p>
-          </div>
-          <div class="phone">
-            <img src="/assets/img/ja-04-insights-400.webp" srcset="/assets/img/ja-04-insights-400.webp 400w, /assets/img/ja-04-insights-800.webp 800w" sizes="260px" width="400" height="869" loading="lazy" decoding="async" alt="分析画面。月の合計、1 日あたりの金額、週ごとの棒グラフ。">
-          </div>
-        </article>
-        <article class="tile wide dark">
-          <div>
-            <p class="insight-label">AI インサイト · 気づいたこと</p>
-            <p class="insight-quote">「月曜がいちばん使う日で、夜の支出が月の大半を占めています。月曜の夜、何がピークにつながっているのでしょう？」</p>
-          </div>
-          <p class="insight-foot"><span>わかった</span><span>あなたの支出だけをもとに</span></p>
-        </article>
-        <article class="tile wide">
-          <h3>ひと月が見えるカレンダー</h3>
-          <p>使った金額に応じて毎日が色分けされます。基準は自分で設定できます。</p>
-          <div class="heat" aria-hidden="true">
-            <i class="l5"></i><i class="l1"></i><i class="l2"></i><i class="l5"></i><i class="l1"></i><i class="l1"></i><i class="l3"></i>
-            <i class="l5"></i><i class="l4"></i><i class="l2"></i><i class="l1"></i><i></i><i class="l5"></i><i class="l2"></i>
-            <i class="l2"></i><i class="l1"></i><i class="l5"></i><i class="l2"></i><i class="l3"></i><i class="l1"></i><i></i>
-          </div>
-        </article>
       </div>
     </div>
   </section>
@@ -441,25 +737,42 @@
             <p>同期はあなた専用の iCloud で行われます。1 台だけで使いたいときは、アプリでオフにできます。</p>
           </li>
         </ul>
-        <div class="devices" role="img" aria-label="hustless の分析を表示した iPad と、その手前の iPhone。iPhone で追加したラテ ¥480 が、すぐに iPad にも表示されます。">
+        <div class="devices" data-dvc data-typed="ラテ 480" data-start="5830" data-add="480" data-currency="¥" data-decimals="0" data-count-label="今日{n}件" role="img" aria-label="hustless の分析を表示した iPad と、その手前の iPhone。iPhone で追加したラテ ¥480 が、すぐに iPad にも表示されます。">
           <div class="tablet">
-            <img src="/assets/img/ipad-ja-insights-560.webp" srcset="/assets/img/ipad-ja-insights-560.webp 560w, /assets/img/ipad-ja-insights-1120.webp 1120w" sizes="(max-width: 860px) 80vw, 500px" width="560" height="746" loading="lazy" decoding="async" alt="">
+            <div class="lsp">
+              <div class="lsp-status"><span>9:41&nbsp;&nbsp;10月31日(土)</span><i class="dots"></i><svg viewBox="0 0 52 20" fill="currentColor" aria-hidden="true"><path d="M10 6.5c3.6 0 6.8 1.4 9.2 3.6l-2 2c-1.9-1.7-4.4-2.8-7.2-2.8s-5.3 1.1-7.2 2.8l-2-2c2.4-2.2 5.6-3.6 9.2-3.6zm0 5.6c2 0 3.8.8 5.1 2l-5.1 5.1-5.1-5.1c1.3-1.2 3.1-2 5.1-2z"/><rect x="24" y="3" width="24" height="14" rx="4" fill="none" stroke="currentColor" stroke-opacity=".45" stroke-width="1.6"/><rect x="26.5" y="5.5" width="19" height="9" rx="2.2"/><rect x="49.5" y="7.5" width="2" height="5" rx="1" fill-opacity=".45"/></svg></div>
+              <p class="lsp-brand">hust<span>less</span></p>
+              <p class="lsp-greet">ゆうきさん、おはようございます <span class="ls-avatar"></span></p>
+              <div class="lsp-card lsp-here"><span class="ls-heart">🤍</span><span><i>ここにいる</i><small>何かを買う前に</small></span><svg viewBox="0 0 10 18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 2l6 7-6 7"/></svg></div>
+              <div class="lsp-card lsp-today"><small>今日</small><b class="lsp-total">¥5,830</b><span class="lsp-count">今日4件</span></div>
+              <div class="lsp-mic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><rect x="8.5" y="2.5" width="7" height="12" rx="3.5"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3.5M8.5 21.5h7"/></svg></div>
+              <p class="lsp-hint">話すか下に入力して</p>
+              <div class="lsp-field">例：「コーヒー 500」</div>
+              <span class="lsp-plus">+</span>
+              <p class="lsp-recent">最近</p>
+              <div class="lsp-list"><ul><li class="lsp-row new" data-vars="--tone:#33291f"><span class="ico">☕</span><span class="nm">ラテ<small>コーヒー</small></span><span class="am">¥480<small>たった今</small></span></li><li class="lsp-row" data-vars="--tone:#24382a"><span class="ico">🛒</span><span class="nm">スーパー<small>食料品</small></span><span class="am">¥3,500<small>20分前</small></span></li><li class="lsp-row" data-vars="--tone:#3a2220"><span class="ico">🍽️</span><span class="nm">ランチ<small>食事</small></span><span class="am">¥1,200<small>1時間前</small></span></li><li class="lsp-row" data-vars="--tone:#33291f"><span class="ico">☕</span><span class="nm">ラテ<small>コーヒー</small></span><span class="am">¥480<small>3時間前</small></span></li><li class="lsp-row" data-vars="--tone:#3a2220"><span class="ico">🍽️</span><span class="nm">朝ごはん<small>食事</small></span><span class="am">¥650<small>5時間前</small></span></li></ul></div>
+              <div class="lsp-tabs"><span class="on"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 1.5c.5 5.6 4.9 10 10.5 10.5-5.6.5-10 4.9-10.5 10.5C11.5 16.9 7.1 12.5 1.5 12 7.1 11.5 11.5 7.1 12 1.5z"/></svg>いま</span><span><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="2" y="11" width="5.5" height="10" rx="1.6"/><rect x="9.25" y="6" width="5.5" height="15" rx="1.6"/><rect x="16.5" y="2.5" width="5.5" height="18.5" rx="1.6"/></svg>分析</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="2.5" y="3.5" width="19" height="17" rx="3.5"/><path d="M2.5 8.5h19"/><g fill="currentColor" stroke="none"><circle cx="7.5" cy="12.5" r="1"/><circle cx="12" cy="12.5" r="1"/><circle cx="16.5" cy="12.5" r="1"/><circle cx="7.5" cy="16.5" r="1"/><circle cx="12" cy="16.5" r="1"/><circle cx="16.5" cy="16.5" r="1"/></g></svg>カレンダー</span><span><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 1.5a10.5 10.5 0 1 0 0 21 10.5 10.5 0 0 0 0-21zm0 4a3.6 3.6 0 1 1 0 7.2 3.6 3.6 0 0 1 0-7.2zm0 15c-2.7 0-5.1-1.2-6.7-3.2 1.4-1.9 4-2.8 6.7-2.8s5.3.9 6.7 2.8c-1.6 2-4 3.2-6.7 3.2z"/></svg>あなた</span></div>
+              <i class="lsp-home"></i>
+            </div>
           </div>
           <div class="phone">
-            <img src="/assets/img/ja-03-now-400.webp" sizes="200px" width="400" height="869" loading="lazy" decoding="async" alt="">
+            <div class="ls dv-ls">
+              <div class="ls-status"><span>9:41</span><svg viewBox="0 0 82 20" fill="currentColor" aria-hidden="true"><rect x="0" y="12" width="4" height="7" rx="1"/><rect x="6" y="9" width="4" height="10" rx="1"/><rect x="12" y="5" width="4" height="14" rx="1"/><rect x="18" y="1" width="4" height="18" rx="1"/><path d="M38 6.5c3.6 0 6.8 1.4 9.2 3.6l-2 2c-1.9-1.7-4.4-2.8-7.2-2.8s-5.3 1.1-7.2 2.8l-2-2c2.4-2.2 5.6-3.6 9.2-3.6zm0 5.6c2 0 3.8.8 5.1 2l-5.1 5.1-5.1-5.1c1.3-1.2 3.1-2 5.1-2z"/><rect x="54" y="3" width="24" height="14" rx="4" fill="none" stroke="currentColor" stroke-opacity=".45" stroke-width="1.6"/><rect x="56.5" y="5.5" width="19" height="9" rx="2.2" fill="#4cd964"/><rect x="79.5" y="7.5" width="2" height="5" rx="1" fill-opacity=".45"/></svg></div>
+              <div class="ls-top"><span class="ls-brand">hust<span>less</span></span><span class="ls-greet">ゆうきさん、おはようございます</span><span class="ls-avatar"></span></div>
+              <div class="ls-card ls-here"><span class="ls-heart">🤍</span><span><i>ここにいる</i><small>何かを買う前に</small></span><svg viewBox="0 0 10 18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 2l6 7-6 7"/></svg></div>
+              <div class="ls-card ls-today"><small>今日</small><b class="ls-total">¥5,830</b><span class="ls-count">今日4件</span></div>
+              <div class="ls-mic"><span class="ls-mic-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><rect x="8.5" y="2.5" width="7" height="12" rx="3.5"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3.5M8.5 21.5h7"/></svg></span></div>
+              <p class="ls-hint"><span class="idle">話すか下に入力して</span></p>
+              <div class="ls-field"><span class="ls-ph">例：「コーヒー 500」</span><span class="ls-input"></span><span class="ls-cat">☕ コーヒー</span></div>
+              <span class="ls-plus">+</span>
+              <p class="ls-recent">最近</p>
+              <div class="ls-list"><ul><li class="ls-row new" data-vars="--tone:#33291f"><span class="ico">☕</span><span class="nm">ラテ<small>コーヒー</small></span><span class="am">¥480<small>たった今</small></span></li><li class="ls-row" data-vars="--tone:#24382a"><span class="ico">🛒</span><span class="nm">スーパー<small>食料品</small></span><span class="am">¥3,500<small>20分前</small></span></li><li class="ls-row" data-vars="--tone:#3a2220"><span class="ico">🍽️</span><span class="nm">ランチ<small>食事</small></span><span class="am">¥1,200<small>1時間前</small></span></li><li class="ls-row" data-vars="--tone:#33291f"><span class="ico">☕</span><span class="nm">ラテ<small>コーヒー</small></span><span class="am">¥480<small>3時間前</small></span></li><li class="ls-row" data-vars="--tone:#3a2220"><span class="ico">🍽️</span><span class="nm">朝ごはん<small>食事</small></span><span class="am">¥650<small>5時間前</small></span></li></ul></div>
+              <div class="ls-tabs"><span class="on"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 1.5c.5 5.6 4.9 10 10.5 10.5-5.6.5-10 4.9-10.5 10.5C11.5 16.9 7.1 12.5 1.5 12 7.1 11.5 11.5 7.1 12 1.5z"/></svg>いま</span><span><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="2" y="11" width="5.5" height="10" rx="1.6"/><rect x="9.25" y="6" width="5.5" height="15" rx="1.6"/><rect x="16.5" y="2.5" width="5.5" height="18.5" rx="1.6"/></svg>分析</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="2.5" y="3.5" width="19" height="17" rx="3.5"/><path d="M2.5 8.5h19"/><g fill="currentColor" stroke="none"><circle cx="7.5" cy="12.5" r="1"/><circle cx="12" cy="12.5" r="1"/><circle cx="16.5" cy="12.5" r="1"/><circle cx="7.5" cy="16.5" r="1"/><circle cx="12" cy="16.5" r="1"/><circle cx="16.5" cy="16.5" r="1"/></g></svg>カレンダー</span><span><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 1.5a10.5 10.5 0 1 0 0 21 10.5 10.5 0 0 0 0-21zm0 4a3.6 3.6 0 1 1 0 7.2 3.6 3.6 0 0 1 0-7.2zm0 15c-2.7 0-5.1-1.2-6.7-3.2 1.4-1.9 4-2.8 6.7-2.8s5.3.9 6.7 2.8c-1.6 2-4 3.2-6.7 3.2z"/></svg>あなた</span></div>
+            </div>
           </div>
-          <svg class="sync-arc" viewBox="0 0 100 120" aria-hidden="true">
-            <path id="sync-path" d="M14 68 Q26 24 60 26"/>
-            <g class="sync-mover" opacity="0">
-              <circle class="halo" r="2.6" fill="#c4956a" fill-opacity="0.28"/>
-              <circle class="core" r="1.15" fill="#c4956a"/>
-              <animateMotion dur="7s" repeatCount="indefinite" calcMode="spline" keyPoints="0;0;1;1" keyTimes="0;0.2;0.44;1" keySplines="0 0 1 1;0.45 0 0.55 1;0 0 1 1"><mpath href="#sync-path"/></animateMotion>
-              <animate attributeName="opacity" dur="7s" repeatCount="indefinite" values="0;0;1;1;0;0" keyTimes="0;0.16;0.2;0.44;0.48;1"/>
-            </g>
-          </svg>
-          <span class="sync-label" aria-hidden="true">iCloud</span>
-          <span class="sync-chip from" aria-hidden="true"><small>iPhone で追加</small><b>ラテ · ¥480</b></span>
-          <span class="sync-chip to" aria-hidden="true"><small>すぐに iPad にも</small><b>ラテ · ¥480</b></span>
+          <svg class="dv-path" aria-hidden="true"><path class="guide"/><path class="trail" pathLength="1"/></svg>
+          <span class="dv-label" aria-hidden="true"><svg viewBox="0 0 34 22" aria-hidden="true"><defs><linearGradient id="dv-gold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ecc391"/><stop offset="1" stop-color="#b98757"/></linearGradient></defs><path fill="url(#dv-gold)" d="M27.4 9.3A8.6 8.6 0 0 0 11 6.4 6.6 6.6 0 0 0 7.6 19.5h18.6a5.2 5.2 0 0 0 1.2-10.2z"/></svg>iCloud</span>
+          <p class="dv-fly" aria-hidden="true"><span class="ico">☕</span><span class="nm">ラテ<small>コーヒー</small></span><span class="am">¥480<small>たった今</small></span></p>
         </div>
       </div>
     </div>

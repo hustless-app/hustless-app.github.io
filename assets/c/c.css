@@ -1,0 +1,237 @@
+/* Preview C — the design system applied (see _preview/DESIGN.md).
+   Official Apple product bezels everywhere (iOS 27 UI Kit: iPhone 18 Pro Black, iPad Pro M5 13" Space Black),
+   one lamp from the upper left, exploded-UI depth, smooth wheel. */
+
+@import url("../vendor/lenis.css");
+
+/* Screen openings measured on the bezel artwork, as % of the bezel width (padding % is width-based):
+   iPhone 1350×2760, screen 1206×2621 at (72, 70) · iPad 2300×3000, screen 2064×2752 at (118, 124). */
+:root {
+  --bz-phone-pad: 5.185% 5.407% 5.111% 5.333%;
+  --bz-ipad-pad: 5.391% 5.13% 5.391% 5.13%;
+  --device-shadow: 0 2px 3px rgba(20, 12, 4, 0.12), 0 14px 28px -10px rgba(20, 12, 4, 0.3), 0 44px 80px -30px rgba(20, 12, 4, 0.5);
+  --glass-sheen: linear-gradient(118deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.025) 28%, transparent 42%);
+}
+
+/* ---------- the iPhone: real bezel over the screen ---------- */
+.phone, .devices .phone {
+  padding: var(--bz-phone-pad); background: none; border-radius: 15.5% / 7.6%;
+  box-shadow: var(--device-shadow);
+}
+.phone { position: relative; }
+.devices .phone { position: absolute; }
+.phone img, .phone .ls, .devices .phone img { border-radius: 13.5% / 6.2%; }
+.phone::before { content: none; }
+.phone > .bezel, .tablet > .bezel {
+  position: absolute; inset: 0; z-index: 8; pointer-events: none;
+  background: var(--bezel) center / 100% 100% no-repeat;
+}
+.phone > .bezel { --bezel: url("../img/bezel-iphone.webp"); }
+.phone::after { /* glass sheen inside the screen only */
+  content: ""; position: absolute; inset: 2.536% 5.407% 2.5% 5.333%; border-radius: 13.5% / 6.2%;
+  background: var(--glass-sheen); pointer-events: none; z-index: 7;
+}
+
+/* ---------- the iPad ---------- */
+.tablet {
+  position: relative; background: none; padding: var(--bz-ipad-pad); border-radius: 6.8% / 5.2%;
+  box-shadow: var(--device-shadow);
+}
+.tablet img { border-radius: 3.6%  / 2.7%; }
+.tablet > .bezel { --bezel: url("../img/bezel-ipad.webp"); }
+.tablet::after { content: ""; position: absolute; inset: 4.133% 5.13%; border-radius: 3.6% / 2.7%; background: var(--glass-sheen); pointer-events: none; z-index: 7; }
+
+/* ---------- rail cards are iPhones too ---------- */
+.rc-inner {
+  aspect-ratio: 1350 / 2760; border: 0; border-radius: 15.5% / 7.6%; background: none; overflow: visible;
+}
+.rc-inner > .rc-app, .rc-inner > .rc-lock {
+  inset: 5.185cqw 5.407cqw 5.111cqw 5.333cqw; border-radius: 12cqw; overflow: hidden;
+}
+.rc-inner > .bezel {
+  position: absolute; inset: 0; z-index: 8; pointer-events: none;
+  background: url("../img/bezel-iphone.webp") center / 100% 100% no-repeat;
+}
+/* the screens inside the rail were laid out for a frame-less card: nudge their status bars under the island */
+.rc-inner .ls-status { top: 9.5cqw; }
+.rc-app { padding-top: 22cqw; }
+
+/* ---------- exploded UI: the live Now screen comes apart in depth, then reassembles ---------- */
+.phones { perspective: 1400px; }
+.phones .phone.live { transform-style: preserve-3d; }
+.phones .phone.live .ls { overflow: visible; transform-style: preserve-3d; }
+.phones .phone.live .ls > * { transform-style: preserve-3d; will-change: transform; }
+.phones .phone.live .ls::before { content: ""; position: absolute; inset: 0; border-radius: inherit; background: #1d1915; }
+.phones .phone.live::after { transition: opacity 400ms; }
+.phones .phone.live.is-exploding::after { opacity: 0; }
+
+/* ---------- the lamp: one warm light from the upper left on every scene ---------- */
+.chapter { position: relative; }
+.chapter::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  background: radial-gradient(60% 50% at 12% 0%, rgba(196, 149, 106, 0.08), transparent 70%);
+}
+.chapter > .wrap { position: relative; z-index: 1; }
+
+/* ---------- shadows follow the real device outline (drop-shadow on the bezel art, not a box) ---------- */
+.phone, .devices .phone, .tablet, .rc-inner { box-shadow: none; }
+.phone > .bezel, .tablet > .bezel, .rc-inner > .bezel, .demo-3d > .bezel {
+  filter: drop-shadow(0 2px 2px rgba(20, 12, 4, 0.18)) drop-shadow(0 18px 28px rgba(20, 12, 4, 0.32));
+}
+
+/* ---------- the chat lives on an iPad ---------- */
+.demo-3d { position: relative; padding: var(--bz-ipad-pad); width: min(540px, 100%); margin-inline: auto; }
+.demo-3d > .bezel { position: absolute; inset: 0; z-index: 8; pointer-events: none; background: url("../img/bezel-ipad.webp") center / 100% 100% no-repeat; }
+.demo-3d .demo { aspect-ratio: 2064 / 2752; display: flex; flex-direction: column; border-radius: 3.6% / 2.7%; box-shadow: none; }
+.demo-3d .demo-log { flex: 1 1 auto; min-height: 0; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; }
+.demo-figure figcaption { text-align: center; }
+
+/* ---------- reminders: lock screens look like lock screens ---------- */
+.rc-lock { display: flex; flex-direction: column; }
+.rc-lock .ls-status > span { visibility: hidden; } /* no small clock on a lock screen */
+.rc-lock .rc-date { order: 1; padding-top: 25cqw; }
+.rc-lock .rc-clock { order: 2; margin-top: 1cqw; }
+.rc-lock .rc-notif { top: 72cqw; }
+.rc-lock .rc-actions { top: 112cqw; }
+.rc-app .ls-status, .rc-lock .ls-status { left: 13cqw; right: 12cqw; }
+
+/* ---------- devices: iPad Now screen, rebuilt (sizes in cqw of the iPad screen) ---------- */
+.devices[data-dvc] { perspective: 1600px; }
+.lsp {
+  position: relative; container-type: inline-size; aspect-ratio: 2064 / 2752; overflow: hidden; border-radius: 3.6% / 2.7%;
+  background: #1d1915; color: #fff; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif; -webkit-font-smoothing: antialiased;
+}
+.lsp p { margin: 0; }
+.lsp-status { position: absolute; top: 0.9cqw; left: 2.4cqw; right: 2.4cqw; display: flex; justify-content: space-between; align-items: center; font-size: 1.3cqw; font-weight: 600; }
+.lsp-status .dots { width: 2.6cqw; height: 0.6cqw; background: radial-gradient(circle, rgba(255,255,255,.5) 40%, transparent 45%) 0 0 / 0.9cqw 0.6cqw repeat-x; }
+.lsp-status svg { width: 3.6cqw; }
+.lsp-brand { position: absolute; top: 4.6cqw; left: 3.15cqw; font-family: var(--font-sans); font-size: 2.4cqw; font-weight: 500; letter-spacing: -0.03em; }
+.lsp-brand span { font-weight: 300; color: var(--accent); }
+.lsp-greet { position: absolute; top: 5.2cqw; right: 3cqw; display: flex; gap: 1cqw; align-items: center; font-size: 1.55cqw; color: rgba(255,255,255,.55); }
+.lsp-greet .ls-avatar { width: 1.9cqw; height: 1.9cqw; }
+.lsp-card { position: absolute; left: 3.15cqw; width: 38.7cqw; background: #2a2420; border-radius: 1.6cqw; box-shadow: 0 0 0 0.08cqw rgba(255,255,255,.06) inset; }
+.lsp-here { top: 10.9cqw; height: 7.3cqw; display: flex; align-items: center; gap: 1.6cqw; padding: 0 1.8cqw 0 1.5cqw; }
+.lsp-here .ls-heart { width: 4.4cqw; height: 4.4cqw; border-radius: 1.1cqw; font-size: 2.2cqw; }
+.lsp-here > span:nth-child(2) { display: grid; gap: 0.2cqw; margin-right: auto; }
+.lsp-here i { font-family: var(--font-voice); font-size: 1.85cqw; }
+.lsp-here small { font-size: 1.2cqw; color: #c99a6c; }
+.lsp-here svg { width: 1cqw; color: rgba(255,255,255,.55); }
+.lsp-today { top: 21.5cqw; height: 13.7cqw; padding: 2.4cqw; display: grid; align-content: start; gap: 0.5cqw; transition: box-shadow 500ms; }
+.lsp-today small { font-size: 1.2cqw; color: #c99a6c; font-weight: 600; }
+.lsp-total { font-size: 4.3cqw; font-weight: 700; letter-spacing: -0.03em; line-height: 1.15; font-variant-numeric: tabular-nums; }
+.lsp-count { font-size: 1.35cqw; color: rgba(255,255,255,.6); }
+.lsp-mic { position: absolute; top: 38.3cqw; left: calc(3.15cqw + 19.35cqw - 3.25cqw); width: 6.5cqw; height: 6.5cqw; border-radius: 50%; display: grid; place-items: center; color: #1d1915; background: radial-gradient(circle at 50% 35%, #d6a676, #b98757); box-shadow: 0 0 3cqw -0.5cqw rgba(201,154,108,.45); }
+.lsp-mic svg { width: 2.4cqw; }
+.lsp-hint { position: absolute; top: 46.4cqw; left: 3.15cqw; width: 38.7cqw; text-align: center; font-size: 1.33cqw; color: #c99a6c; }
+.lsp-field { position: absolute; top: 51cqw; left: 3.15cqw; width: 34.2cqw; height: 3.8cqw; border-radius: 1cqw; background: #2a2420; display: flex; align-items: center; padding: 0 1.5cqw; font-size: 1.6cqw; color: rgba(255,255,255,.28); }
+.lsp-plus { position: absolute; top: 51.4cqw; left: 38.6cqw; width: 2.9cqw; height: 2.9cqw; border-radius: 50%; background: #5a4532; color: #1d1915; display: grid; place-items: center; font-size: 2.4cqw; line-height: 1; }
+.lsp-recent { position: absolute; top: 10.9cqw; left: 46.5cqw; font-size: 1.2cqw; font-weight: 600; letter-spacing: 0.08em; color: rgba(255,255,255,.55); }
+.lsp-list { position: absolute; top: 13cqw; left: 46.5cqw; width: 50.3cqw; height: 29.6cqw; overflow: hidden; border-radius: 1.4cqw; }
+.lsp-list ul, .dv-ls .ls-list ul { list-style: none; margin: 0; padding: 0; will-change: transform; }
+.lsp-row { display: flex; align-items: center; gap: 1.6cqw; height: 5.9cqw; padding: 0 1.6cqw; background: #2a2420; border-bottom: 0.08cqw solid rgba(0,0,0,.35); position: relative; }
+.lsp-row .ico { flex: none; width: 3.9cqw; height: 3.9cqw; border-radius: 0.8cqw; display: grid; place-items: center; font-size: 2cqw; background: var(--tone, #33291f); }
+.lsp-row .nm { display: grid; gap: 0.2cqw; margin-right: auto; font-size: 1.6cqw; line-height: 1.1; }
+.lsp-row .nm small { font-size: 1.35cqw; color: #c99a6c; }
+.lsp-row .am { display: grid; gap: 0.2cqw; justify-items: end; font-size: 1.6cqw; font-weight: 700; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.lsp-row .am small { font-size: 1.2cqw; font-weight: 400; color: rgba(255,255,255,.55); }
+.lsp-row.new::after, .dv-ls .ls-row.new::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: 0 0 0 0.25cqw rgba(214,166,118,.9) inset; background: rgba(214,166,118,.1); opacity: var(--glow, 0); pointer-events: none; }
+.lsp-tabs { position: absolute; left: 0; right: 0; top: 127.2cqw; display: grid; grid-template-columns: repeat(4, 1fr); }
+.lsp-tabs span { display: grid; justify-items: center; gap: 0.4cqw; font-size: 1.1cqw; color: rgba(255,255,255,.7); }
+.lsp-tabs svg { width: 2.4cqw; height: 2.4cqw; }
+.lsp-tabs .on { color: #e2ad78; }
+.lsp-home { position: absolute; left: 35%; right: 35%; bottom: 1cqw; height: 0.5cqw; border-radius: 1cqw; background: rgba(255,255,255,.45); }
+.lsp.is-bump .lsp-today, .dv-ls.is-bump .ls-today { box-shadow: 0 0 0 0.25cqw rgba(201,154,108,.6) inset, 0 0 5cqw -1cqw rgba(201,154,108,.45); }
+
+/* the devices scene's iPhone types instead of listening; its chip and caret are driven by scroll */
+.dv-ls .ls-cat { transition: opacity 200ms, transform 300ms cubic-bezier(0.34, 1.4, 0.64, 1); }
+.dv-ls.is-chip .ls-cat { opacity: 1; transform: none; }
+.dv-ls.is-typing .ls-ph { opacity: 0; }
+
+/* the latte in flight */
+.dv-fly {
+  position: absolute; left: 0; top: 0; z-index: 20; margin: 0; display: flex; align-items: center; gap: 0.6em; padding: 0 0.8em; height: 2.6em;
+  font-size: 9px; color: #fff; background: #2f2721; border-radius: 0.6em; opacity: 0; pointer-events: none; transform-origin: 0 0; white-space: nowrap;
+  box-shadow: 0 0 0 1.5px rgba(214,166,118,.95), 0 0 24px 4px rgba(214,166,118,.55), 0 12px 24px -8px rgba(0,0,0,.6);
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+}
+.dv-fly .ico { width: 1.9em; height: 1.9em; border-radius: 0.4em; display: grid; place-items: center; background: #33291f; }
+.dv-fly .nm, .dv-fly .am { display: grid; line-height: 1.15; }
+.dv-fly .nm { margin-right: auto; }
+.dv-fly small { font-size: 0.82em; color: #c99a6c; }
+.dv-fly .am { justify-items: end; font-weight: 700; }
+.dv-fly .am small { color: rgba(255,255,255,.55); font-weight: 400; }
+.dv-path { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; z-index: 15; }
+.dv-path .guide { fill: none; stroke: var(--accent); stroke-width: 1.2; stroke-dasharray: 3 5; stroke-linecap: round; opacity: 0; }
+.dv-path .trail { fill: none; stroke: #e7b887; stroke-width: 2; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; filter: drop-shadow(0 0 3px rgba(231,184,135,.9)); }
+.dv-label { position: absolute; left: 0; top: 0; z-index: 16; padding: 0.2rem 0.6rem; border-radius: 99px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent-ink); background: var(--bg); box-shadow: 0 0 0 1px var(--faint); opacity: 0; transform: translate(-50%, -50%); }
+.devices[data-dvc] .phone { z-index: 10; }
+.devices[data-dvc] .tablet { z-index: 5; }
+
+/* ---------- calendar: the month, day by day ---------- */
+.cal { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: clamp(1.5rem, 1rem + 3vw, 3.5rem); align-items: center; max-width: none; }
+.cal-copy h3 { margin: 0 0 0.5rem; }
+.cal-legend { list-style: none; margin: 1.25rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.55rem 1rem; }
+.cal-legend li { display: flex; align-items: center; gap: 0.55rem; font-size: 0.92rem; color: var(--dim); cursor: default; padding: 0.2rem 0.4rem; margin: -0.2rem -0.4rem; border-radius: 8px; transition: background-color 200ms, color 200ms; }
+.cal-legend li:hover, .cal-legend li.is-on { background: var(--chip-bg); color: var(--text); }
+.cal-legend i { width: 0.9rem; height: 0.9rem; border-radius: 50%; flex: none; background: var(--c); box-shadow: 0 0 0 1px var(--faint); }
+.cal-note { margin: 1rem 0 0; font-size: 0.85rem; color: var(--dim); }
+.cal [data-lvl="0"] { --c: transparent; } .cal [data-lvl="1"] { --c: #15803d; } .cal [data-lvl="2"] { --c: #22c55e; }
+.cal [data-lvl="3"] { --c: #84cc16; } .cal [data-lvl="4"] { --c: #f59e0b; } .cal [data-lvl="5"] { --c: #ef4444; }
+.cal-month { position: relative; padding: clamp(1rem, 0.6rem + 1.5vw, 1.6rem); border-radius: var(--radius-lg); background: var(--app-bg); color: var(--app-text); box-shadow: 0 0 0 1px rgba(255,255,255,.05) inset, 0 24px 50px -30px rgba(20,12,4,.5); }
+.cal-title { margin: 0 0 0.9rem; font-weight: 700; font-size: 1.05rem; }
+.cal-week, .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: clamp(4px, 0.6vw, 8px); }
+.cal-week { margin: 0 0 0.5rem; font-size: 0.72rem; color: var(--app-dim); text-align: center; }
+.cal-grid { list-style: none; margin: 0; padding: 0; }
+.cal-grid li { aspect-ratio: 1; border-radius: 50%; display: grid; place-items: center; position: relative; cursor: pointer; outline: none; }
+.cal-grid li span { position: relative; z-index: 1; font-size: clamp(0.62rem, 0.5rem + 0.4vw, 0.8rem); font-weight: 600; font-variant-numeric: tabular-nums; color: rgba(255,255,255,.92); text-shadow: 0 1px 2px rgba(0,0,0,.35); }
+.cal-grid li::before { content: ""; position: absolute; inset: 0; border-radius: 50%; background: var(--c); box-shadow: 0 0 0 1px rgba(255,255,255,.08) inset; transition: transform 380ms cubic-bezier(0.34, 1.5, 0.64, 1), opacity 300ms, filter 200ms; }
+.cal-grid li[data-lvl="0"]::before { background: rgba(255,255,255,.06); }
+.cal-grid li.pad { cursor: default; }
+.cal-grid li.pad::before { content: none; }
+.cal.is-armed .cal-grid li:not(.is-in):not(.pad)::before { transform: scale(0.2); opacity: 0; }
+.cal.is-armed .cal-grid li:not(.is-in) span { opacity: 0.25; }
+.cal-grid li span { transition: opacity 300ms; }
+.cal-grid li:hover::before, .cal-grid li:focus-visible::before, .cal-grid li.is-picked::before { transform: scale(1.18); filter: brightness(1.12); }
+.cal-grid li.is-picked { z-index: 2; }
+.cal-grid li.is-picked::after { content: ""; position: absolute; inset: -4px; border-radius: 50%; box-shadow: 0 0 0 2px var(--accent); }
+.cal.is-filter .cal-grid li:not(.pad):not(.is-match)::before { opacity: 0.18; }
+.cal-tip { margin: 1rem 0 0; min-height: 2.6em; padding: 0.6rem 0.8rem; border-radius: 12px; background: rgba(255,255,255,.06); font-size: 0.9rem; line-height: 1.35; color: var(--app-text); transition: opacity 250ms; }
+.cal-tip b { font-variant-numeric: tabular-nums; }
+.cal-tip i { display: inline-block; width: 0.7em; height: 0.7em; border-radius: 50%; background: var(--c); margin-right: 0.45em; vertical-align: 0.02em; }
+@media (max-width: 860px) { .cal { grid-template-columns: 1fr; } }
+
+/* ---------- screen openings, measured on the device itself ----------
+   Padding % is relative to the parent's width, which made the black border too thick wherever the device
+   is narrower than its parent. Devices now keep the bezel's aspect ratio and place the screen absolutely,
+   where top/bottom % follow the device's height and left/right % its width. */
+.phone, .devices .phone { padding: 0; aspect-ratio: 1350 / 2760; height: auto; }
+.phone > .ls { position: absolute; inset: 2.536% 5.407% 2.5% 5.333%; aspect-ratio: auto; }
+.phone > img { position: absolute; top: 2.536%; left: 5.333%; width: 89.26%; height: 94.964%; object-fit: cover; }
+.tablet { padding: 0; aspect-ratio: 2300 / 3000; height: auto; }
+.tablet > .lsp { position: absolute; inset: 4.133% 5.13%; aspect-ratio: auto; }
+.tablet > img { position: absolute; top: 4.133%; left: 5.13%; width: 89.74%; height: 91.734%; object-fit: cover; }
+.demo-3d { padding: 0; aspect-ratio: 2300 / 3000; }
+.demo-3d .demo { position: absolute; inset: 4.133% 5.13%; aspect-ratio: auto; }
+
+/* ---------- the latte in flight: one paper card, one gold edge, one glow ---------- */
+.dv-fly {
+  background: #fdfaf4; color: #1a1814;
+  box-shadow: 0 0 0 1.5px #d6a676, 0 0 0 6px rgba(214, 166, 118, 0.18), 0 0 34px 6px rgba(214, 166, 118, 0.45), 0 16px 30px -12px rgba(0, 0, 0, 0.55);
+}
+.dv-fly .ico { background: #efe3d3; }
+.dv-fly small { color: #8a5d36; }
+.dv-fly .am small { color: rgba(26, 24, 20, 0.55); }
+
+/* ---------- iCloud: a gold cloud above the devices, not on the iPad ---------- */
+.dv-label {
+  display: inline-flex; align-items: center; gap: 0.4rem; padding: 0; background: none; box-shadow: none;
+  color: var(--accent); font-size: 0.95rem; font-weight: 600; letter-spacing: 0; text-transform: none; white-space: nowrap;
+  filter: drop-shadow(0 0 10px rgba(214, 166, 118, 0.45));
+}
+.dv-label svg { width: 1.7rem; height: auto; }
+.phone.live { padding: 0; }
+
+/* The flying card must never be depth-sorted against the tilted devices (that sliced it diagonally):
+   the scene is flat, each device keeps its own perspective (transformPerspective), and z-index orders them. */
+.devices[data-dvc] { transform-style: flat; perspective: none; }
+.devices[data-dvc] .phone, .devices[data-dvc] .tablet { transform-style: flat; }
