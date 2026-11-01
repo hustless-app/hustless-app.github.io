@@ -235,3 +235,17 @@
    the scene is flat, each device keeps its own perspective (transformPerspective), and z-index orders them. */
 .devices[data-dvc] { transform-style: flat; perspective: none; }
 .devices[data-dvc] .phone, .devices[data-dvc] .tablet { transform-style: flat; }
+
+/* Say it. Logged.: the live phone lands flat (no idle tilt) so every row of the logging is readable */
+.phones .phone.live { transform: none; }
+
+/* devices: a top band inside the stage holds the iCloud arc and label, so they never sit on the text above */
+.devices[data-dvc] { padding-top: clamp(64px, 14%, 110px); }
+@media (max-width: 860px) { .devices[data-dvc] { padding-top: 72px; } }
+
+/* insights cube: no scroll pinning; it turns by itself and follows a swipe */
+.cube-scene { min-height: 0; }
+.cube-view { cursor: grab; user-select: none; -webkit-user-select: none; }
+.cube-view:active { cursor: grabbing; }
+.cube-dots i { cursor: pointer; }
+@media (max-width: 860px) { .cube-scene { min-height: 0; padding-block: 0.5rem 0; } }

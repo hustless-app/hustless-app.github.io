@@ -294,6 +294,68 @@
     tl.fromTo(phone, { rotationY: 12, rotationX: 4, transformPerspective: 1400 }, { rotationY: -10, rotationX: -2, ease: "none", duration: tl.duration() }, 0);
   }
 
+  // The cube without scroll-jacking: it turns on its own while on screen, and follows a horizontal
+  // swipe or drag like the app's cube. Vertical scrolling stays the page's (touch-action: pan-y).
+  function initCubeSwipe() {
+    const scene = document.querySelector("[data-cube-scene]");
+    if (!scene) return;
+    const { show } = makeCube(scene);
+    const view = scene.querySelector(".cube-view");
+    const steps = Array.from(scene.querySelectorAll(".cube-steps li"));
+    const dots = Array.from(scene.querySelectorAll(".cube-dots i"));
+    const LAST = 5, AUTO_MS = 3600, USER_PAUSE_MS = 9000;
+    const state = { r: 0 };
+    let tween = null, isVisible = false, pausedUntil = 0, drag = null;
+    const render = () => show(Math.min(LAST, Math.max(0, state.r)));
+    function goTo(face, duration = 0.95) {
+      if (tween) tween.kill();
+      const to = Math.min(LAST, Math.max(0, face));
+      tween = gsap.to(state, { r: to, duration: duration * Math.max(1, Math.abs(to - state.r) * 0.45), ease: "power3.inOut", onUpdate: render });
+    }
+    const pause = () => { pausedUntil = performance.now() + USER_PAUSE_MS; };
+    steps.forEach((li, i) => { li.style.cursor = "pointer"; li.addEventListener("click", () => { pause(); goTo(i); }); });
+    dots.forEach((dot, i) => dot.addEventListener("click", () => { pause(); goTo(i); }));
+
+    view.addEventListener("pointerdown", (e) => {
+      if (tween) tween.kill();
+      drag = { x: e.clientX, y: e.clientY, r: state.r, t: performance.now(), lastX: e.clientX, lastT: performance.now(), v: 0, axis: null, id: e.pointerId };
+      pause();
+    });
+    view.addEventListener("pointermove", (e) => {
+      if (!drag) return;
+      const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+      if (!drag.axis) {
+        if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+        drag.axis = Math.abs(dx) > Math.abs(dy) ? "x" : "y";
+        if (drag.axis === "x") view.setPointerCapture(drag.id);
+      }
+      if (drag.axis !== "x") return;
+      const now = performance.now();
+      drag.v = (e.clientX - drag.lastX) / Math.max(1, now - drag.lastT);
+      drag.lastX = e.clientX; drag.lastT = now;
+      state.r = Math.min(LAST + 0.25, Math.max(-0.25, drag.r - dx / view.clientWidth));
+      render();
+    });
+    const end = () => {
+      if (!drag) return;
+      const fling = drag.axis === "x" ? -drag.v * 0.35 : 0; // px/ms → faces
+      const target = drag.axis === "x" ? Math.round(state.r + Math.max(-1, Math.min(1, fling))) : Math.round(state.r);
+      drag = null;
+      goTo(target, 0.6);
+    };
+    view.addEventListener("pointerup", end);
+    view.addEventListener("pointercancel", end);
+    view.style.touchAction = "pan-y";
+
+    new IntersectionObserver((entries) => { isVisible = entries.some((e) => e.isIntersecting); }, { threshold: 0.5 }).observe(scene);
+    setInterval(() => {
+      if (!isVisible || document.hidden || drag || performance.now() < pausedUntil) return;
+      const next = Math.round(state.r) >= LAST ? 0 : Math.round(state.r) + 1;
+      goTo(next, next === 0 ? 0.7 : 0.95);
+    }, AUTO_MS);
+    show(0);
+  }
+
   // Reduced motion: no scrubbing; the cube changes face every few seconds, without turning.
   function initCubeStill() {
     const scene = document.querySelector("[data-cube-scene]");
@@ -414,7 +476,7 @@
     if (still) { initCubeStill(); return; }
     if (!motion) return;
     if (root.dataset.variant !== "c") initLiveTilt(); // preview C explodes the live screen instead (assets/c/c.js)
-    initCube();
+    if (root.dataset.variant === "c") initCubeSwipe(); else initCube(); // C: swipe, no scroll pinning
     if (root.dataset.world !== "devices" && root.dataset.variant !== "c") initDevices(wide); // WebGL (preview B) and preview C own it otherwise
     if (root.dataset.world !== "story") initManifesto(); // preview A reads the manifesto over its 3D world
   });

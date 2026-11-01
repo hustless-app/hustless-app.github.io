@@ -115,13 +115,11 @@
         onLeave: () => phone.classList.remove("is-exploding"),
       },
     });
-    tl.fromTo(phone, { transformPerspective: 1400, rotationY: -34, rotationX: 20, rotationZ: -6 }, { rotationY: -4, rotationX: 2, rotationZ: -3, ease: "power2.out", duration: 1 }, 0);
+    tl.fromTo(phone, { transformPerspective: 1400, rotationY: -34, rotationX: 20, rotationZ: -6 }, { rotationY: 0, rotationX: 0, rotationZ: 0, ease: "power2.out", duration: 1 }, 0); // lands flat: the logging must be fully readable
     layers.forEach(([el, z], i) => {
       // centre-anchored layers keep their own translate; add depth and a small lift
       tl.fromTo(el, { z, y: -z * 0.08 }, { z: 0, y: 0, ease: "power3.inOut", duration: 0.85 }, 0.1 + i * 0.006);
     });
-    // after it reassembles, a gentle tilt keeps it alive while it scrolls away
-    gsap.to(phone, { rotationY: 8, rotationX: -4, ease: "none", scrollTrigger: { trigger: phone, start: "center 50%", end: "bottom top", scrub: 0.8 } });
   }
 
   initDevicesC();
@@ -212,7 +210,7 @@
       defaults: { ease: "power3.out" },
       onUpdate: render,
       scrollTrigger: {
-        trigger: scene.closest(".split") || scene,
+        trigger: window.matchMedia("(min-width: 861px)").matches ? scene.closest(".split") || scene : scene,
         start: "center center", end: () => `+=${Math.round(window.innerHeight * 3.2)}`,
         pin: true, scrub: 0.8, anticipatePin: 1, invalidateOnRefresh: true,
         onRefresh: measure,
@@ -255,9 +253,14 @@
       const d = `M${a.x},${a.y} C${c1.x},${c1.y} ${c2.x},${c2.y} ${b.x},${b.y}`;
       guide.setAttribute("d", d);
       trail.setAttribute("d", d);
-      let top = { x: 0, y: Infinity };
-      for (let i = 0; i <= 40; i++) { const p = bezier(geo, i / 40); if (p.y < top.y) top = p; }
-      gsap.set(label, { left: top.x, top: top.y - 34 });
+      const topOf = () => { let t = { x: 0, y: Infinity }; for (let i = 0; i <= 40; i++) { const p = bezier(geo, i / 40); if (p.y < t.y) t = p; } return t; };
+      const ROOM = 52; // px kept free at the top of the stage for the iCloud label
+      let top = topOf();
+      for (let k = 0; k < 30 && top.y < ROOM; k++) { c1.y += 12; c2.y += 12; top = topOf(); }
+      const d2 = `M${a.x},${a.y} C${c1.x},${c1.y} ${c2.x},${c2.y} ${b.x},${b.y}`;
+      guide.setAttribute("d", d2);
+      trail.setAttribute("d", d2);
+      gsap.set(label, { left: top.x, top: Math.max(14, top.y - 30) });
       tl.time(saved, true);
       render();
     }
