@@ -261,3 +261,7 @@
   .devices[data-dvc] { padding-top: 48px; }
   .cube-phone { width: min(220px, calc((100svh - 2rem) * 0.46)); }
 }
+
+/* calendar month panel is always espresso: its text stays light in every theme (beats the generic `.tile p` dim colour) */
+.cal .cal-month .cal-title, .cal .cal-month .cal-tip { color: #fff; }
+.cal .cal-month .cal-week { color: rgba(255, 255, 255, 0.58); }
