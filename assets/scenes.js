@@ -162,11 +162,24 @@
     }
     const onScroll = () => { if (!isTicking) { isTicking = true; requestAnimationFrame(render); } };
 
+    // Programmatic scrolling is a tween on scrollLeft with snapping suspended: native smooth scrollTo against
+    // scroll-snap stalls on iOS Safari (the rail got to 6 and never came back to 1).
+    let scrollTween = null;
+    const stopTween = () => { if (scrollTween) { scrollTween.kill(); scrollTween = null; track.style.scrollSnapType = ""; } };
     function goTo(index) {
       const card = cards[(index + cards.length) % cards.length];
-      track.scrollTo({ left: card.offsetLeft - (track.clientWidth - card.offsetWidth) / 2, behavior: prefersReducedMotion.matches ? "auto" : "smooth" });
+      const left = card.offsetLeft - (track.clientWidth - card.offsetWidth) / 2;
+      stopTween();
+      if (prefersReducedMotion.matches) { track.scrollLeft = left; return; }
+      const proxy = { x: track.scrollLeft };
+      track.style.scrollSnapType = "none";
+      scrollTween = gsap.to(proxy, {
+        x: left, duration: Math.min(1.5, 0.6 + Math.abs(left - proxy.x) / 1800), ease: "power3.inOut",
+        onUpdate: () => { track.scrollLeft = proxy.x; },
+        onComplete: () => { track.scrollLeft = left; track.style.scrollSnapType = ""; scrollTween = null; },
+      });
     }
-    const userPause = () => { pausedUntil = performance.now() + USER_PAUSE_MS; };
+    const userPause = () => { pausedUntil = performance.now() + USER_PAUSE_MS; stopTween(); };
 
     rail.querySelector(".rail-btn.prev").addEventListener("click", () => { userPause(); goTo(active - 1); });
     rail.querySelector(".rail-btn.next").addEventListener("click", () => { userPause(); goTo(active + 1); });

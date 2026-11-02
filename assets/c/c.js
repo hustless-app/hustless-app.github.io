@@ -129,10 +129,23 @@
   function initSyncVideo() {
     const video = document.querySelector(".devices-video video");
     if (!video) return;
-    if (window.matchMedia("(prefers-color-scheme: dark)").matches) video.poster = video.dataset.posterDark;
+    const dark = window.matchMedia("(prefers-color-scheme: dark)");
+    let visible = false;
+    // the file is chosen here, not with <source media> (Safari ignores that attribute on video)
+    const choose = () => {
+      const want = dark.matches ? video.dataset.dark : video.dataset.light;
+      video.poster = dark.matches ? video.dataset.posterDark : video.dataset.posterLight;
+      if (reduced || video.getAttribute("src") === want) return;
+      video.setAttribute("src", want);
+      video.load();
+      if (visible) video.play().catch(() => {});
+    };
+    choose();
+    if (dark.addEventListener) dark.addEventListener("change", choose);
     if (reduced) return; // the poster is the still
     const io = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) video.play().catch(() => {});
+      visible = entry.isIntersecting;
+      if (visible) video.play().catch(() => {});
       else video.pause();
     }, { threshold: 0.25 });
     io.observe(video);
