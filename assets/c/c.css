@@ -225,7 +225,7 @@
 /* ---------- iCloud: a gold cloud above the devices, not on the iPad ---------- */
 .dv-label {
   display: inline-flex; align-items: center; gap: 0.4rem; padding: 0; background: none; box-shadow: none;
-  color: var(--accent); font-size: 0.95rem; font-weight: 600; letter-spacing: 0; text-transform: none; white-space: nowrap;
+  color: var(--accent-ink); font-size: 0.95rem; font-weight: 600; letter-spacing: 0; text-transform: none; white-space: nowrap;
   filter: drop-shadow(0 0 10px rgba(214, 166, 118, 0.45));
 }
 .dv-label svg { width: 1.7rem; height: auto; }
@@ -265,3 +265,72 @@
 /* calendar month panel is always espresso: its text stays light in every theme (beats the generic `.tile p` dim colour) */
 .cal .cal-month .cal-title, .cal .cal-month .cal-tip { color: #fff; }
 .cal .cal-month .cal-week { color: rgba(255, 255, 255, 0.58); }
+
+/* ---------- iPhone ⇄ iPad sync: a looping video, edges feathered into the page ---------- */
+.devices-video { max-width: 620px; margin-inline: auto; margin-top: -3%; }
+.devices-video video {
+  display: block; width: 100%; height: auto; aspect-ratio: 700 / 971; pointer-events: none;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent), linear-gradient(to bottom, transparent, #000 9%, #000 91%, transparent);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent), linear-gradient(to bottom, transparent, #000 9%, #000 91%, transparent);
+  mask-composite: intersect;
+}
+
+/* ---------- Insights cube: arrows + hold, hand cursor ---------- */
+.cube-view { cursor: grab; }
+.cube-scene.is-dragging .cube-view { cursor: grabbing; }
+.cube-stage { display: grid; justify-items: center; }
+.cube-ctl { display: flex; align-items: center; justify-content: center; gap: 0.6rem; margin-top: 1.1rem; }
+.cube-ctl button {
+  width: 2.75rem; height: 2.75rem; border-radius: 50%; border: 0; padding: 0; cursor: pointer; display: grid; place-items: center;
+  color: var(--text); background: var(--chip-bg); box-shadow: 0 0 0 1px var(--faint) inset;
+  transition: background-color 200ms, color 200ms, transform 160ms var(--ease-out-expo);
+}
+.cube-ctl button:hover { background: var(--accent); color: #1d1915; }
+.cube-ctl button:active { transform: scale(0.94); }
+.cube-ctl button:focus-visible { outline: 2px solid var(--accent-ink); outline-offset: 2px; }
+.cube-ctl svg { width: 1.2rem; height: 1.2rem; }
+.cube-ctl .i-play { display: none; }
+.cube-scene.is-held .cube-ctl .i-play { display: block; }
+.cube-scene.is-held .cube-ctl .i-pause { display: none; }
+.cube-scene.is-held .cc-hold { background: var(--accent); color: #1d1915; }
+
+/* ---------- Insights: the six screens on a ring, deeper = fainter ---------- */
+.cube-scene.is-ring .cube-phone:not(.ring-phone) { display: none; }
+.cube-scene.is-ring .cube-stage { perspective: 1500px; perspective-origin: 50% 42%; overflow-x: clip; width: 100%; }
+.cube-ring { display: grid; place-items: center; transform-style: preserve-3d; cursor: grab; touch-action: pan-y; -webkit-tap-highlight-color: transparent; }
+.cube-scene.is-dragging .cube-ring { cursor: grabbing; }
+.ring-phone { grid-area: 1 / 1; transform-style: preserve-3d; will-change: transform, opacity; user-select: none; -webkit-user-select: none; }
+.ring-phone:not(.is-front) { cursor: pointer; }
+/* in the ring each screen is a flat page, not a cube side */
+.ring-side { position: absolute; inset: 0; transform: none; -webkit-backface-visibility: visible; backface-visibility: visible; }
+.ring-side::after { content: none; }
+.ring-phone .cube-view { perspective: none; }
+@media (prefers-reduced-motion: reduce) { .ring-phone { will-change: auto; } }
+@media (min-width: 861px) { .cube-scene.is-ring .cube-stage { overflow: visible; } }
+@media (max-width: 860px) {
+  .cube-scene.is-ring .cube-stage { -webkit-mask-image: linear-gradient(to right, transparent, #000 9%, #000 91%, transparent); mask-image: linear-gradient(to right, transparent, #000 9%, #000 91%, transparent); }
+}
+
+/* ---------- reminders: on a wide screen the six screens stand on a ring in depth ---------- */
+.rail-hold { display: none; }
+.rail.is-ring .rail-hold { display: grid; }
+.rail-hold .i-play { display: none; }
+.rail.is-held .rail-hold .i-play { display: block; }
+.rail.is-held .rail-hold .i-pause { display: none; }
+.rail.is-held .rail-hold { background: var(--accent); color: #1d1915; }
+.rail-hold svg { width: 1.15rem; height: 1.15rem; }
+.rail.is-ring { perspective: 1800px; perspective-origin: 50% 36%; }
+.rail.is-ring .rail-track {
+  display: grid; place-items: center; overflow: visible; scroll-snap-type: none; perspective: none; transform-style: preserve-3d;
+  padding: 2.5rem 0 1.25rem; margin-inline: 0; -webkit-mask-image: none; mask-image: none; cursor: grab; touch-action: pan-y;
+}
+.rail.is-ring.is-dragging .rail-track { cursor: grabbing; }
+.rail.is-ring .rc { grid-area: 1 / 1; scroll-snap-align: none; will-change: transform, opacity; user-select: none; -webkit-user-select: none; }
+.rail.is-ring .rc:not(.is-active) { cursor: pointer; }
+.rail.is-ring .rc .rc-inner { transform: none !important; opacity: 1 !important; }
+.rail.is-ring .rc-cap { opacity: 0.35; }
+.rail.is-ring .rc.is-active .rc-cap { opacity: 1; }
+
+/* the privacy manifesto no longer pins the page, so it needs no full-screen stage */
+.manifesto { min-height: 0; }

@@ -34,17 +34,17 @@
 <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/jakarta-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/landing.css?v=20261101p">
-<link rel="stylesheet" href="/assets/scenes.css?v=20261101p">
-<link rel="stylesheet" href="/assets/c/c.css?v=20261101p">
-<script src="/assets/early.js?v=20261101p"></script>
-<script src="/assets/demo.js?v=20261101p" defer></script>
-<script src="/assets/live.js?v=20261101p" defer></script>
+<link rel="stylesheet" href="/assets/landing.css?v=20261102k">
+<link rel="stylesheet" href="/assets/scenes.css?v=20261102k">
+<link rel="stylesheet" href="/assets/c/c.css?v=20261102k">
+<script src="/assets/early.js?v=20261102k"></script>
+<script src="/assets/demo.js?v=20261102k" defer></script>
+<script src="/assets/live.js?v=20261102k" defer></script>
 <script src="/assets/vendor/gsap.min.js?v=3.13.0" defer></script>
 <script src="/assets/vendor/ScrollTrigger.min.js?v=3.13.0" defer></script>
-<script src="/assets/scenes.js?v=20261101p" defer></script>
+<script src="/assets/scenes.js?v=20261102k" defer></script>
 <script src="/assets/vendor/lenis.min.js?v=1.1.13" defer></script>
-<script src="/assets/c/c.js?v=20261101p" defer></script>
+<script src="/assets/c/c.js?v=20261102k" defer></script>
 
 <script type="application/ld+json">
 {
@@ -633,6 +633,11 @@
               <div class="ls-tabs"><span><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 1.5c.5 5.6 4.9 10 10.5 10.5-5.6.5-10 4.9-10.5 10.5C11.5 16.9 7.1 12.5 1.5 12 7.1 11.5 11.5 7.1 12 1.5z"/></svg>Now</span><span class="on"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="2" y="11" width="5.5" height="10" rx="1.6"/><rect x="9.25" y="6" width="5.5" height="15" rx="1.6"/><rect x="16.5" y="2.5" width="5.5" height="18.5" rx="1.6"/></svg>Insights</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="2.5" y="3.5" width="19" height="17" rx="3.5"/><path d="M2.5 8.5h19"/><g fill="currentColor" stroke="none"><circle cx="7.5" cy="12.5" r="1"/><circle cx="12" cy="12.5" r="1"/><circle cx="16.5" cy="12.5" r="1"/><circle cx="7.5" cy="16.5" r="1"/><circle cx="12" cy="16.5" r="1"/><circle cx="16.5" cy="16.5" r="1"/></g></svg>Calendar</span><span><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 1.5a10.5 10.5 0 1 0 0 21 10.5 10.5 0 0 0 0-21zm0 4a3.6 3.6 0 1 1 0 7.2 3.6 3.6 0 0 1 0-7.2zm0 15c-2.7 0-5.1-1.2-6.7-3.2 1.4-1.9 4-2.8 6.7-2.8s5.3.9 6.7 2.8c-1.6 2-4 3.2-6.7 3.2z"/></svg>You</span></div>
             </div>
           </div>
+          <div class="cube-ctl" role="group" aria-label="Insights views">
+            <button type="button" class="cc-prev" aria-label="Previous view"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+            <button type="button" class="cc-hold" aria-pressed="false" aria-label="Hold this view" data-hold="Hold this view" data-resume="Keep turning"><svg class="i-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1.2"/><rect x="14" y="5" width="4" height="14" rx="1.2"/></svg><svg class="i-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg></button>
+            <button type="button" class="cc-next" aria-label="Next view"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+          </div>
         </div>
       </div>
       <article class="tile wide calendar-tile cal" data-cal data-tip-over="over your $50 limit" data-tip-near="close to your limit" data-tip-under="under your limits" data-tip-none="no spending">
@@ -726,6 +731,7 @@
         <div class="rail-nav">
           <button type="button" class="rail-btn prev" aria-label="Previous"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
           <div class="rail-dots"><button type="button" aria-label="1" aria-current="true"></button><button type="button" aria-label="2"></button><button type="button" aria-label="3"></button><button type="button" aria-label="4"></button><button type="button" aria-label="5"></button><button type="button" aria-label="6"></button></div>
+          <button type="button" class="rail-btn rail-hold" aria-pressed="false" aria-label="Hold this view" data-hold="Hold this view" data-resume="Keep turning"><svg class="i-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1.2"/><rect x="14" y="5" width="4" height="14" rx="1.2"/></svg><svg class="i-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg></button>
           <button type="button" class="rail-btn next" aria-label="Next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
         </div>
       </div>
@@ -778,42 +784,12 @@
             <p>Sync runs through your own private iCloud. Prefer one device? Turn it off in the app.</p>
           </li>
         </ul>
-        <div class="devices" data-dvc data-typed="Latte 4.80" data-start="56.5" data-add="4.8" data-currency="$" data-decimals="2" data-count-label="{n} entries today" role="img" aria-label="An iPad showing hustless Insights, with an iPhone in front. A latte for $4.80 added on the iPhone appears on the iPad a moment later.">
-          <div class="tablet">
-            <div class="lsp">
-              <div class="lsp-status"><span>9:41&nbsp;&nbsp;Sat Oct 31</span><i class="dots"></i><svg viewBox="0 0 52 20" fill="currentColor" aria-hidden="true"><path d="M10 6.5c3.6 0 6.8 1.4 9.2 3.6l-2 2c-1.9-1.7-4.4-2.8-7.2-2.8s-5.3 1.1-7.2 2.8l-2-2c2.4-2.2 5.6-3.6 9.2-3.6zm0 5.6c2 0 3.8.8 5.1 2l-5.1 5.1-5.1-5.1c1.3-1.2 3.1-2 5.1-2z"/><rect x="24" y="3" width="24" height="14" rx="4" fill="none" stroke="currentColor" stroke-opacity=".45" stroke-width="1.6"/><rect x="26.5" y="5.5" width="19" height="9" rx="2.2"/><rect x="49.5" y="7.5" width="2" height="5" rx="1" fill-opacity=".45"/></svg></div>
-              <p class="lsp-brand">hust<span>less</span></p>
-              <p class="lsp-greet">Good morning, Alex <span class="ls-avatar"></span></p>
-              <div class="lsp-card lsp-here"><span class="ls-heart">🤍</span><span><i>I’m here</i><small>before buying something</small></span><svg viewBox="0 0 10 18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 2l6 7-6 7"/></svg></div>
-              <div class="lsp-card lsp-today"><small>Today</small><b class="lsp-total">$56.50</b><span class="lsp-count">4 entries today</span></div>
-              <div class="lsp-mic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><rect x="8.5" y="2.5" width="7" height="12" rx="3.5"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3.5M8.5 21.5h7"/></svg></div>
-              <p class="lsp-hint">Speak or type below</p>
-              <div class="lsp-field">e.g. &quot;5 coffee&quot; or &quot;12.50 food&quot;</div>
-              <span class="lsp-plus">+</span>
-              <p class="lsp-recent">RECENT</p>
-              <div class="lsp-list"><ul><li class="lsp-row new" data-vars="--tone:#33291f"><span class="ico">☕</span><span class="nm">Latte<small>Coffee</small></span><span class="am">$4.80<small>now</small></span></li><li class="lsp-row" data-vars="--tone:#24382a"><span class="ico">🛒</span><span class="nm">Groceries<small>Groceries</small></span><span class="am">$32.00<small>20m ago</small></span></li><li class="lsp-row" data-vars="--tone:#3a2220"><span class="ico">🍽️</span><span class="nm">Lunch<small>Food</small></span><span class="am">$13.50<small>1h ago</small></span></li><li class="lsp-row" data-vars="--tone:#33291f"><span class="ico">☕</span><span class="nm">Latte<small>Coffee</small></span><span class="am">$4.80<small>3h ago</small></span></li><li class="lsp-row" data-vars="--tone:#3a2220"><span class="ico">🍽️</span><span class="nm">Breakfast<small>Food</small></span><span class="am">$6.20<small>5h ago</small></span></li></ul></div>
-              <div class="lsp-tabs"><span class="on"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 1.5c.5 5.6 4.9 10 10.5 10.5-5.6.5-10 4.9-10.5 10.5C11.5 16.9 7.1 12.5 1.5 12 7.1 11.5 11.5 7.1 12 1.5z"/></svg>Now</span><span><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="2" y="11" width="5.5" height="10" rx="1.6"/><rect x="9.25" y="6" width="5.5" height="15" rx="1.6"/><rect x="16.5" y="2.5" width="5.5" height="18.5" rx="1.6"/></svg>Insights</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="2.5" y="3.5" width="19" height="17" rx="3.5"/><path d="M2.5 8.5h19"/><g fill="currentColor" stroke="none"><circle cx="7.5" cy="12.5" r="1"/><circle cx="12" cy="12.5" r="1"/><circle cx="16.5" cy="12.5" r="1"/><circle cx="7.5" cy="16.5" r="1"/><circle cx="12" cy="16.5" r="1"/><circle cx="16.5" cy="16.5" r="1"/></g></svg>Calendar</span><span><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 1.5a10.5 10.5 0 1 0 0 21 10.5 10.5 0 0 0 0-21zm0 4a3.6 3.6 0 1 1 0 7.2 3.6 3.6 0 0 1 0-7.2zm0 15c-2.7 0-5.1-1.2-6.7-3.2 1.4-1.9 4-2.8 6.7-2.8s5.3.9 6.7 2.8c-1.6 2-4 3.2-6.7 3.2z"/></svg>You</span></div>
-              <i class="lsp-home"></i>
-            </div>
-          </div>
-          <div class="phone">
-            <div class="ls dv-ls">
-              <div class="ls-status"><span>9:41</span><svg viewBox="0 0 82 20" fill="currentColor" aria-hidden="true"><rect x="0" y="12" width="4" height="7" rx="1"/><rect x="6" y="9" width="4" height="10" rx="1"/><rect x="12" y="5" width="4" height="14" rx="1"/><rect x="18" y="1" width="4" height="18" rx="1"/><path d="M38 6.5c3.6 0 6.8 1.4 9.2 3.6l-2 2c-1.9-1.7-4.4-2.8-7.2-2.8s-5.3 1.1-7.2 2.8l-2-2c2.4-2.2 5.6-3.6 9.2-3.6zm0 5.6c2 0 3.8.8 5.1 2l-5.1 5.1-5.1-5.1c1.3-1.2 3.1-2 5.1-2z"/><rect x="54" y="3" width="24" height="14" rx="4" fill="none" stroke="currentColor" stroke-opacity=".45" stroke-width="1.6"/><rect x="56.5" y="5.5" width="19" height="9" rx="2.2" fill="#4cd964"/><rect x="79.5" y="7.5" width="2" height="5" rx="1" fill-opacity=".45"/></svg></div>
-              <div class="ls-top"><span class="ls-brand">hust<span>less</span></span><span class="ls-greet">Good morning, Alex</span><span class="ls-avatar"></span></div>
-              <div class="ls-card ls-here"><span class="ls-heart">🤍</span><span><i>I’m here</i><small>before buying something</small></span><svg viewBox="0 0 10 18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 2l6 7-6 7"/></svg></div>
-              <div class="ls-card ls-today"><small>Today</small><b class="ls-total">$56.50</b><span class="ls-count">4 entries today</span></div>
-              <div class="ls-mic"><span class="ls-mic-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><rect x="8.5" y="2.5" width="7" height="12" rx="3.5"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3.5M8.5 21.5h7"/></svg></span></div>
-              <p class="ls-hint"><span class="idle">Speak or type below</span></p>
-              <div class="ls-field"><span class="ls-ph">e.g. &quot;5 coffee&quot; or &quot;12.50 food&quot;</span><span class="ls-input"></span><span class="ls-cat">☕ Coffee</span></div>
-              <span class="ls-plus">+</span>
-              <p class="ls-recent">RECENT</p>
-              <div class="ls-list"><ul><li class="ls-row new" data-vars="--tone:#33291f"><span class="ico">☕</span><span class="nm">Latte<small>Coffee</small></span><span class="am">$4.80<small>now</small></span></li><li class="ls-row" data-vars="--tone:#24382a"><span class="ico">🛒</span><span class="nm">Groceries<small>Groceries</small></span><span class="am">$32.00<small>20m ago</small></span></li><li class="ls-row" data-vars="--tone:#3a2220"><span class="ico">🍽️</span><span class="nm">Lunch<small>Food</small></span><span class="am">$13.50<small>1h ago</small></span></li><li class="ls-row" data-vars="--tone:#33291f"><span class="ico">☕</span><span class="nm">Latte<small>Coffee</small></span><span class="am">$4.80<small>3h ago</small></span></li><li class="ls-row" data-vars="--tone:#3a2220"><span class="ico">🍽️</span><span class="nm">Breakfast<small>Food</small></span><span class="am">$6.20<small>5h ago</small></span></li></ul></div>
-              <div class="ls-tabs"><span class="on"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 1.5c.5 5.6 4.9 10 10.5 10.5-5.6.5-10 4.9-10.5 10.5C11.5 16.9 7.1 12.5 1.5 12 7.1 11.5 11.5 7.1 12 1.5z"/></svg>Now</span><span><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="2" y="11" width="5.5" height="10" rx="1.6"/><rect x="9.25" y="6" width="5.5" height="15" rx="1.6"/><rect x="16.5" y="2.5" width="5.5" height="18.5" rx="1.6"/></svg>Insights</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="2.5" y="3.5" width="19" height="17" rx="3.5"/><path d="M2.5 8.5h19"/><g fill="currentColor" stroke="none"><circle cx="7.5" cy="12.5" r="1"/><circle cx="12" cy="12.5" r="1"/><circle cx="16.5" cy="12.5" r="1"/><circle cx="7.5" cy="16.5" r="1"/><circle cx="12" cy="16.5" r="1"/><circle cx="16.5" cy="16.5" r="1"/></g></svg>Calendar</span><span><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 1.5a10.5 10.5 0 1 0 0 21 10.5 10.5 0 0 0 0-21zm0 4a3.6 3.6 0 1 1 0 7.2 3.6 3.6 0 0 1 0-7.2zm0 15c-2.7 0-5.1-1.2-6.7-3.2 1.4-1.9 4-2.8 6.7-2.8s5.3.9 6.7 2.8c-1.6 2-4 3.2-6.7 3.2z"/></svg>You</span></div>
-            </div>
-          </div>
-          <svg class="dv-path" aria-hidden="true"><path class="guide"/><path class="trail" pathLength="1"/></svg>
-          <span class="dv-label" aria-hidden="true"><svg viewBox="0 0 34 22" aria-hidden="true"><defs><linearGradient id="dv-gold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ecc391"/><stop offset="1" stop-color="#b98757"/></linearGradient></defs><path fill="url(#dv-gold)" d="M27.4 9.3A8.6 8.6 0 0 0 11 6.4 6.6 6.6 0 0 0 7.6 19.5h18.6a5.2 5.2 0 0 0 1.2-10.2z"/></svg>iCloud</span>
-          <p class="dv-fly" aria-hidden="true"><span class="ico">☕</span><span class="nm">Latte<small>Coffee</small></span><span class="am">$4.80<small>now</small></span></p>
+        <div class="devices-video" role="img" aria-label="An iPad and an iPhone showing hustless. A latte added on the iPhone appears on the iPad a moment later. Deleted on the iPad, it disappears from the iPhone too.">
+          <video muted loop playsinline preload="none" poster="/assets/video/sync-en-light.webp" data-poster-dark="/assets/video/sync-en-dark.webp" aria-hidden="true" tabindex="-1" disablepictureinpicture>
+            <source src="/assets/video/sync-en-dark.mp4?v=20261102k" type="video/mp4" media="(prefers-color-scheme: dark)">
+            <source src="/assets/video/sync-en-light.mp4?v=20261102k" type="video/mp4">
+          </video>
+        </div>
         </div>
       </div>
     </div>

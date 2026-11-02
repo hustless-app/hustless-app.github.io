@@ -268,7 +268,13 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
   font-size: 0.92rem; font-weight: 600; color: var(--dim);
 }
 .facts li { display: inline-flex; align-items: center; gap: 0.55rem; }
-.facts li::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+.facts li::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex: none; }
+@media (max-width: 640px) {
+  .facts ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); justify-content: stretch; }
+  .facts li { align-items: flex-start; }
+  .facts li::before { margin-top: 0.45em; }
+  .facts li:last-child { grid-column: 1 / -1; }
+}
 
 /* ---------- chapters ---------- */
 .chapter { padding-block: var(--space-section) 0; }
@@ -391,7 +397,24 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
 .plan { padding: 1rem 1.25rem; border-radius: var(--radius-md); box-shadow: 0 0 0 1px var(--faint); min-width: 9.5rem; }
 .plan small { display: block; color: var(--dim); font-weight: 600; font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; }
 .plan b { font-size: 1.6rem; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
-.plan.best { box-shadow: 0 0 0 2px var(--accent); }
+/* the yearly plan: a gold ring with a bright head running round it, a long tail fading out behind it */
+@property --gold-a { syntax: "<angle>"; initial-value: 0deg; inherits: false; }
+.plan.best {
+  --gold-base: rgba(196, 149, 106, 0.28); --gold-tail: rgba(201, 143, 61, 0.55); --gold-hi: #c27d1f; --gold-glow: rgba(201, 143, 61, 0.5);
+  position: relative; box-shadow: none; isolation: isolate;
+}
+.plan.best::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; padding: 2px; pointer-events: none;
+  /* clockwise from --gold-a: quiet ring, then the tail swelling towards the head, then a sharp fall-off behind the head */
+  background: conic-gradient(from var(--gold-a), var(--gold-base) 0deg, var(--gold-base) 120deg, var(--gold-tail) 250deg, var(--gold-hi) 336deg, var(--gold-hi) 344deg, var(--gold-base) 352deg);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  filter: drop-shadow(0 0 6px var(--gold-glow));
+  animation: gold-turn 6s linear infinite;
+}
+@keyframes gold-turn { to { --gold-a: 360deg; } }
+@media (prefers-color-scheme: dark) { .plan.best { --gold-base: rgba(196, 149, 106, 0.22); --gold-tail: rgba(232, 193, 140, 0.55); --gold-hi: #f7dfb2; --gold-glow: rgba(247, 223, 178, 0.5); } }
+@media (prefers-reduced-motion: reduce) { .plan.best::before { animation: none; --gold-a: 40deg; } }
 .plan em { display: block; font-style: normal; font-size: 0.8rem; color: var(--accent-ink); font-weight: 600; }
 
 /* faq — answers always visible (content behind accordions is less likely to be quoted) */

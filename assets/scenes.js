@@ -126,6 +126,7 @@
     const cards = Array.from(track.children);
     const dots = Array.from(rail.querySelectorAll(".rail-dots button"));
     if (cards.length === 0) return;
+    if (rail._bound) { rail._bound.activate(); return; } // already wired: the ring may have been on top of it
 
     const AUTO_MS = 5200;
     const USER_PAUSE_MS = 9000;
@@ -142,6 +143,7 @@
 
     function render() {
       isTicking = false;
+      if (rail.classList.contains("is-ring")) return;
       const mid = track.scrollLeft + track.clientWidth / 2;
       let best = 0;
       let bestDistance = Infinity;
@@ -198,11 +200,12 @@
 
     new IntersectionObserver((entries) => { isVisible = entries.some((e) => e.isIntersecting); }, { threshold: 0.4 }).observe(rail);
     setInterval(() => {
-      if (!isVisible || document.hidden || drag || performance.now() < pausedUntil || prefersReducedMotion.matches) return;
+      if (rail.classList.contains("is-ring") || !isVisible || document.hidden || drag || performance.now() < pausedUntil || prefersReducedMotion.matches) return;
       goTo(active + 1 >= cards.length ? 0 : active + 1);
     }, AUTO_MS);
 
     rail.classList.add("is-armed");
+    rail._bound = { activate: () => { rail.classList.add("is-armed"); cards.forEach((c) => { c.style.transform = ""; c.style.opacity = ""; c.style.filter = ""; c.style.zIndex = ""; }); render(); goTo(Math.max(0, active)); } };
     render();
   }
 
@@ -216,11 +219,20 @@
   }
 
   /* ---------------- insights cube ---------------- */
-  const CUBE_SIDES = [[0, 4], [1, 5], [2], [3]];
+  // page 6 is a copy of page 0 on the back side, so the cube can keep turning from the last face to the first
+  const CUBE_SIDES = [[0, 4], [1, 5], [2, 6], [3]];
 
   function makeCube(scene) {
     const cube = scene.querySelector(".cube");
     const sides = Array.from(scene.querySelectorAll(".cube-side"));
+    const first = scene.querySelector('.cube-page[data-page="0"]');
+    const sideTwo = scene.querySelector('.cube-side[data-side="2"]');
+    if (first && sideTwo && !sideTwo.querySelector('.cube-page[data-page="6"]')) {
+      const copy = first.cloneNode(true);
+      copy.dataset.page = "6";
+      copy.classList.remove("is-shown", "is-live");
+      sideTwo.append(copy);
+    }
     const pages = Array.from(scene.querySelectorAll(".cube-page"));
     const steps = Array.from(scene.querySelectorAll(".cube-steps li"));
     const dots = Array.from(scene.querySelectorAll(".cube-dots i"));
@@ -249,7 +261,7 @@
     function setCurrent(index) {
       if (index === current) return;
       current = index;
-      pages.forEach((page) => page.classList.toggle("is-live", Number(page.dataset.page) === index));
+      pages.forEach((page) => page.classList.toggle("is-live", Number(page.dataset.page) % 6 === index));
       steps.forEach((step, i) => step.classList.toggle("is-on", i === index));
       dots.forEach((dot, i) => dot.classList.toggle("on", i === index));
       if (index === 5) typeInsight(); else { clearInterval(typer); if (aiBody) aiBody.textContent = aiText; }
@@ -264,11 +276,34 @@
         let angle = ((s * 90 - r * 90) % 360 + 540) % 360 - 180; // -180…180, 0 = facing us
         side.style.setProperty("--shade", (Math.min(1, Math.abs(angle) / 90) * 0.6).toFixed(3));
       });
-      setCurrent(clamp(Math.round(r), 0, 5));
+      setCurrent(((Math.round(r) % 6) + 6) % 6);
+    }
+
+    // run the current face's charts (and typing) again, e.g. when the scene scrolls into view
+    function replay() {
+      pages.forEach((page) => page.classList.remove("is-live"));
+      void scene.offsetWidth;
+      pages.forEach((page) => page.classList.toggle("is-live", Number(page.dataset.page) % 6 === current));
+      if (current === 5) typeInsight();
+    }
+
+    // how long face i's own preview takes to play: its longest transition (delay included), or the typed insight
+    const previewCache = new Map();
+    function previewMs(i) {
+      if (previewCache.has(i)) return previewCache.get(i);
+      const toMs = (v) => v.split(",").map((x) => (x.trim().endsWith("ms") ? parseFloat(x) : parseFloat(x) * 1000) || 0);
+      let longest = 0;
+      scene.querySelectorAll(`.cube-page[data-page="${i}"] .bar, .cube-page[data-page="${i}"] .seg, .cube-page[data-page="${i}"] .ln, .cube-page[data-page="${i}"] .end, .cube-page[data-page="${i}"] em, .cube-page[data-page="${i}"] .avg`).forEach((el) => {
+        const cs = getComputedStyle(el), d = toMs(cs.transitionDuration), dl = toMs(cs.transitionDelay);
+        d.forEach((x, k) => { longest = Math.max(longest, x + (dl[k % dl.length] || 0)); });
+      });
+      if (i === 5) longest = Math.max(longest, Math.ceil(Array.from(aiText).length / 2) * 28 + 400);
+      previewCache.set(i, longest);
+      return longest;
     }
 
     scene.classList.add("is-armed");
-    return { show };
+    return { show, replay, previewMs };
   }
 
   function initCube() {
@@ -294,38 +329,297 @@
     tl.fromTo(phone, { rotationY: 12, rotationX: 4, transformPerspective: 1400 }, { rotationY: -10, rotationX: -2, ease: "none", duration: tl.duration() }, 0);
   }
 
-  // The cube without scroll-jacking: it turns on its own while on screen, and follows a horizontal
-  // swipe or drag like the app's cube. Vertical scrolling stays the page's (touch-action: pan-y).
+  // The six Insights screens stand on a ring in depth: the one in front is sharp and alive, the others sit
+  // further round and further back, fainter with every step, their charts waiting until their turn.
+  // One ring is built per page load (matchMedia may re-run the init); screens face the viewer, they are not a prism.
+  const RING_N = 6, RING_STEP = 360 / RING_N, RING_RADIUS = 0.62, RING_YAW = 0.5;
+  let ringBuilt = null;
+  const wrapIndex = (n) => ((n % RING_N) + RING_N) % RING_N;
+
+  function makeRing(scene) {
+    if (ringBuilt) return ringBuilt;
+    const stage = scene.querySelector(".cube-stage");
+    const source = scene.querySelector(".cube-phone");
+    const pages = Array.from(scene.querySelectorAll(".cube-page")).filter((p) => Number(p.dataset.page) < RING_N).sort((x, y) => x.dataset.page - y.dataset.page);
+    const steps = Array.from(scene.querySelectorAll(".cube-steps li"));
+    const aiBody = scene.querySelector(".cp-ai .body");
+    const aiText = aiBody ? aiBody.dataset.typeText || aiBody.textContent : "";
+    let typer = 0, current = -1;
+
+    // a phone with the chrome (status bar, period pills, tabs) but an empty view
+    const template = source.cloneNode(true);
+    template.querySelector(".cube-view").replaceChildren();
+    const ring = document.createElement("div");
+    ring.className = "cube-ring";
+    ring.setAttribute("role", "img");
+    ring.setAttribute("aria-label", source.querySelector(".cube-screen").getAttribute("aria-label"));
+    const items = pages.map((page, i) => {
+      const item = template.cloneNode(true);
+      item.classList.add("ring-phone");
+      item.dataset.i = String(i);
+      item.setAttribute("aria-hidden", "true");
+      item.querySelector(".cube-screen").removeAttribute("role");
+      item.querySelector(".cube-screen").removeAttribute("aria-label");
+      item.querySelectorAll(".cube-dots i").forEach((dot, k) => dot.classList.toggle("on", k === i));
+      if (!item.querySelector(":scope > .bezel")) { const bz = document.createElement("i"); bz.className = "bezel"; bz.setAttribute("aria-hidden", "true"); item.append(bz); }
+      const side = document.createElement("div");
+      side.className = "cube-side ring-side";
+      page.classList.add("is-shown");
+      side.append(page);
+      item.querySelector(".cube-view").append(side);
+      ring.append(item);
+      return item;
+    });
+    source.after(ring);
+    scene.classList.add("is-ring", "is-armed");
+
+    function typeInsight() {
+      if (!aiBody) return;
+      clearInterval(typer);
+      if (prefersReducedMotion.matches) { aiBody.textContent = aiText; return; }
+      const chars = Array.from(aiText);
+      let shown = 0;
+      const caret = document.createElement("span");
+      caret.className = "caret";
+      aiBody.textContent = "";
+      aiBody.append(document.createTextNode(""), caret);
+      typer = setInterval(() => {
+        shown = Math.min(chars.length, shown + 2);
+        aiBody.firstChild.data = chars.slice(0, shown).join("");
+        if (shown >= chars.length) { clearInterval(typer); setTimeout(() => caret.remove(), 1200); }
+      }, 28);
+    }
+    function setCurrent(index) {
+      if (index === current) return;
+      current = index;
+      pages.forEach((page, i) => page.classList.toggle("is-live", i === index)); // only the front screen plays
+      items.forEach((item, i) => item.classList.toggle("is-front", i === index));
+      steps.forEach((step, i) => step.classList.toggle("is-on", i === index));
+      if (index === 5) typeInsight(); else { clearInterval(typer); if (aiBody) aiBody.textContent = aiText; }
+    }
+
+    // r = which screen is in front, fractions while the ring turns (any real number: the ring is a circle)
+    function show(r) {
+      const w = items[0].offsetWidth, R = w * RING_RADIUS;
+      items.forEach((item, i) => {
+        let d = ((i - r) % RING_N + RING_N) % RING_N; // 0…6
+        if (d > RING_N / 2) d -= RING_N;               // -3…3 screens round the ring
+        const th = d * RING_STEP * Math.PI / 180;
+        const x = R * Math.sin(th), z = R * (Math.cos(th) - 1);
+        const near = (1 + Math.cos(th)) / 2;           // 1 in front, 0 straight behind
+        item.style.transform = `translate3d(${x.toFixed(1)}px, 0, ${z.toFixed(1)}px) rotateY(${(-th * RING_YAW * 180 / Math.PI).toFixed(2)}deg)`;
+        item.style.opacity = (0.07 + 0.93 * Math.pow(near, 1.7)).toFixed(3);
+        item.style.filter = near > 0.97 ? "none" : `blur(${((1 - near) * 2.2).toFixed(2)}px)`;
+        item.style.zIndex = String(Math.round(near * 100));
+      });
+      setCurrent(wrapIndex(Math.round(r)));
+    }
+    function replay() {
+      pages.forEach((page) => page.classList.remove("is-live"));
+      void scene.offsetWidth;
+      pages.forEach((page, i) => page.classList.toggle("is-live", i === current));
+      if (current === 5) typeInsight();
+    }
+    const previewCache = new Map();
+    function previewMs(i) {
+      if (previewCache.has(i)) return previewCache.get(i);
+      const toMs = (v) => v.split(",").map((x) => (x.trim().endsWith("ms") ? parseFloat(x) : parseFloat(x) * 1000) || 0);
+      let longest = 0;
+      pages[i].querySelectorAll(".bar, .seg, .ln, .end, em, .avg").forEach((el) => {
+        const cs = getComputedStyle(el), d = toMs(cs.transitionDuration), dl = toMs(cs.transitionDelay);
+        d.forEach((x, k) => { longest = Math.max(longest, x + (dl[k % dl.length] || 0)); });
+      });
+      if (i === 5) longest = Math.max(longest, Math.ceil(Array.from(aiText).length / 2) * 28 + 400);
+      previewCache.set(i, longest);
+      return longest;
+    }
+    function destroy() {
+      clearInterval(typer);
+      pages.forEach((page, i) => {
+        const side = scene.querySelector(`.cube-side[data-side="${CUBE_SIDES.findIndex((g) => g.includes(i))}"]`);
+        if (side) side.append(page);
+        page.classList.remove("is-live");
+      });
+      ring.remove();
+      scene.classList.remove("is-ring", "is-held", "is-dragging");
+      ringBuilt = null;
+    }
+    ringBuilt = { show, replay, previewMs, ring, items, destroy };
+    return ringBuilt;
+  }
+
+  // Autoplay, 1 → 6 → 1 round and round: a screen's own preview plays, then 2 s, then the ring turns to the next.
+  // Hovering the ring, the arrows, a drag or a dot hold it; with no interaction for 5 s it carries on.
+  // A press on the front screen (or the pause button) holds it until pressed again; a press on another screen brings it round.
   function initCubeSwipe() {
     const scene = document.querySelector("[data-cube-scene]");
     if (!scene) return;
-    const { show } = makeCube(scene);
+    const { show, replay, previewMs, ring, items } = makeRing(scene);
+    const steps = Array.from(scene.querySelectorAll(".cube-steps li"));
+    const prevBtn = scene.querySelector(".cc-prev"), nextBtn = scene.querySelector(".cc-next"), holdBtn = scene.querySelector(".cc-hold");
+    const TURN_MS = 950, GAP_MS = 2000, IDLE_MS = 5000, TAP_PX = 8;
+    const state = { r: 0 };
+    const off = new AbortController(), on = { signal: off.signal };
+    let tween = null, isVisible = false, hasShown = false, drag = null, hovering = false, locked = false, advanceAt = Infinity;
+    const face = () => wrapIndex(Math.round(state.r));
+    const render = () => show(state.r);
+    const arm = (ms) => { advanceAt = performance.now() + ms; };
+    const dwell = (f) => TURN_MS + previewMs(f) + GAP_MS;
+    // the shortest way round to screen i (so the ring never spins the long way)
+    const via = (i) => { let d = wrapIndex(i - Math.round(state.r)); if (d > RING_N / 2) d -= RING_N; return Math.round(state.r) + d; };
+    function goTo(target, duration = 0.95) {
+      if (tween) tween.kill();
+      tween = gsap.to(state, { r: target, duration: duration * Math.max(1, Math.abs(target - state.r) * 0.45), ease: "power3.inOut", onUpdate: render });
+    }
+    function userGo(target) {
+      goTo(target);
+      arm(Math.max(IDLE_MS, dwell(wrapIndex(target))));
+    }
+    function setLocked(isOn) {
+      locked = isOn;
+      scene.classList.toggle("is-held", isOn);
+      if (holdBtn) { holdBtn.setAttribute("aria-pressed", String(isOn)); holdBtn.setAttribute("aria-label", isOn ? holdBtn.dataset.resume : holdBtn.dataset.hold); }
+      if (!isOn) arm(GAP_MS);
+    }
+    steps.forEach((li, i) => { li.style.cursor = "pointer"; li.addEventListener("click", () => userGo(via(i)), on); });
+    items.forEach((item, i) => item.querySelectorAll(".cube-dots i").forEach((dot, k) => dot.addEventListener("click", () => userGo(via(k)), on)));
+    if (prevBtn) prevBtn.addEventListener("click", () => userGo(Math.round(state.r) - 1), on);
+    if (nextBtn) nextBtn.addEventListener("click", () => userGo(Math.round(state.r) + 1), on);
+    if (holdBtn) holdBtn.addEventListener("click", () => setLocked(!locked), on);
+
+    ring.addEventListener("pointerenter", (e) => { if (e.pointerType === "mouse") hovering = true; }, on);
+    ring.addEventListener("pointerleave", (e) => { if (e.pointerType === "mouse") { hovering = false; arm(IDLE_MS); } }, on);
+    ring.addEventListener("pointerdown", (e) => {
+      if (tween) tween.kill();
+      drag = { x: e.clientX, y: e.clientY, r: state.r, lastX: e.clientX, lastT: performance.now(), v: 0, axis: null, id: e.pointerId, item: e.target.closest(".ring-phone") };
+      scene.classList.add("is-dragging");
+    }, on);
+    ring.addEventListener("pointermove", (e) => {
+      if (!drag) return;
+      const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+      if (!drag.axis) {
+        if (Math.abs(dx) < TAP_PX && Math.abs(dy) < TAP_PX) return;
+        drag.axis = Math.abs(dx) > Math.abs(dy) ? "x" : "y";
+        if (drag.axis === "x") ring.setPointerCapture(drag.id);
+      }
+      if (drag.axis !== "x") return;
+      const now = performance.now();
+      drag.v = (e.clientX - drag.lastX) / Math.max(1, now - drag.lastT);
+      drag.lastX = e.clientX; drag.lastT = now;
+      state.r = drag.r - dx / (items[0].offsetWidth * 0.9);
+      render();
+    }, on);
+    const end = (e) => {
+      if (!drag) return;
+      const wasTap = !drag.axis && e.type === "pointerup";
+      const tapped = drag.item ? Number(drag.item.dataset.i) : face();
+      const fling = drag.axis === "x" ? -drag.v * 0.35 : 0; // px/ms → screens
+      const target = Math.round(state.r + Math.max(-1, Math.min(1, fling)));
+      drag = null;
+      scene.classList.remove("is-dragging");
+      if (wasTap && tapped !== face()) { userGo(via(tapped)); return; } // another screen: bring it round
+      if (wasTap) { goTo(Math.round(state.r), 0.6); setLocked(!locked); return; } // the front one: hold / release
+      goTo(target, 0.6);
+      arm(IDLE_MS);
+    };
+    ring.addEventListener("pointerup", end, on);
+    ring.addEventListener("pointercancel", end, on);
+    ring.style.touchAction = "pan-y";
+
+    const io = new IntersectionObserver((entries) => {
+      isVisible = entries.some((e) => e.isIntersecting);
+      if (isVisible && !hasShown) { hasShown = true; replay(); arm(dwell(face())); }
+    }, { threshold: 0.5 });
+    io.observe(scene);
+    const timer = setInterval(() => {
+      if (!isVisible || document.hidden || drag || hovering || locked) return;
+      if (performance.now() < advanceAt) return;
+      const next = Math.round(state.r) + 1;
+      goTo(next);
+      arm(dwell(wrapIndex(next)));
+    }, 200);
+    show(0);
+    return () => { off.abort(); clearInterval(timer); io.disconnect(); if (tween) tween.kill(); ringBuilt && ringBuilt.destroy(); };
+  }
+
+  // Reduced motion: the ring does not turn; the front screen changes every few seconds (and with the arrows).
+  function initCubeStill() {
+    const scene = document.querySelector("[data-cube-scene]");
+    if (!scene) return;
+    const { show, items } = makeRing(scene);
+    const off = new AbortController(), on = { signal: off.signal };
+    let face = 0, isVisible = false, heldUntil = 0, locked = false;
+    const go = (f) => { face = wrapIndex(f); show(face); };
+    const user = (f) => { go(f); heldUntil = performance.now() + IDLE_STILL; };
+    const IDLE_STILL = 5000;
+    const q = (c) => scene.querySelector(c);
+    show(0);
+    const io = new IntersectionObserver((entries) => { isVisible = entries.some((e) => e.isIntersecting); }, { threshold: 0.4 });
+    io.observe(scene);
+    if (q(".cc-prev")) q(".cc-prev").addEventListener("click", () => user(face - 1), on);
+    if (q(".cc-next")) q(".cc-next").addEventListener("click", () => user(face + 1), on);
+    if (q(".cc-hold")) q(".cc-hold").addEventListener("click", (e) => { locked = !locked; scene.classList.toggle("is-held", locked); e.currentTarget.setAttribute("aria-pressed", String(locked)); e.currentTarget.setAttribute("aria-label", locked ? e.currentTarget.dataset.resume : e.currentTarget.dataset.hold); }, on);
+    items.forEach((item) => item.querySelectorAll(".cube-dots i").forEach((dot, k) => dot.addEventListener("click", () => user(k), on)));
+    const timer = setInterval(() => { if (isVisible && !document.hidden && !locked && performance.now() > heldUntil) go(face + 1); }, 5000);
+    return () => { off.abort(); clearInterval(timer); io.disconnect(); ringBuilt && ringBuilt.destroy(); };
+  }
+
+  // Phones: the Insights screens stay a cube that turns (as before), with the same rhythm and controls as the ring.
+  function initCubeTurn() {
+    const scene = document.querySelector("[data-cube-scene]");
+    if (!scene) return;
+    const { show, replay, previewMs } = makeCube(scene);
     const view = scene.querySelector(".cube-view");
+    const phone = scene.querySelector(".cube-phone");
     const steps = Array.from(scene.querySelectorAll(".cube-steps li"));
     const dots = Array.from(scene.querySelectorAll(".cube-dots i"));
-    const LAST = 5, AUTO_MS = 3600, USER_PAUSE_MS = 9000;
+    const prevBtn = scene.querySelector(".cc-prev"), nextBtn = scene.querySelector(".cc-next"), holdBtn = scene.querySelector(".cc-hold");
+    const LAST = 5, TURN_MS = 950, GAP_MS = 2000, IDLE_MS = 5000, TAP_PX = 8;
     const state = { r: 0 };
-    let tween = null, isVisible = false, pausedUntil = 0, drag = null;
-    const render = () => show(Math.min(LAST, Math.max(0, state.r)));
-    function goTo(face, duration = 0.95) {
+    const off = new AbortController(), on = { signal: off.signal };
+    let tween = null, isVisible = false, hasShown = false, drag = null, hovering = false, locked = false, advanceAt = Infinity;
+    const face = () => Math.min(LAST, Math.max(0, Math.round(state.r)));
+    const render = () => show(Math.min(LAST + 1, Math.max(0, state.r)));
+    const arm = (ms) => { advanceAt = performance.now() + ms; };
+    const dwell = (f) => TURN_MS + previewMs(f) + GAP_MS;
+    function goTo(target, duration = 0.95) {
       if (tween) tween.kill();
-      const to = Math.min(LAST, Math.max(0, face));
-      tween = gsap.to(state, { r: to, duration: duration * Math.max(1, Math.abs(to - state.r) * 0.45), ease: "power3.inOut", onUpdate: render });
+      const to = Math.min(LAST + 1, Math.max(0, target));
+      tween = gsap.to(state, {
+        r: to, duration: duration * Math.max(1, Math.abs(to - state.r) * 0.45), ease: "power3.inOut", onUpdate: render,
+        // face 6 is face 0 seen from the back: swap to it unseen, so the cube carries on turning the same way
+        onComplete: () => { if (state.r > LAST + 0.5) { state.r = 0; render(); } },
+      });
     }
-    const pause = () => { pausedUntil = performance.now() + USER_PAUSE_MS; };
-    steps.forEach((li, i) => { li.style.cursor = "pointer"; li.addEventListener("click", () => { pause(); goTo(i); }); });
-    dots.forEach((dot, i) => dot.addEventListener("click", () => { pause(); goTo(i); }));
-
+    function userGo(target) {
+      if (target < 0) { state.r = LAST + 1; render(); } // before the first face: from the copy behind it, turn back to the last
+      const to = target < 0 ? LAST : target > LAST ? LAST + 1 : target;
+      goTo(to);
+      arm(Math.max(IDLE_MS, dwell(to % (LAST + 1))));
+    }
+    function setLocked(isOn) {
+      locked = isOn;
+      scene.classList.toggle("is-held", isOn);
+      if (holdBtn) { holdBtn.setAttribute("aria-pressed", String(isOn)); holdBtn.setAttribute("aria-label", isOn ? holdBtn.dataset.resume : holdBtn.dataset.hold); }
+      if (!isOn) arm(GAP_MS);
+    }
+    steps.forEach((li, i) => { li.style.cursor = "pointer"; li.addEventListener("click", () => userGo(i), on); });
+    dots.forEach((dot, i) => dot.addEventListener("click", () => userGo(i), on));
+    if (prevBtn) prevBtn.addEventListener("click", () => userGo(face() - 1), on);
+    if (nextBtn) nextBtn.addEventListener("click", () => userGo(face() + 1), on);
+    if (holdBtn) holdBtn.addEventListener("click", () => setLocked(!locked), on);
+    phone.addEventListener("pointerenter", (e) => { if (e.pointerType === "mouse") hovering = true; }, on);
+    phone.addEventListener("pointerleave", (e) => { if (e.pointerType === "mouse") { hovering = false; arm(IDLE_MS); } }, on);
     view.addEventListener("pointerdown", (e) => {
       if (tween) tween.kill();
-      drag = { x: e.clientX, y: e.clientY, r: state.r, t: performance.now(), lastX: e.clientX, lastT: performance.now(), v: 0, axis: null, id: e.pointerId };
-      pause();
-    });
+      drag = { x: e.clientX, y: e.clientY, r: state.r, lastX: e.clientX, lastT: performance.now(), v: 0, axis: null, id: e.pointerId };
+      scene.classList.add("is-dragging");
+    }, on);
     view.addEventListener("pointermove", (e) => {
       if (!drag) return;
       const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
       if (!drag.axis) {
-        if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+        if (Math.abs(dx) < TAP_PX && Math.abs(dy) < TAP_PX) return;
         drag.axis = Math.abs(dx) > Math.abs(dy) ? "x" : "y";
         if (drag.axis === "x") view.setPointerCapture(drag.id);
       }
@@ -335,37 +629,202 @@
       drag.lastX = e.clientX; drag.lastT = now;
       state.r = Math.min(LAST + 0.25, Math.max(-0.25, drag.r - dx / view.clientWidth));
       render();
-    });
-    const end = () => {
+    }, on);
+    const end = (e) => {
       if (!drag) return;
-      const fling = drag.axis === "x" ? -drag.v * 0.35 : 0; // px/ms → faces
+      const wasTap = !drag.axis && e.type === "pointerup";
+      const fling = drag.axis === "x" ? -drag.v * 0.35 : 0;
       const target = drag.axis === "x" ? Math.round(state.r + Math.max(-1, Math.min(1, fling))) : Math.round(state.r);
       drag = null;
+      scene.classList.remove("is-dragging");
+      if (wasTap) { goTo(target, 0.6); setLocked(!locked); return; }
       goTo(target, 0.6);
+      arm(IDLE_MS);
     };
-    view.addEventListener("pointerup", end);
-    view.addEventListener("pointercancel", end);
+    view.addEventListener("pointerup", end, on);
+    view.addEventListener("pointercancel", end, on);
     view.style.touchAction = "pan-y";
-
-    new IntersectionObserver((entries) => { isVisible = entries.some((e) => e.isIntersecting); }, { threshold: 0.5 }).observe(scene);
-    setInterval(() => {
-      if (!isVisible || document.hidden || drag || performance.now() < pausedUntil) return;
-      const next = Math.round(state.r) >= LAST ? 0 : Math.round(state.r) + 1;
-      goTo(next, next === 0 ? 0.7 : 0.95);
-    }, AUTO_MS);
+    const io = new IntersectionObserver((entries) => {
+      isVisible = entries.some((e) => e.isIntersecting);
+      if (isVisible && !hasShown) { hasShown = true; replay(); arm(dwell(0)); }
+    }, { threshold: 0.5 });
+    io.observe(scene);
+    const timer = setInterval(() => {
+      if (!isVisible || document.hidden || drag || hovering || locked) return;
+      if (performance.now() < advanceAt) return;
+      const f = face() % (LAST + 1), next = (f + 1) % (LAST + 1);
+      goTo(f + 1);
+      arm(dwell(next));
+    }, 200);
     show(0);
+    return () => { off.abort(); clearInterval(timer); io.disconnect(); if (tween) tween.kill(); };
   }
 
-  // Reduced motion: no scrubbing; the cube changes face every few seconds, without turning.
-  function initCubeStill() {
+  // Reduced motion on a phone: the cube does not turn; the face changes every few seconds (and with the arrows).
+  function initCubeStillFlat() {
     const scene = document.querySelector("[data-cube-scene]");
     if (!scene) return;
     const { show } = makeCube(scene);
-    let face = 0;
-    let isVisible = false;
+    const off = new AbortController(), on = { signal: off.signal };
+    let face = 0, isVisible = false, heldUntil = 0, locked = false;
+    const go = (f) => { face = ((f % 6) + 6) % 6; show(face); };
+    const user = (f) => { go(f); heldUntil = performance.now() + 5000; };
+    const q = (c) => scene.querySelector(c);
     show(0);
-    new IntersectionObserver((entries) => { isVisible = entries.some((e) => e.isIntersecting); }, { threshold: 0.4 }).observe(scene);
-    setInterval(() => { if (isVisible && !document.hidden) { face = (face + 1) % 6; show(face); } }, 5000);
+    const io = new IntersectionObserver((entries) => { isVisible = entries.some((e) => e.isIntersecting); }, { threshold: 0.4 });
+    io.observe(scene);
+    if (q(".cc-prev")) q(".cc-prev").addEventListener("click", () => user(face - 1), on);
+    if (q(".cc-next")) q(".cc-next").addEventListener("click", () => user(face + 1), on);
+    if (q(".cc-hold")) q(".cc-hold").addEventListener("click", (e) => { locked = !locked; scene.classList.toggle("is-held", locked); e.currentTarget.setAttribute("aria-pressed", String(locked)); e.currentTarget.setAttribute("aria-label", locked ? e.currentTarget.dataset.resume : e.currentTarget.dataset.hold); }, on);
+    Array.from(scene.querySelectorAll(".cube-dots i")).forEach((dot, i) => dot.addEventListener("click", () => user(i), on));
+    const timer = setInterval(() => { if (isVisible && !document.hidden && !locked && performance.now() > heldUntil) go(face + 1); }, 5000);
+    return () => { off.abort(); clearInterval(timer); io.disconnect(); };
+  }
+
+  // "No surprise bills" on a wide screen: the six reminder screens stand on a ring seen slightly from above, the
+  // front one sharp and alive, the rest further round and deeper, smaller, fainter and turned away. Same rhythm and
+  // controls as the Insights ring: a screen's own preview plays, then 2 s, then the ring turns on (1 → 6 → 1 …).
+  const RAIL_RADIUS = 1.12, RAIL_YAW = 0.72, RAIL_RISE = 0.2;
+  function initRailRing() {
+    const rail = document.querySelector("[data-rail]");
+    if (!rail) return;
+    const track = rail.querySelector(".rail-track");
+    const cards = Array.from(track.children);
+    if (cards.length === 0) return;
+    const N = cards.length, STEP = 360 / N;
+    const dots = Array.from(rail.querySelectorAll(".rail-dots button"));
+    const prevBtn = rail.querySelector(".rail-btn.prev"), nextBtn = rail.querySelector(".rail-btn.next"), holdBtn = rail.querySelector(".rail-hold");
+    const TURN_MS = 950, GAP_MS = 2000, IDLE_MS = 5000, TAP_PX = 8;
+    const state = { r: 0 };
+    const off = new AbortController(), on = { signal: off.signal };
+    const wrap = (n) => ((n % N) + N) % N;
+    let tween = null, isVisible = false, hasShown = false, drag = null, hovering = false, locked = false, advanceAt = Infinity, front = -1;
+
+    rail.classList.add("is-ring", "is-armed");
+    track.scrollLeft = 0;
+    cards.forEach((card) => { card.firstElementChild.style.transform = ""; card.firstElementChild.style.opacity = ""; });
+
+    // how long a card's own preview takes (animations that finish), measured once with its is-active class on
+    const previews = cards.map((card) => {
+      card.classList.add("is-active");
+      let longest = 0;
+      card.querySelectorAll("*").forEach((el) => {
+        const cs = getComputedStyle(el);
+        if (cs.animationName === "none") return;
+        const toMs = (v) => v.split(",").map((x) => (x.trim().endsWith("ms") ? parseFloat(x) : parseFloat(x) * 1000) || 0);
+        const d = toMs(cs.animationDuration), dl = toMs(cs.animationDelay), it = cs.animationIterationCount.split(",");
+        d.forEach((x, k) => { if (it[k % it.length] !== "infinite") longest = Math.max(longest, x + (dl[k % dl.length] || 0)); });
+      });
+      card.classList.remove("is-active");
+      return longest;
+    });
+    const dwell = (i) => TURN_MS + previews[i] + GAP_MS;
+
+    function setFront(i) {
+      if (i === front) return;
+      front = i;
+      cards.forEach((card, k) => card.classList.toggle("is-active", k === i)); // only the front screen plays
+      dots.forEach((dot, k) => dot.setAttribute("aria-current", String(k === i)));
+    }
+    function show(r) {
+      const w = cards[0].offsetWidth, R = w * RAIL_RADIUS;
+      cards.forEach((card, i) => {
+        let d = wrap(i - r); if (d > N / 2) d -= N;
+        const th = d * STEP * Math.PI / 180;
+        const near = (1 + Math.cos(th)) / 2;
+        const x = R * Math.sin(th), z = R * (Math.cos(th) - 1), y = -(1 - Math.cos(th)) / 2 * R * RAIL_RISE;
+        card.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, ${z.toFixed(1)}px) rotateY(${(-th * RAIL_YAW * 180 / Math.PI).toFixed(2)}deg)`;
+        card.style.opacity = (0.06 + 0.94 * Math.pow(near, 1.8)).toFixed(3);
+        card.style.filter = near > 0.97 ? "none" : `blur(${((1 - near) * 2.2).toFixed(2)}px)`;
+        card.style.zIndex = String(Math.round(near * 100));
+      });
+      setFront(wrap(Math.round(r)));
+    }
+    const render = () => show(state.r);
+    const face = () => wrap(Math.round(state.r));
+    const arm = (ms) => { advanceAt = performance.now() + ms; };
+    const via = (i) => { let d = wrap(i - Math.round(state.r)); if (d > N / 2) d -= N; return Math.round(state.r) + d; };
+    function goTo(target, duration = 0.95) {
+      if (tween) tween.kill();
+      if (prefersReducedMotion.matches) { state.r = target; render(); return; }
+      tween = gsap.to(state, { r: target, duration: duration * Math.max(1, Math.abs(target - state.r) * 0.45), ease: "power3.inOut", onUpdate: render });
+    }
+    function userGo(target) { goTo(target); arm(Math.max(IDLE_MS, dwell(wrap(target)))); }
+    function setLocked(isOn) {
+      locked = isOn;
+      rail.classList.toggle("is-held", isOn);
+      if (holdBtn) { holdBtn.setAttribute("aria-pressed", String(isOn)); holdBtn.setAttribute("aria-label", isOn ? holdBtn.dataset.resume : holdBtn.dataset.hold); }
+      if (!isOn) arm(GAP_MS);
+    }
+    dots.forEach((dot, i) => dot.addEventListener("click", () => userGo(via(i)), on));
+    if (prevBtn) prevBtn.addEventListener("click", () => userGo(Math.round(state.r) - 1), on);
+    if (nextBtn) nextBtn.addEventListener("click", () => userGo(Math.round(state.r) + 1), on);
+    if (holdBtn) holdBtn.addEventListener("click", () => setLocked(!locked), on);
+    track.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft") { e.preventDefault(); userGo(Math.round(state.r) - 1); }
+      if (e.key === "ArrowRight") { e.preventDefault(); userGo(Math.round(state.r) + 1); }
+    }, on);
+
+    track.addEventListener("pointerenter", (e) => { if (e.pointerType === "mouse") hovering = true; }, on);
+    track.addEventListener("pointerleave", (e) => { if (e.pointerType === "mouse") { hovering = false; arm(IDLE_MS); } }, on);
+    track.addEventListener("pointerdown", (e) => {
+      if (tween) tween.kill();
+      drag = { x: e.clientX, y: e.clientY, r: state.r, lastX: e.clientX, lastT: performance.now(), v: 0, axis: null, id: e.pointerId, card: e.target.closest(".rc") };
+      rail.classList.add("is-dragging");
+    }, on);
+    track.addEventListener("pointermove", (e) => {
+      if (!drag) return;
+      const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+      if (!drag.axis) {
+        if (Math.abs(dx) < TAP_PX && Math.abs(dy) < TAP_PX) return;
+        drag.axis = Math.abs(dx) > Math.abs(dy) ? "x" : "y";
+        if (drag.axis === "x") track.setPointerCapture(drag.id);
+      }
+      if (drag.axis !== "x") return;
+      const now = performance.now();
+      drag.v = (e.clientX - drag.lastX) / Math.max(1, now - drag.lastT);
+      drag.lastX = e.clientX; drag.lastT = now;
+      state.r = drag.r - dx / (cards[0].offsetWidth * 0.9);
+      render();
+    }, on);
+    const end = (e) => {
+      if (!drag) return;
+      const wasTap = !drag.axis && e.type === "pointerup";
+      const tapped = drag.card ? cards.indexOf(drag.card) : face();
+      const fling = drag.axis === "x" ? -drag.v * 0.35 : 0;
+      const target = Math.round(state.r + Math.max(-1, Math.min(1, fling)));
+      drag = null;
+      rail.classList.remove("is-dragging");
+      if (wasTap && tapped !== face()) { userGo(via(tapped)); return; } // another screen: bring it round
+      if (wasTap) { goTo(Math.round(state.r), 0.6); setLocked(!locked); return; } // the front one: hold / release
+      goTo(target, 0.6);
+      arm(IDLE_MS);
+    };
+    track.addEventListener("pointerup", end, on);
+    track.addEventListener("pointercancel", end, on);
+
+    const io = new IntersectionObserver((entries) => {
+      isVisible = entries.some((e) => e.isIntersecting);
+      if (isVisible && !hasShown) { // start the first screen's preview as the ring comes into view
+        hasShown = true;
+        const f = front; front = -1; cards.forEach((c) => c.classList.remove("is-active")); void rail.offsetWidth; setFront(f);
+        arm(dwell(face()));
+      }
+    }, { threshold: 0.4 });
+    io.observe(rail);
+    const timer = setInterval(() => {
+      if (prefersReducedMotion.matches || !isVisible || document.hidden || drag || hovering || locked) return;
+      if (performance.now() < advanceAt) return;
+      const next = Math.round(state.r) + 1;
+      goTo(next);
+      arm(dwell(wrap(next)));
+    }, 200);
+    show(0);
+    return () => {
+      off.abort(); clearInterval(timer); io.disconnect(); if (tween) tween.kill();
+      rail.classList.remove("is-ring", "is-held", "is-dragging");
+      cards.forEach((c) => { c.style.transform = ""; c.style.opacity = ""; c.style.filter = ""; c.style.zIndex = ""; c.classList.remove("is-active"); });
+    };
   }
 
   /* ---------------- devices ---------------- */
@@ -446,26 +905,26 @@
     const cols = Array.from(section.querySelectorAll(".cols > *"));
     const glow = { v: 0 };
 
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: section,
-        start: () => (section.offsetHeight > window.innerHeight ? "bottom bottom" : "top top"),
-        end: () => `+=${Math.round(window.innerHeight * 1.7)}`,
-        pin: true, scrub: 0.8, anticipatePin: 1, invalidateOnRefresh: true,
-      },
-    });
+    // No pinning: the page keeps scrolling. The words come into focus once, over a few seconds, as the section arrives.
+    const tl = gsap.timeline({ paused: true });
     tl.fromTo(words,
       { opacity: 0.06, filter: "blur(14px)", yPercent: 60, rotationX: -55, transformPerspective: 600, transformOrigin: "50% 100%" },
-      { opacity: 1, filter: "blur(0px)", yPercent: 0, rotationX: 0, stagger: 0.14, duration: 0.9, ease: "power3.out" })
-      .to(glow, { v: 1, duration: 1.2, ease: "power1.inOut", onUpdate: () => { section.style.setProperty("--glow", glow.v.toFixed(3)); section.style.setProperty("--glow-scale", (0.6 + glow.v * 0.5).toFixed(3)); } }, 0.6)
+      { opacity: 1, filter: "blur(0px)", yPercent: 0, rotationX: 0, stagger: 0.1, duration: 0.9, ease: "power3.out" })
+      .to(glow, { v: 1, duration: 1.2, ease: "power1.inOut", onUpdate: () => { section.style.setProperty("--glow", glow.v.toFixed(3)); section.style.setProperty("--glow-scale", (0.6 + glow.v * 0.5).toFixed(3)); } }, 0.5)
       .to(accent, { scale: 1.06, textShadow: "0 0 32px rgba(214, 166, 118, 0.6)", duration: 0.6, ease: "power2.out" }, ">-0.5")
-      .fromTo(cols, { opacity: 0, y: 44 }, { opacity: 1, y: 0, stagger: 0.16, duration: 0.7, ease: "power3.out" }, ">-0.2")
-      .to({}, { duration: 0.5 });
+      .fromTo(cols, { opacity: 0, y: 44 }, { opacity: 1, y: 0, stagger: 0.16, duration: 0.7, ease: "power3.out" }, ">-0.2");
+    let played = false;
+    const play = () => { if (played) return; played = true; tl.play(); };
+    const trigger = ScrollTrigger.create({
+      trigger: section, start: "top 70%", once: true, onEnter: play,
+      // arrived by an anchor link or a reload past the section: just show it
+      onRefresh: (self) => { if (!played && self.scroll() > self.start + 1) { played = true; tl.progress(1); } },
+    });
+    return trigger;
   }
 
   /* ---------------- boot ---------------- */
   initHero();
-  initRail();
   const media = gsap.matchMedia();
   media.add({
     motion: "(prefers-reduced-motion: no-preference)",
@@ -473,12 +932,21 @@
     wide: "(min-width: 861px)",
   }, (context) => {
     const { motion, still, wide } = context.conditions;
-    if (still) { initCubeStill(); return; }
-    if (!motion) return;
+    const cleanups = [];
+    const keep = (fn) => { if (typeof fn === "function") cleanups.push(fn); };
+    // reminders: a ring in depth on a wide screen, the swipeable rail on a phone (or with reduced motion)
+    if (wide && motion) keep(initRailRing()); else initRail();
+    if (still) {
+      keep(wide ? initCubeStill() : initCubeStillFlat());
+      return () => cleanups.forEach((fn) => fn());
+    }
+    if (!motion) return () => cleanups.forEach((fn) => fn());
     if (root.dataset.variant !== "c") initLiveTilt(); // preview C explodes the live screen instead (assets/c/c.js)
-    if (root.dataset.variant === "c") initCubeSwipe(); else initCube(); // C: swipe, no scroll pinning
+    // insights: a ring in depth on a wide screen, the turning cube on a phone
+    if (root.dataset.variant === "c") keep(wide ? initCubeSwipe() : initCubeTurn()); else initCube();
     if (root.dataset.world !== "devices" && root.dataset.variant !== "c") initDevices(wide); // WebGL (preview B) and preview C own it otherwise
     if (root.dataset.world !== "story") initManifesto(); // preview A reads the manifesto over its 3D world
+    return () => cleanups.forEach((fn) => fn());
   });
   window.addEventListener("load", () => ScrollTrigger.refresh());
 })();
