@@ -335,3 +335,14 @@
 /* the privacy manifesto no longer pins the page, so it needs no full-screen stage */
 .manifesto { min-height: 0; }
 .rail.is-ring .rc[data-clone] { display: none; }
+
+/* when a phone refuses to autoplay the video, a tap starts it */
+.devices-video { position: relative; }
+.video-play {
+  position: absolute; left: 50%; top: 50%; translate: -50% -50%; width: 4.25rem; height: 4.25rem; border-radius: 50%; border: 0; padding: 0;
+  display: grid; place-items: center; cursor: pointer; color: #1d1915; background: var(--accent);
+  box-shadow: 0 0 0 6px rgba(196, 149, 106, 0.25), 0 12px 30px -8px rgba(0, 0, 0, 0.5);
+}
+.video-play[hidden] { display: none; }
+.video-play svg { width: 1.8rem; height: 1.8rem; margin-left: 0.15rem; }
+.video-play:focus-visible { outline: 2px solid var(--accent-ink); outline-offset: 3px; }

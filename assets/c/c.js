@@ -129,6 +129,7 @@
   function initSyncVideo() {
     const video = document.querySelector(".devices-video video");
     if (!video) return;
+    const box = video.parentElement;
     const dark = window.matchMedia("(prefers-color-scheme: dark)");
     let visible = false;
     // the file is chosen here, not with <source media> (Safari ignores that attribute on video)
@@ -138,17 +139,42 @@
       if (reduced || video.getAttribute("src") === want) return;
       video.setAttribute("src", want);
       video.load();
-      if (visible) video.play().catch(() => {});
+      if (visible) tryPlay();
     };
+    // iOS can refuse autoplay (Low Power Mode, data saver): then a play button appears and a tap starts it
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "video-play";
+    button.hidden = true;
+    button.setAttribute("aria-label", video.dataset.play || "Play");
+    button.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>';
+    box.append(button);
+    function tryPlay() {
+      const p = video.play();
+      if (p && p.catch) p.catch(() => { button.hidden = false; });
+    }
+    button.addEventListener("click", () => { button.hidden = true; video.play().catch(() => { button.hidden = false; }); });
+    video.addEventListener("playing", () => { button.hidden = true; });
     choose();
     if (dark.addEventListener) dark.addEventListener("change", choose);
     if (reduced) return; // the poster is the still
-    const io = new IntersectionObserver(([entry]) => {
+    // start fetching well before it is on screen (1.3 MB: on a phone connection that is what made it feel slow to start)
+    new IntersectionObserver((entries, observer) => {
+      if (!entries.some((e) => e.isIntersecting)) return;
+      video.preload = "auto";
+      observer.disconnect();
+    }, { rootMargin: "1200px 0px" }).observe(video);
+    // it is already playing by the time it scrolls into view: it starts (from the beginning, the first time) a screen's
+    // height before it arrives, and rests again when it is well out of sight
+    let started = false;
+    new IntersectionObserver(([entry]) => {
       visible = entry.isIntersecting;
-      if (visible) video.play().catch(() => {});
-      else video.pause();
-    }, { threshold: 0.25 });
-    io.observe(video);
+      if (visible) {
+        if (!started) { started = true; video.currentTime = 0; }
+        tryPlay();
+      } else video.pause();
+    }, { rootMargin: "500px 0px" }).observe(video);
+    document.addEventListener("visibilitychange", () => { if (!document.hidden && visible && video.paused) tryPlay(); });
   }
 
 })();
