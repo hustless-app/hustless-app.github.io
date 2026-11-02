@@ -80,6 +80,7 @@
   });
 
   initCalendar();
+  initSyncVideo(); // independent of GSAP: it must start even if nothing below runs
 
   if (!gsap || !ScrollTrigger || reduced) return;
 
@@ -122,7 +123,6 @@
     });
   }
 
-  initSyncVideo();
   window.addEventListener("load", () => ScrollTrigger.refresh());
 
   // 4. iPhone ⇄ iPad: a looping video of the sync, both directions. It plays in place (no pin) while it is on screen.

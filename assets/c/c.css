@@ -269,7 +269,7 @@
 /* ---------- iPhone ⇄ iPad sync: a looping video, edges feathered into the page ---------- */
 .devices-video { max-width: 620px; margin-inline: auto; margin-top: -3%; }
 .devices-video video {
-  display: block; width: 100%; height: auto; aspect-ratio: 700 / 971; pointer-events: none;
+  display: block; width: 100%; height: auto; aspect-ratio: 760 / 971; pointer-events: none;
   -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent), linear-gradient(to bottom, transparent, #000 9%, #000 91%, transparent);
   -webkit-mask-composite: source-in;
   mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent), linear-gradient(to bottom, transparent, #000 9%, #000 91%, transparent);

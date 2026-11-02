@@ -119,6 +119,9 @@
   }
 
   /* ---------------- reminders rail ---------------- */
+  // A swipeable rail that is a circle: a copy of the last screen sits before the first, a copy of the first after the last.
+  // Swiping, the arrows and autoplay all just move on to the neighbour; once the rail has settled on a copy it swaps,
+  // unseen, to the real screen it copies. So 1 → 6 → 1 always runs in the same direction, never back through the rest.
   function initRail() {
     const rail = document.querySelector("[data-rail]");
     if (!rail) return;
@@ -126,30 +129,35 @@
     const real = Array.from(track.children).filter((c) => !c.hasAttribute("data-clone"));
     const dots = Array.from(rail.querySelectorAll(".rail-dots button"));
     if (real.length === 0) return;
-    // a copy of the first screen after the last one, so autoplay can keep going forward: 1 → 6 → 1 (the swap back is unseen)
-    let clone = track.querySelector("[data-clone]");
-    if (!clone) {
-      clone = real[0].cloneNode(true);
-      clone.setAttribute("data-clone", "");
-      clone.setAttribute("aria-hidden", "true");
-      clone.removeAttribute("data-card");
-      track.append(clone);
-    }
     const N = real.length;
-    const cards = [...real, clone];
+    const copy = (card, which) => {
+      const c = card.cloneNode(true);
+      c.setAttribute("data-clone", which);
+      c.setAttribute("aria-hidden", "true");
+      c.removeAttribute("data-card");
+      return c;
+    };
+    let first = track.querySelector('[data-clone="first"]'), last = track.querySelector('[data-clone="last"]');
+    if (!first) { first = copy(real[0], "first"); track.append(first); }
+    if (!last) { last = copy(real[N - 1], "last"); track.prepend(last); }
+    const cards = [last, ...real, first]; // array index 1…N are the real screens
+    const logical = (i) => ((i - 1) % N + N) % N;
     if (rail._bound) { rail._bound.activate(); return; } // already wired: the ring may have been on top of it
 
     const AUTO_MS = 5200;
     const USER_PAUSE_MS = 9000;
-    let active = -1;
+    let active = 1;
     let isTicking = false;
     let isVisible = false;
     let pausedUntil = 0;
+    let touching = false;
+    let settleTimer = 0;
 
     function setActive(index) {
       active = index;
-      cards.forEach((card, i) => card.classList.toggle("is-active", i === index || (index === N && i === 0)));
-      dots.forEach((dot, i) => dot.setAttribute("aria-current", String(i === index % N)));
+      const lg = logical(index);
+      cards.forEach((card, i) => card.classList.toggle("is-active", logical(i) === lg));
+      dots.forEach((dot, i) => dot.setAttribute("aria-current", String(i === lg)));
     }
 
     function render() {
@@ -171,44 +179,61 @@
       });
       if (best !== active) setActive(best);
     }
-    const onScroll = () => { if (!isTicking) { isTicking = true; requestAnimationFrame(render); } };
 
-    // Programmatic scrolling is a tween on scrollLeft with snapping suspended: native smooth scrollTo against
-    // scroll-snap stalls on iOS Safari (the rail got to 6 and never came back to 1).
-    let scrollTween = null;
-    const stopTween = () => { if (scrollTween) { scrollTween.kill(); scrollTween = null; track.style.scrollSnapType = ""; } };
     const posOf = (i) => cards[i].offsetLeft - (track.clientWidth - cards[i].offsetWidth) / 2;
-    const jump = (i) => { // an instant, unseen swap between a screen and its copy
+    const jump = (i) => { // an instant swap between a screen and its copy: identical to look at, so it is not seen
       track.style.scrollSnapType = "none";
       track.scrollLeft = posOf(i);
       requestAnimationFrame(() => { track.style.scrollSnapType = ""; });
+      render();
     };
+    // resting on a copy: carry on from the real screen it copies
+    const settle = () => {
+      if (scrollTween || touching || drag) return;
+      if (active === 0) jump(N);
+      else if (active === N + 1) jump(1);
+    };
+    const onScroll = () => {
+      if (!isTicking) { isTicking = true; requestAnimationFrame(render); }
+      clearTimeout(settleTimer);
+      settleTimer = setTimeout(settle, 140); // scrolling (touch momentum included) has come to rest
+    };
+
+    // Programmatic scrolling is a tween on scrollLeft with snapping suspended: native smooth scrollTo against
+    // scroll-snap stalls on iOS Safari.
+    let scrollTween = null;
+    const stopTween = () => { if (scrollTween) { scrollTween.kill(); scrollTween = null; track.style.scrollSnapType = ""; } };
     function goTo(index) {
       stopTween();
-      if (active === N && index !== N - 1) { jump(0); if (index > N) index -= N; } // resting on the copy: carry on from the real first screen
-      if (index < 0) { jump(N); index = N - 1; }                                    // before the first: from its copy, back to the last
-      if (index > N) index -= N;
-      const left = posOf(index);
-      if (prefersReducedMotion.matches) { track.scrollLeft = left; if (index === N) jump(0); return; }
+      const left = posOf(Math.min(Math.max(index, 0), N + 1)); // the copies at either end count as neighbours
+      if (prefersReducedMotion.matches) { track.scrollLeft = left; settle(); return; }
       const proxy = { x: track.scrollLeft };
       track.style.scrollSnapType = "none";
       scrollTween = gsap.to(proxy, {
         x: left, duration: Math.min(1.5, 0.6 + Math.abs(left - proxy.x) / 1800), ease: "power3.inOut",
         onUpdate: () => { track.scrollLeft = proxy.x; },
-        onComplete: () => {
-          track.scrollLeft = left; scrollTween = null;
-          if (index === N) jump(0); else track.style.scrollSnapType = "";
-        },
+        onComplete: () => { track.scrollLeft = left; scrollTween = null; track.style.scrollSnapType = ""; render(); settle(); },
       });
     }
     const userPause = () => { pausedUntil = performance.now() + USER_PAUSE_MS; stopTween(); };
+    // one screen on, either way: from a copy, first swap to the real screen it copies
+    const step = (d) => {
+      stopTween();
+      if (active === 0) jump(N); else if (active === N + 1) jump(1);
+      goTo(active + d);
+    };
 
-    rail.querySelector(".rail-btn.prev").addEventListener("click", () => { userPause(); goTo(active - 1); });
-    rail.querySelector(".rail-btn.next").addEventListener("click", () => { userPause(); goTo(active + 1); });
-    dots.forEach((dot, i) => dot.addEventListener("click", () => { userPause(); goTo(i); }));
-    ["pointerdown", "wheel", "keydown", "touchstart"].forEach((type) => track.addEventListener(type, userPause, { passive: true }));
+    rail.querySelector(".rail-btn.prev").addEventListener("click", () => { userPause(); step(-1); });
+    rail.querySelector(".rail-btn.next").addEventListener("click", () => { userPause(); step(1); });
+    dots.forEach((dot, i) => dot.addEventListener("click", () => { userPause(); stopTween(); if (active === 0) jump(N); else if (active === N + 1) jump(1); goTo(i + 1); }));
+    ["pointerdown", "wheel", "keydown"].forEach((type) => track.addEventListener(type, userPause, { passive: true }));
+    track.addEventListener("touchstart", () => { touching = true; userPause(); }, { passive: true });
+    const touchEnd = () => { touching = false; clearTimeout(settleTimer); settleTimer = setTimeout(settle, 140); };
+    track.addEventListener("touchend", touchEnd, { passive: true });
+    track.addEventListener("touchcancel", touchEnd, { passive: true });
     track.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll, { passive: true });
+    const resync = () => { jump(Math.min(Math.max(active, 1), N)); };
+    window.addEventListener("resize", () => { resync(); onScroll(); }, { passive: true });
 
     // Mouse drag on desktop (touch already swipes natively).
     let drag = null;
@@ -235,13 +260,20 @@
 
     new IntersectionObserver((entries) => { isVisible = entries.some((e) => e.isIntersecting); }, { threshold: 0.4 }).observe(rail);
     setInterval(() => {
-      if (rail.classList.contains("is-ring") || !isVisible || document.hidden || drag || performance.now() < pausedUntil || prefersReducedMotion.matches) return;
-      goTo(active + 1);
+      if (rail.classList.contains("is-ring") || !isVisible || document.hidden || drag || touching || scrollTween || performance.now() < pausedUntil || prefersReducedMotion.matches) return;
+      step(1);
     }, AUTO_MS);
 
     rail.classList.add("is-armed");
-    rail._bound = { activate: () => { rail.classList.add("is-armed"); cards.forEach((c) => { c.style.transform = ""; c.style.opacity = ""; c.style.filter = ""; c.style.zIndex = ""; }); render(); goTo(Math.max(0, active)); } };
-    render();
+    rail._bound = {
+      activate: () => {
+        rail.classList.add("is-armed");
+        cards.forEach((c) => { c.style.transform = ""; c.style.opacity = ""; c.style.filter = ""; c.style.zIndex = ""; });
+        resync();
+      },
+    };
+    jump(1);
+    window.addEventListener("load", () => { if (!touching) resync(); });
   }
 
   /* ---------------- live Now screen tilt ---------------- */
