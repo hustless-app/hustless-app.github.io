@@ -123,9 +123,20 @@
     const rail = document.querySelector("[data-rail]");
     if (!rail) return;
     const track = rail.querySelector(".rail-track");
-    const cards = Array.from(track.children);
+    const real = Array.from(track.children).filter((c) => !c.hasAttribute("data-clone"));
     const dots = Array.from(rail.querySelectorAll(".rail-dots button"));
-    if (cards.length === 0) return;
+    if (real.length === 0) return;
+    // a copy of the first screen after the last one, so autoplay can keep going forward: 1 → 6 → 1 (the swap back is unseen)
+    let clone = track.querySelector("[data-clone]");
+    if (!clone) {
+      clone = real[0].cloneNode(true);
+      clone.setAttribute("data-clone", "");
+      clone.setAttribute("aria-hidden", "true");
+      clone.removeAttribute("data-card");
+      track.append(clone);
+    }
+    const N = real.length;
+    const cards = [...real, clone];
     if (rail._bound) { rail._bound.activate(); return; } // already wired: the ring may have been on top of it
 
     const AUTO_MS = 5200;
@@ -137,8 +148,8 @@
 
     function setActive(index) {
       active = index;
-      cards.forEach((card, i) => card.classList.toggle("is-active", i === index));
-      dots.forEach((dot, i) => dot.setAttribute("aria-current", String(i === index)));
+      cards.forEach((card, i) => card.classList.toggle("is-active", i === index || (index === N && i === 0)));
+      dots.forEach((dot, i) => dot.setAttribute("aria-current", String(i === index % N)));
     }
 
     function render() {
@@ -166,17 +177,28 @@
     // scroll-snap stalls on iOS Safari (the rail got to 6 and never came back to 1).
     let scrollTween = null;
     const stopTween = () => { if (scrollTween) { scrollTween.kill(); scrollTween = null; track.style.scrollSnapType = ""; } };
+    const posOf = (i) => cards[i].offsetLeft - (track.clientWidth - cards[i].offsetWidth) / 2;
+    const jump = (i) => { // an instant, unseen swap between a screen and its copy
+      track.style.scrollSnapType = "none";
+      track.scrollLeft = posOf(i);
+      requestAnimationFrame(() => { track.style.scrollSnapType = ""; });
+    };
     function goTo(index) {
-      const card = cards[(index + cards.length) % cards.length];
-      const left = card.offsetLeft - (track.clientWidth - card.offsetWidth) / 2;
       stopTween();
-      if (prefersReducedMotion.matches) { track.scrollLeft = left; return; }
+      if (active === N && index !== N - 1) { jump(0); if (index > N) index -= N; } // resting on the copy: carry on from the real first screen
+      if (index < 0) { jump(N); index = N - 1; }                                    // before the first: from its copy, back to the last
+      if (index > N) index -= N;
+      const left = posOf(index);
+      if (prefersReducedMotion.matches) { track.scrollLeft = left; if (index === N) jump(0); return; }
       const proxy = { x: track.scrollLeft };
       track.style.scrollSnapType = "none";
       scrollTween = gsap.to(proxy, {
         x: left, duration: Math.min(1.5, 0.6 + Math.abs(left - proxy.x) / 1800), ease: "power3.inOut",
         onUpdate: () => { track.scrollLeft = proxy.x; },
-        onComplete: () => { track.scrollLeft = left; track.style.scrollSnapType = ""; scrollTween = null; },
+        onComplete: () => {
+          track.scrollLeft = left; scrollTween = null;
+          if (index === N) jump(0); else track.style.scrollSnapType = "";
+        },
       });
     }
     const userPause = () => { pausedUntil = performance.now() + USER_PAUSE_MS; stopTween(); };
@@ -214,7 +236,7 @@
     new IntersectionObserver((entries) => { isVisible = entries.some((e) => e.isIntersecting); }, { threshold: 0.4 }).observe(rail);
     setInterval(() => {
       if (rail.classList.contains("is-ring") || !isVisible || document.hidden || drag || performance.now() < pausedUntil || prefersReducedMotion.matches) return;
-      goTo(active + 1 >= cards.length ? 0 : active + 1);
+      goTo(active + 1);
     }, AUTO_MS);
 
     rail.classList.add("is-armed");
@@ -702,7 +724,7 @@
     const rail = document.querySelector("[data-rail]");
     if (!rail) return;
     const track = rail.querySelector(".rail-track");
-    const cards = Array.from(track.children);
+    const cards = Array.from(track.children).filter((c) => !c.hasAttribute("data-clone"));
     if (cards.length === 0) return;
     const N = cards.length, STEP = 360 / N;
     const dots = Array.from(rail.querySelectorAll(".rail-dots button"));

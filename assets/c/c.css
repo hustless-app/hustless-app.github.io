@@ -334,3 +334,4 @@
 
 /* the privacy manifesto no longer pins the page, so it needs no full-screen stage */
 .manifesto { min-height: 0; }
+.rail.is-ring .rc[data-clone] { display: none; }
