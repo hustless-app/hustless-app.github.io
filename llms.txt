@@ -9,7 +9,7 @@
 - App Store name: "hustless: Stop Impulse Buying" (Japanese: 「hustless: 衝動買い防止とAI家計簿」). App Store ID 6826845830. Category: Finance. Age rating 18+.
 - Price: 7-day free trial through the App Store, then $3.49/month or $34.99/year in the United States; local prices in the App Store. The trial includes 5 AI conversations and up to 5 AI insights a day.
 - Availability: 145 countries and regions; not yet in the European Union. Launching on the App Store soon.
-- Privacy: no account, no ads, no analytics, no tracking. Expenses and conversations stay on the user's devices and can sync through the user's own private iCloud. Data leaves the device only for: the AI features (messages go through the developer's server to Anthropic, which does not train on them; Insights use totals, never individual expenses), the weather (approximate location, only if the user allows it, goes to Apple WeatherKit) and the subscription (payment is handled by Apple). The server does not store conversations or insights.
+- Privacy: no account, no ads, no tracking. Expenses stay on the user's devices. Only the AI features send what they need to answer; conversations are not stored on the server.
 - Features: AI "I'm here" coach before purchases; voice and text expense logging with 25 categories plus custom ones; reminders 1–30 days before each subscription or bill, with an "Did you use it this month?" question for subscriptions; insights (trends, categories, time of day, weekday and weather patterns, AI insights); calendar heat map; Home Screen and Lock Screen widgets.
 - Who it is for: people who buy on impulse and regret it, people doing a no-spend or no-buy challenge, people who lost track of their subscriptions, and anyone who wants to spend mindfully without a strict budget.
 
