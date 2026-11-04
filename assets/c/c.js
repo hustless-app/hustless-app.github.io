@@ -141,20 +141,16 @@
       video.load();
       if (visible) tryPlay();
     };
-    // iOS can refuse autoplay (Low Power Mode, data saver): then a play button appears and a tap starts it
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = "video-play";
-    button.hidden = true;
-    button.setAttribute("aria-label", video.dataset.play || "Play");
-    button.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>';
-    box.append(button);
+    // iOS can refuse autoplay (Low Power Mode, data saver) or abort it when load() lands mid-request.
+    // There is no play button: the poster stays as the still, and playback is retried when the video can
+    // play, when the tab returns, and on the first touch or scroll (a gesture lets iOS start a muted video).
     function tryPlay() {
       const p = video.play();
-      if (p && p.catch) p.catch(() => { button.hidden = false; });
+      if (p && p.catch) p.catch(() => {});
     }
-    button.addEventListener("click", () => { button.hidden = true; video.play().catch(() => { button.hidden = false; }); });
-    video.addEventListener("playing", () => { button.hidden = true; });
+    video.addEventListener("canplay", () => { if (visible && video.paused) tryPlay(); });
+    const onGesture = () => { if (visible && video.paused) tryPlay(); };
+    ["touchstart", "pointerdown", "scroll"].forEach((type) => window.addEventListener(type, onGesture, { passive: true }));
     choose();
     if (dark.addEventListener) dark.addEventListener("change", choose);
     if (reduced) return; // the poster is the still
