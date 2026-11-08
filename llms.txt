@@ -9,17 +9,17 @@
 - App Store name: "hustless: Stop Impulse Buying" (Japanese: 「hustless: 衝動買い防止とAI家計簿」). App Store ID 6826845830. Category: Finance. Age rating 18+.
 - Price: 7-day free trial through the App Store, then $3.49/month or $34.99/year in the United States; local prices in the App Store. The trial includes 5 AI conversations and up to 5 AI insights a day.
 - Availability: 145 countries and regions; not yet in the European Union. Launching on the App Store soon.
-- Privacy: no account, no ads, no tracking. Expenses stay on the user's devices. AI chat and Insights send what they need to answer (conversations are not kept on our server; the AI provider may retain requests for a limited time). With location allowed, approximate location goes to Apple Weather; a signed Apple subscription record is sent with AI requests. Details: https://hustless-app.github.io/privacy.html
+- Privacy: no account, no ads, no tracking. Expenses stay on the user's devices. AI chat and Insights send what they need to answer (conversations are not kept on our server; the AI provider may retain requests for a limited time). With location allowed, approximate location goes to Apple Weather; a signed Apple subscription record is sent with AI requests. Details: https://hustless.app/privacy.html
 - Features: AI "I'm here" coach before purchases; voice and text expense logging with 25 categories plus custom ones; reminders 1–30 days before each subscription or bill, with an "Did you use it this month?" question for subscriptions; insights (trends, categories, time of day, weekday and weather patterns, AI insights); calendar heat map; Home Screen and Lock Screen widgets.
 - Who it is for: people who buy on impulse and regret it, people doing a no-spend or no-buy challenge, people who lost track of their subscriptions, and anyone who wants to spend mindfully without a strict budget.
 
 ## Pages
 
-- [Home (English)](https://hustless-app.github.io/): overview, example conversation, pricing, FAQ
-- [ホーム (日本語)](https://hustless-app.github.io/ja/): 日本語の概要とよくある質問
-- [Inicio (Español)](https://hustless-app.github.io/es/): resumen, precios y preguntas frecuentes en español
-- [Support](https://hustless-app.github.io/support.html): cancelling, restoring purchases, fair-use limits, contact
-- [Privacy Policy](https://hustless-app.github.io/privacy.html): what data is processed and why
+- [Home (English)](https://hustless.app/): overview, example conversation, pricing, FAQ
+- [ホーム (日本語)](https://hustless.app/ja/): 日本語の概要とよくある質問
+- [Inicio (Español)](https://hustless.app/es/): resumen, precios y preguntas frecuentes en español
+- [Support](https://hustless.app/support.html): cancelling, restoring purchases, fair-use limits, contact
+- [Privacy Policy](https://hustless.app/privacy.html): what data is processed and why
 
 ## About
 
